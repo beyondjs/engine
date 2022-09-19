@@ -62,8 +62,8 @@
     "npm": ">=6.0.0"
   },
   "exports": {
-    "./mformat": "./lib/client/mformat/index.js",
-    "./typings": "./lib/client/typings/index.js"
+    "./mformat": "./lib/engine/mformat/index.js",
+    "./typings": "./lib/engine/typings/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",
