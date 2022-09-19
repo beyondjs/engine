@@ -1,0 +1,10 @@
+{
+  "scope": "beyond-js",
+  "name": "local",
+  "version": "1.0",
+  "connect": true,
+  "modules": "./modules",
+  "legacyBackend": {
+    "core": "./service"
+  }
+}
