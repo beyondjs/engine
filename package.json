@@ -6,11 +6,9 @@
   "version": "1.0.4",
   "license": "MIT",
   "main": "lib",
-  "repository": "https://github.com/hello-beyond/beyond",
+  "repository": "https://github.com/beyondjs/engine",
   "files": [
     "bin",
-    "docs",
-    "dashboard",
     "lib"
   ],
   "bin": {
@@ -58,9 +56,7 @@
     "socket.io",
     "websockets"
   ],
-  "scripts": {
-    "start": "npm run index.js"
-  },
+  "scripts": {},
   "engines": {
     "node": ">=14.17.4",
     "npm": ">=6.0.0"
