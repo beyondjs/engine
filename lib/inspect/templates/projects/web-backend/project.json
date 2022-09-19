@@ -1,0 +1,34 @@
+{
+  "name": "web-app",
+  "version": "0.0.1",
+  "title": "Basic Web-Backend Application",
+  "description": "Basic Web Backend application",
+  "template": "template/template.json",
+  "layout": "main-layout",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "modules"
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "web",
+        "platform": "web",
+        "environment": "development",
+        "backend": "backend",
+        "default": true
+      },
+      {
+        "name": "backend",
+        "platform": "backend",
+        "environment": "development"
+      }
+    ]
+  }
+}

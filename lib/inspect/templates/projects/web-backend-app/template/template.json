@@ -1,0 +1,25 @@
+{
+  "application": {
+    "processor": "sass",
+    "path": "application",
+    "files": [
+      "*"
+    ]
+  },
+  "global": {
+    "processor": "sass",
+    "path": "global",
+    "files": [
+      "*"
+    ]
+  },
+  "processors": {
+    "sass": {
+      "path": "sass",
+      "files": [
+        "*"
+      ]
+    }
+  },
+  "overwrites": "overwrites/overwrites.json"
+}

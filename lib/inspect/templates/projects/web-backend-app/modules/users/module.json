@@ -1,0 +1,22 @@
+{
+  "name": "users",
+  "widget": {
+    "is": "page",
+    "route": "/users",
+    "element": {
+      "name": "users-page"
+    },
+    "ts": {
+      "path": "ts",
+      "files": [
+        "*"
+      ]
+    },
+    "sass": {
+      "path": "sass",
+      "files": [
+        "*"
+      ]
+    }
+  }
+}

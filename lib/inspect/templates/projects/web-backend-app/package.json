@@ -1,0 +1,11 @@
+{
+  "name": "$[scope]$[name]",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@beyond-js/backend": "^0.0.9",
+    "@beyond-js/react-widgets": "^18.18.1"
+  }
+}

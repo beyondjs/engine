@@ -1,0 +1,16 @@
+{
+  "name": "web-app",
+  "version": "0.0.1",
+  "layout": "main-layout",
+  "template": "template/template.json",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "./modules"
+  }
+}

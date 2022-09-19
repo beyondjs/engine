@@ -1,0 +1,16 @@
+aside {
+  background: #313C50;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  div {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: 200ms ease-in all;
+
+    &:hover {
+      background: darken(#E36152, 10%);
+    }
+  }
+}

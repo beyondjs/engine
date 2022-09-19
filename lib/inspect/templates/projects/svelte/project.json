@@ -1,0 +1,17 @@
+{
+  "name": "svelte-first-app",
+  "version": "0.0.1",
+  "template": "template/template.json",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "./modules"
+  },
+  "deployment": {
+  }
+}

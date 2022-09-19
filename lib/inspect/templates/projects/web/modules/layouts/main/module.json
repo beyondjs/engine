@@ -1,0 +1,21 @@
+{
+  "name": "layout/main",
+  "widget": {
+    "is": "layout",
+    "element": {
+      "name": "main-layout"
+    },
+    "sass": {
+      "path": "sass",
+      "files": [
+        "*"
+      ]
+    },
+    "ts": {
+      "path": "ts",
+      "files": [
+        "*"
+      ]
+    }
+  }
+}

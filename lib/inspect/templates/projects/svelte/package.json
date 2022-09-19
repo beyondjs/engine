@@ -1,0 +1,13 @@
+{
+  "name": "$[scope]$[name]",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@beyond-js/svelte-widgets": "^0.0.2"
+  },
+  "devDependencies": {
+    "@beyond-js/backend": "^0.0.9"
+  }
+}

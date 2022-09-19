@@ -1,0 +1,16 @@
+{
+  "name": "$[scope]$[name]",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@beyond-js/kernel": "^0.0.20",
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.7",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@beyond-js/backend": "^0.0.9"
+  }
+}

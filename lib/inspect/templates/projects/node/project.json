@@ -1,0 +1,17 @@
+{
+  "name": "node-app",
+  "version": "0.0.1",
+  "title": "Node JS Basic Application",
+  "description": "Node JS Basic application",
+  "node": {},
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "modules"
+  }
+}

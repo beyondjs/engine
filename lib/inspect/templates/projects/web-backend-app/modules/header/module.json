@@ -1,0 +1,11 @@
+{
+  "name": "header",
+  "code": {
+    "ts": {
+      "path": "ts",
+      "files": [
+        "*"
+      ]
+    }
+  }
+}

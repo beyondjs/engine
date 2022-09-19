@@ -1,0 +1,22 @@
+{
+  "name": "home",
+  "widget": {
+    "is": "page",
+    "route": "/",
+    "element": {
+      "name": "home-page"
+    },
+    "vue": {
+      "path": "vue",
+      "files": "*"
+    },
+    "ts": {
+      "path": "vue",
+      "files": "*"
+    },
+    "sass": {
+      "path": "vue",
+      "files": "*"
+    }
+  }
+}
