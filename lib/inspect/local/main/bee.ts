@@ -10,7 +10,7 @@ export class BEE extends Events {
     }
 
     #status = async (): Promise<string> => {
-        return <string>await module.execute('bees/status', {id: this.#id});
+        return <string>await module.execute('launchers/status', {id: this.#id});
     }
 
     get status() {
@@ -18,10 +18,10 @@ export class BEE extends Events {
     }
 
     async start() {
-        await module.execute('bees/start', {id: this.#id});
+        await module.execute('launchers/start', {id: this.#id});
     }
 
     async stop() {
-        await module.execute('bees/stop', {id: this.#id});
+        await module.execute('launchers/stop', {id: this.#id});
     }
 }
