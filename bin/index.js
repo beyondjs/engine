@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-
-const yargs = require('yargs/yargs');
-const {hideBin} = require('yargs/helpers');
 require('colors');
+require('../lib/global');
+const {ports} = global.utils;
 
 module.exports = new class {
     #engine;
@@ -20,24 +19,46 @@ module.exports = new class {
         return this.#launchers;
     }
 
-    constructor() {
-        const usage = '$ beyond engine --workspace=[port number]';
+    #start(argv) {
+        const done = ({error, params}) => {
+            if (error) {
+                console.log('Cannot run BeyondJS: '.red, error);
+                return;
+            }
 
-        yargs(hideBin(process.argv))
+            params = params ? params : {};
+            new (require('beyond'))(params);
+        }
+
+        const {workspace} = argv;
+        if (workspace) {
+            ports.check(workspace)
+                .then(ok => ok ?
+                    done({params: {workspace}}) :
+                    done({error: `Workspace port ${workspace} is already in use`})
+                )
+                .catch(exc => done(exc.message));
+        }
+        else {
+            done({});
+        }
+    }
+
+    constructor() {
+        const usage = 'Usage: $0 <command> [options]';
+
+        require('yargs')
+            .scriptName('beyond')
             .usage(usage)
-            .command('engine', 'Start the BeyondJS engine', yargs => {
+            .command('run [workspace]', 'Welcome to BeyondJS', yargs => {
                 yargs.positional('workspace', {
                     type: 'number',
+                    default: 4000,
                     describe: 'The port on which the http workspace will work'
-                });
-            }, argv => {
-                new (require('beyond'))(argv.port);
-            })
-            .option('verbose', {
-                alias: 'v',
-                type: 'boolean',
-                description: 'Run with verbose logging'
-            })
-            .parse();
+                })
+            }, this.#start)
+            .help()
+            .demandCommand(1, 'You need to set a command to run BeyondJS'.red)
+            .argv;
     }
 }
