@@ -10,10 +10,10 @@ const args = (() => {
     return args;
 })();
 
-const workspace = (() => {
+const inspect = (() => {
     if (!args.has('workspace')) return;
     const workspace = parseInt(args.get('workspace'));
     return Number.isInteger(workspace) ? workspace : void 0;
 })();
 
-new (require('beyond'))({workspace});
+new (require('beyond'))({inspect});
