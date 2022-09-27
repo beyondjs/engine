@@ -1,0 +1,198 @@
+<widget xmlns="http://www.w3.org/ns/widgets"
+        xmlns:gap="http://phonegap.com/ns/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="#application.id#"
+        versionCode="#version.code#"
+        version="#version.number#">
+
+    <name>#application.name#</name>
+    <description>>#application.description#</description>
+    <author href="#author.href#" email="#author.email#">#author.name#</author>
+
+    <content src="index.html"/>
+
+    <platform name="ios"/>
+
+    <preference name="phonegap-version" value="cli-7.1.0"/>
+
+    <preference name="fullscreen" value="false"/>
+
+    <!-- ios only -->
+    <preference name="exit-on-suspend" value="true"/>
+    <preference name="AllowInlineMediaPlayback" value="true"/>
+    <preference name="SplashScreen" value="screen"/>
+    <preference name="DisallowOverscroll" value="true"/>
+    <preference name="AutoHideSplashScreen" value="false"/>
+    <preference name="FadeSplashScreen" value="true"/>
+    <preference name="FadeSplashScreenDuration" value="100"/>
+    <preference name="SplashMaintainAspectRatio" value="true"/>
+    <preference name="ShowSplashScreenSpinner" value="false"/>
+
+    <preference name="permissions" value="none"/>
+    <preference name="orientation" value="portrait"/>
+    <preference name="target-device" value="universal"/>
+    <preference name="webviewbounce" value="false"/>
+    <preference name="prerendered-icon" value="true"/>
+    <preference name="stay-in-webview" value="false"/>
+    <preference name="detect-data-types" value="true"/>
+    <preference name="exit-on-suspend" value="false"/>
+    <preference name="disable-cursor" value="false"/>
+    <preference name="android-installLocation" value="auto"/>
+    <preference name="EnableViewportScale" value="true"/>
+
+    <preference name="deployment-target" value="10.3"/>
+
+    <plugin name="cordova-plugin-battery-status" source="npm"/>
+    <plugin name="cordova-plugin-camera" source="npm"/>
+
+    <plugin name="cordova-plugin-media-capture" source="npm"></plugin>
+    <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+        <string>Necesitamos acceso a la cámara para publicar tu foto</string>
+    </edit-config>
+    <edit-config target="NSMicrophoneUsageDescription" file="*-Info.plist" mode="merge">
+        <string>Necesitamos acceso para capturar audio de tu dispositivo</string>
+    </edit-config>
+    <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
+        <string>Necesitamos acceso a la librería de fotos para que puedas publicar tu foto</string>
+    </edit-config>
+
+    <plugin name="cordova-plugin-console" source="npm"/>
+    <plugin name="cordova-plugin-device" source="npm"/>
+    <plugin name="cordova-plugin-device-motion" source="npm"/>
+    <plugin name="cordova-plugin-device-orientation" source="npm"/>
+    <plugin name="cordova-plugin-file" source="npm"/>
+    <plugin name="cordova-plugin-file-transfer" source="npm"/>
+    <plugin name="cordova-plugin-globalization" source="npm"/>
+    <plugin name="cordova-plugin-media" source="npm"/>
+    <plugin name="cordova-plugin-network-information" source="npm"/>
+    <plugin name="cordova-plugin-splashscreen" source="npm"/>
+    <plugin name="cordova-plugin-vibration" source="npm"/>
+    <plugin name="cordova-plugin-appavailability" source="npm"/>
+    <plugin name="cordova-plugin-startapp" source="npm"/>
+    <plugin name="cordova-plugin-app-launcher" source="npm"/>
+    <plugin name="cordova-plugin-x-socialsharing" source="npm"/>
+    <plugin name="cordova-plugin-market" source="npm"/>
+
+    <feature name="InAppBrowser">
+        <plugin name="cordova-plugin-inappbrowser" source="npm" spec="3.1.0"/>
+    </feature>
+
+    <!--
+    <plugin name="com.virtualartifacts.webintent" spec="1.0.0" source="pgb"/>
+    -->
+
+    <!-- Universal links plugin -->
+    <!-- plugin name="cordova-universal-links-plugin" source="npm" spec="1.2.1"/>
+    <universal-links>
+        <host name="superliga.dev.efan.zone" scheme="http"/>
+        <host name="superliga.efan.zone" scheme="https"/>
+    </universal-links -->
+
+    <!-- Facebook plugin -->
+    <plugin name="cordova-plugin-facebook4" source="npm" spec="1.7.4">
+        <param name="APP_ID" value="382586449249248"/>
+        <param name="APP_NAME" value="Superliga Fan"/>
+    </plugin>
+    <!-- /Facebook plugin -->
+
+    <!-- Push notifications plugin -->
+    <plugin name="phonegap-plugin-push" source="npm" spec="2.2.3">
+        <variable name="FCM_VERSION" value="16.0.1"/>
+    </plugin>
+    <platform name="ios">
+        <resource-file src="GoogleService-Info.plist"/>
+    </platform>
+    <!-- /Push notifications plugin -->
+
+    <!-- Firebase analytics plugin -->
+    <plugin name="cordova-plugin-firebase-analytics" source="npm" spec="0.12.0">
+        <variable name="FIREBASE_CORE_VERSION" value="16.0.1"/>
+    </plugin>
+    <!-- /Firebase analytics plugin -->
+
+    <!-- Google analytics plugin -->
+    <plugin name="cordova-plugin-google-analytics" source="npm" spec="1.8.6">
+        <variable name="GMS_VERSION" value="16.0.1"/>
+    </plugin>
+    <!-- /Google analytics plugin -->
+
+    <!-- Badge plugin -->
+    <plugin name="cordova-plugin-badge" spec="0.7.2" source="npm"/>
+
+    <plugin name="cordova-plugin-x-socialsharing" source="npm"/>
+
+    <access origin="*"/>
+    <plugin name="cordova-plugin-whitelist" version="1"/>
+    <allow-intent href="http://*/*"/>
+    <allow-intent href="https://*/*"/>
+    <allow-intent href="tel:*"/>
+    <allow-intent href="sms:*"/>
+    <allow-intent href="mailto:*"/>
+    <allow-intent href="geo:*"/>
+    <allow-intent href="itms:*"/>
+    <allow-intent href="itms-apps:*"/>
+    <allow-navigation href="*"/>
+    <allow-navigation href="https://itunes.apple.com/*"/>
+
+    <!-- Default icon and splash screen -->
+    <icon src="resources/icons/1024.png" width="1024" height="1024"/>
+    <splash src="resources/screens/1536x2048.png" width="1536" height="2048"/>
+
+    <platform name="ios">
+        <allow-intent href="itms:*"/>
+        <allow-intent href="itms-apps:*"/>
+
+        <!-- iOS 7.0+ | iPhone 6 / 6+ -->
+        <icon src="resources/icons/180.png" width="180" height="180"/>
+
+        <!-- iOS 7.0+ | iPhone / iPod Touch  -->
+        <icon src="resources/icons/60.png" width="60" height="60"/>
+        <icon src="resources/icons/120.png" width="120" height="120"/>
+
+        <!-- iOS 7.0+ | iPad -->
+        <icon src="resources/icons/76.png" platform="ios" width="76" height="76"/>
+        <icon src="resources/icons/152.png" platform="ios" width="152" height="152"/>
+        <icon src="resources/icons/167.png" platform="ios" width="167" height="167"/>
+
+        <!-- iOS 7.0+ | Settings Icon & iOS 6.1 | iPhone Spotlight and Settings Icon -->
+        <icon src="resources/icons/29.png" width="29" height="29"/>
+        <icon src="resources/icons/58.png" width="58" height="58"/>
+        <!-- iOS 7.0+ | Settings Icon -->
+        <icon src="resources/icons/87.png" width="87" height="87"/>
+
+        <!-- iOS 7.0+ | Spotlight Icon -->
+        <icon src="resources/icons/40.png" width="40" height="40"/>
+        <icon src="resources/icons/80.png" width="80" height="80"/>
+        <icon src="resources/icons/120.png" width="120" height="120"/>
+
+
+        <!-- iOS 6.1 | iPhone / iPod Touch  -->
+        <icon src="resources/icons/57.png" width="57" height="57"/>
+        <icon src="resources/icons/114.png" width="114" height="114"/>
+
+        <!-- iOS 6.1 | iPad -->
+        <icon src="resources/icons/72.png" platform="ios" width="72" height="72"/>
+        <icon src="resources/icons/144.png" platform="ios" width="144" height="144"/>
+
+        <!-- iOS 6.1 | iPad Spotlight and Settings Icon -->
+        <icon src="resources/icons/50.png" platform="ios" width="50" height="50"/>
+        <icon src="resources/icons/100.png" platform="ios" width="100" height="100"/>
+
+
+        <!-- iPhone / iPod Touch  -->
+        <splash src="resources/screens/320x480.png" width="320" height="480"/>
+        <splash src="resources/screens/640x960.png" width="640" height="960"/>
+
+        <!-- iPhone 5 / iPod Touch (5th Generation) -->
+        <splash src="resources/screens/640x1136.png" width="640" height="1136"/>
+
+        <!-- iPhone 6 / 6+ -->
+        <splash src="resources/screens/750x1334.png" width="750" height="1334"/>
+        <splash src="resources/screens/1242x2208.png" width="1242" height="2208"/>
+
+        <!-- iPad -->
+        <splash src="resources/screens/768x1024.png" platform="ios" width="768" height="1024"/>
+        <splash src="resources/screens/1536x2048.png" platform="ios" width="1536" height="2048"/>
+    </platform>
+
+</widget>

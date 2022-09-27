@@ -34,7 +34,7 @@ module.exports = new class {
         if (workspace) {
             ports.check(workspace)
                 .then(ok => ok ?
-                    done({params: {workspace}}) :
+                    done({params: {inspect: workspace}}) :
                     done({error: `Workspace port ${workspace} is already in use`})
                 )
                 .catch(exc => done(exc.message));
