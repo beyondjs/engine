@@ -62,8 +62,7 @@
   },
   "exports": {
     ".": "./lib/index.js",
-    "./mformat": "./lib/engine/mformat/index.js",
-    "./typings": "./lib/engine/typings/index.js"
+    "./mformat": "./utils/mformat/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",
