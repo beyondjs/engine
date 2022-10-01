@@ -30,10 +30,12 @@ module.exports = function (str) {
         if (lX4 | lY4) {
             if (lResult & 0x40000000) {
                 return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-            } else {
+            }
+            else {
                 return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
             }
-        } else {
+        }
+        else {
             return (lResult ^ lX8 ^ lY8);
         }
     };
@@ -209,5 +211,4 @@ module.exports = function (str) {
 
     let temp = wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d);
     return temp.toLowerCase();
-
-};
+}

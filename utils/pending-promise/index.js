@@ -1,20 +1,21 @@
-const PendingPromise = function () {
-    'use strict';
+module.exports = class PendingPromise extends Promise {
+    resolve;
+    reject;
 
-    let resolve, reject;
-    let promise = new Promise((x, y) => {
-        resolve = x;
-        reject = y;
-    });
+    constructor(executor) {
+        // needed for PendingPromise.race/all ecc
+        if (executor instanceof Function) {
+            super(executor);
+            return;
+        }
 
-    let output = {};
-    output.resolve = value => resolve(value);
-    output.reject = value => reject(value);
-
-    Object.defineProperty(output, 'value', {'get': () => promise});
-
-    return output;
-
-};
-
-Promise.pending = PendingPromise;
+        let resolve = void 0;
+        let reject = void 0;
+        super((a, b) => {
+            resolve = a;
+            reject = b;
+        });
+        this.resolve = resolve;
+        this.reject = reject;
+    }
+}

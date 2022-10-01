@@ -62,7 +62,20 @@
   },
   "exports": {
     ".": "./lib/index.js",
-    "./mformat": "./utils/mformat/index.js"
+    "./mformat": "./utils/mformat/index.js",
+    "./utils/ports": "./utils/ports.js",
+    "./utils/finder": "./utils/finder/index.js",
+    "./utils/dynamic-processor": "./utils/dynamic-processor/index.js",
+    "./utils/config": "./utils/config/index.js",
+    "./utils/code": "./utils/code/index.js",
+    "./utils/ipc": "./utils/ipc/index.js",
+    "./utils/watchers/service": "./utils/watchers/service/index.js",
+    "./utils/watchers/client": "./utils/watchers/client/index.js",
+    "./utils/pending-promise": "./utils/pending-promise/index.js",
+    "./utils/equal": "./utils/equal/index.js",
+    "./utils/md5": "./utils/md5/index.js",
+    "./utils/crc32": "./utils/crc32/index.js",
+    "./helpers": "./helpers/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",

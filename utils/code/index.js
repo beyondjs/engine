@@ -1,4 +1,4 @@
 module.exports = {
-    'scoped': require('./scoped.js'),
-    'header': require('./header.js')
+    scoped: require('./scoped.js'),
+    header: require('./header.js')
 };

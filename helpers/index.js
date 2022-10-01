@@ -1,10 +1,3 @@
-/**
- * Processor, Source and Bundle are objects that are exposed globally
- * in lib/engine/process/core/global/index.js
- *
- * The registry is created in lib/engine/process/core/index.js, and exposed globally
- * in lib/engine/process/core/global/index.js
- */
 module.exports = new class {
     #Dependency = (require('./dependencies/dependency'));
     get Dependency() {

@@ -1,4 +1,4 @@
-module.exports = class {
+module.exports = new class {
     check(port) {
         return new Promise((resolve) => {
             const tester = require('net').createServer()
