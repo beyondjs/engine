@@ -1,4 +1,4 @@
-const ipc = (require('../../../../utils/ipc'));
+const ipc = require('beyond/utils/ipc');
 const sep = require('path').sep;
 let counter = 0;
 
