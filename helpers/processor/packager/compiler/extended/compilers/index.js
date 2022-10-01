@@ -38,13 +38,11 @@ module.exports = class extends DynamicProcessor {
             updated.set(name, processor.packager.compiler);
         });
 
-        let changed = false;
-
         // Subscribe extended compilers that are new to the collection
         const subscribe = [];
         updated.forEach((compiler, processor) => !this.has(processor) && subscribe.push(compiler));
         this.#propagator.subscribe(subscribe);
-        changed = subscribe.length;
+        let changed = !!subscribe.length;
 
         // Unsubscribe unused extended compilers
         const unsubscribe = [];

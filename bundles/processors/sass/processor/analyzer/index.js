@@ -11,9 +11,8 @@ module.exports = class extends global.ProcessorAnalyzer {
         const importer = new (require('./importer'))(source, this.processor);
         const options = {sourceMap: false, importer};
 
-        let result;
         try {
-            result = await sass.compileStringAsync(source.content, options);
+            await sass.compileStringAsync(source.content, options);
             if (this._request !== request) return;
         }
         catch (exc) {

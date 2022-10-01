@@ -38,13 +38,11 @@ module.exports = class extends DynamicProcessor {
             updated.set(processor.name, extension.hashes);
         });
 
-        let changed = false;
-
         // Subscribe extensions that are new to the collection
         const subscribe = [];
         updated.forEach((extension, processor) => !this.has(processor) && subscribe.push(extension));
         this.#propagator.subscribe(subscribe);
-        changed = subscribe.length;
+        let changed = !!subscribe.length;
 
         // Unsubscribe unused extensions
         const unsubscribe = [];
