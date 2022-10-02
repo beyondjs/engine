@@ -1,24 +1,8 @@
 #!/usr/bin/env node
 require('colors');
-require('../lib/global');
-const {ports} = global.utils;
+const ports = require('beyond/utils/ports');
 
 module.exports = new class {
-    #engine;
-    get engine() {
-        return this.#engine;
-    }
-
-    #inspect;
-    get inspect() {
-        return this.#inspect;
-    }
-
-    #launchers;
-    get launchers() {
-        return this.#launchers;
-    }
-
     #start(argv) {
         const done = ({error, params}) => {
             if (error) {
@@ -35,8 +19,7 @@ module.exports = new class {
             ports.check(workspace)
                 .then(ok => ok ?
                     done({params: {workspace}}) :
-                    done({error: `Workspace port ${workspace} is already in use`})
-                )
+                    done({error: `Workspace port ${workspace} is already in use`}))
                 .catch(exc => done(exc.message));
         }
         else {
@@ -47,7 +30,7 @@ module.exports = new class {
     constructor() {
         const usage = 'Usage: $0 <command> [options]';
 
-        require('yargs')
+        void require('yargs')
             .scriptName('beyond')
             .usage(usage)
             .command('run [workspace]', 'Welcome to BeyondJS', yargs => {

@@ -63,7 +63,7 @@
   "exports": {
     ".": "./lib/index.js",
     "./mformat": "./utils/mformat/index.js",
-    "./utils/ports": "./utils/ports.js",
+    "./utils/ports": "./utils/ports/index.js",
     "./utils/finder": "./utils/finder/index.js",
     "./utils/dynamic-processor": "./utils/dynamic-processor/index.js",
     "./utils/config": "./utils/config/index.js",

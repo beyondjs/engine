@@ -1,5 +1,3 @@
-require('./lib/global');
-
 const args = (() => {
     const argv = process.argv.slice(2);
     const args = new Map();
