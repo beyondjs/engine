@@ -1,9 +1,9 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
-const {ipc} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const ipc = require('beyond/utils/ipc');
 const Diagnostics = (require('../../diagnostics'));
 const Meta = (require('./meta'));
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'packager.compiler';
     }

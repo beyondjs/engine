@@ -1,4 +1,4 @@
-const {crc32} = global.utils;
+const crc32 = require('beyond/utils/crc32');
 
 module.exports = class {
     #source;

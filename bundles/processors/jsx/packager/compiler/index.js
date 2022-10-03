@@ -1,3 +1,5 @@
+const {header} = require('beyond/utils/code');
+
 /**
  * The jsx compiler
  */
@@ -15,7 +17,6 @@ module.exports = class extends global.ProcessorCompiler {
         const files = this.children.get('files').child;
 
         const sourcemap = new global.SourceMap();
-        const {header} = global.utils.code;
         files.forEach(source => {
             const {file} = source.relative;
             sourcemap.concat(header(file));

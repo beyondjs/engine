@@ -1,4 +1,4 @@
-const {header} = global.utils.code;
+const {header} = require('beyond/utils/code');
 
 module.exports = function (bundle) {
     const {container} = bundle;

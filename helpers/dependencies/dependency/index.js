@@ -1,11 +1,11 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
  * The Dependency object required by:
  *   . The processors (actually it is being used by the "ts" and "sass" processors)
  *   . The dependencies collection of the Bundle and Transversal objects
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'bundler.dependency';
     }

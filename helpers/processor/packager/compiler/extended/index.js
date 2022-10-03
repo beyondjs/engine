@@ -1,10 +1,10 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ExtendedCompilers = (require('./compilers'));
 
 /**
  * The compiled files from the compilers of the processors being extended
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'processor.packager.compiler.extended';
     }

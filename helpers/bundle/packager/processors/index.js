@@ -1,9 +1,9 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
  * The processors of a packager
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'bundler.processors';
     }

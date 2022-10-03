@@ -1,4 +1,5 @@
-const {crc32, equal} = global.utils;
+const crc32 = require('beyond/utils/crc32');
+const equal = require('beyond/utils/equal');
 
 module.exports = class {
     #dependencies;

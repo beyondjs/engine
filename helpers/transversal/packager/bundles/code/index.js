@@ -1,7 +1,7 @@
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const header = require('./header');
-const DynamicProcessor = global.utils.DynamicProcessor();
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'transversal.packager.packagers.code';
     }
@@ -141,6 +141,6 @@ module.exports = class extends DynamicProcessor {
             count++;
         });
 
-        done({count, errors, code: sourcemap.code, map: sourcemap.map})
+        done({count, errors, code: sourcemap.code, map: sourcemap.map});
     }
 }

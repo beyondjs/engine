@@ -1,4 +1,5 @@
-const {ipc, FinderCollection} = global.utils;
+const ipc = require('beyond/utils/ipc');
+const {FinderCollection} = require('beyond/utils/finder');
 const Source = require('./source');
 
 module.exports = class extends FinderCollection {

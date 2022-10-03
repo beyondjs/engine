@@ -1,7 +1,7 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
-const {ipc} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const ipc = require('beyond/utils/ipc');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'bundler.bundle.packager.code';
     }

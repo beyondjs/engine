@@ -1,7 +1,8 @@
+const {header} = require('beyond/utils/code');
+
 module.exports = async function (im, sourcemap) {
     const {id, url, hash, code, map} = im;
 
-    const {header} = global.utils.code;
     sourcemap.concat(header(`INTERNAL MODULE: ${id}`));
 
     const creator = 'creator: function (require, exports) {';

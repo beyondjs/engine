@@ -1,10 +1,11 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {header} = require('beyond/utils/code');
 
 /**
  * Processes the start code required by the bundles,
  * for example, the bundle "page" which must process all the routes of all modules of an application
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'application.start.bundles';
     }
@@ -29,7 +30,7 @@ module.exports = class extends DynamicProcessor {
             if (!platforms.webAndMobileAndSSR.includes(platform) && ['widget'].includes(name)) continue;
 
             if (!child.code) continue;
-            code += global.utils.code.header(`BUNDLE: ${name.toUpperCase()}`);
+            code += header(`BUNDLE: ${name.toUpperCase()}`);
             code += child.code + '\n';
         }
 

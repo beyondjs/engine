@@ -1,4 +1,4 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const babel = require('@babel/core');
 
 /**
@@ -7,7 +7,7 @@ const babel = require('@babel/core');
  * The imports of the bundle (configured in the property .imports in the module.json).
  * Only for backward compatibility required by the dashboard.
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'bundler.bundle.dependencies.deprecated-imports';
     }

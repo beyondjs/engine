@@ -1,7 +1,8 @@
-const {fs, crc32} = global.utils;
-const DynamicProcessor = global.utils.DynamicProcessor();
+const {fs} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const crc32 = require('beyond/utils/crc32');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'processor.sources.options';
     }

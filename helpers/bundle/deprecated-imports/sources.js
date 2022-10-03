@@ -1,4 +1,4 @@
-const {FinderCollection} = global.utils;
+const {FinderCollection} = require('beyond/utils/finder');
 
 /**
  * Just for backward compatibility! This class is deprecated!

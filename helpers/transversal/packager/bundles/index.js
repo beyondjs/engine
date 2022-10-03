@@ -1,10 +1,10 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
  * All the packagers of the modules and libraries of the application for the distribution and language
  * of the transversal code packager
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'bundler.transversal.packagers';
     }

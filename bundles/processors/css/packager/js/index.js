@@ -1,3 +1,5 @@
+const {header} = require('beyond/utils/code');
+
 module.exports = class extends global.ProcessorCode {
     get dp() {
         return 'css.code';
@@ -42,7 +44,7 @@ module.exports = class extends global.ProcessorCode {
             const {styles, errors} = compressed;
             if (errors.length) return done({errors, warnings});
 
-            code += global.utils.code.header(`${name.toUpperCase()} STYLES`);
+            code += header(`${name.toUpperCase()} STYLES`);
             code += `const legacyStyles = beyondLegacyStyles.register('${specs.bundle.specifier}', '${styles}');\n`;
 
             // Insert the styles in the DOM if configured

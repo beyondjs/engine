@@ -1,5 +1,5 @@
 const {platforms} = global;
-const {header} = global.utils.code;
+const {header} = require('beyond/utils/code');
 
 /**
  * Process the bundle code

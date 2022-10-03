@@ -1,7 +1,8 @@
-const {equal, crc32} = global.utils;
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const crc32 = require('beyond/utils/crc32');
+const equal = require('beyond/utils/equal');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'bundler.processors.hashes.dependencies';
     }

@@ -1,7 +1,7 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
-const {equal} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const equal = require('beyond/utils/equal');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'bundles.config.bundle';
     }

@@ -1,5 +1,5 @@
-const {ipc} = global.utils;
-const {ConfigurableFinder} = global.utils;
+const ipc = require('beyond/utils/ipc');
+const {ConfigurableFinder} = require('beyond/utils/finder');
 
 module.exports = class extends ConfigurableFinder {
     #config;

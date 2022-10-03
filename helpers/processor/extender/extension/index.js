@@ -1,11 +1,11 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
  * The files of an extension.
  * Example: the "svelte" processor extends the "ts" processor.
  * This object would have the "ts" preprocessed files of the "svelte" files.
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'processor.extender.extension.sources';
     }

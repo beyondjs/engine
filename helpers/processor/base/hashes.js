@@ -1,5 +1,6 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
-const {crc32, equal} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const crc32 = require('beyond/utils/crc32');
+const equal = require('beyond/utils/equal');
 
 /**
  * The hashes of the processor are the result of including the hash of the dependencies
@@ -9,7 +10,7 @@ const {crc32, equal} = global.utils;
  * By instance, the "ts" processor requires the declarations of the dependencies, and the "sass" processor
  * requires the source files of the dependencies.
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'processor.hashes';
     }

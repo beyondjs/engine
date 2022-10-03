@@ -1,7 +1,8 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
-const {crc32, equal} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const crc32 = require('beyond/utils/crc32');
+const equal = require('beyond/utils/equal');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'bundler.bundle.dependencies.deprecated-imports.hash';
     }

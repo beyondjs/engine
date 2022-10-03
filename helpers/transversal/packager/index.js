@@ -1,9 +1,9 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
  * Transversal bundler abstract class
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'transversal.packager';
     }

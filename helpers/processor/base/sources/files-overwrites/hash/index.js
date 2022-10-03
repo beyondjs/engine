@@ -1,10 +1,11 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
-const {crc32, equal} = global.utils;
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const crc32 = require('beyond/utils/crc32');
+const equal = require('beyond/utils/equal');
 
 /**
  * Hash of a collection of sources. It is used by files and overwrites
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'processor.sources.hash';
     }

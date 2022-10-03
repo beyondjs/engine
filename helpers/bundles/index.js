@@ -1,10 +1,10 @@
-const {ipc} = global.utils;
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const ipc = require('beyond/utils/ipc');
 
 /**
  * Bundles collection used by application module (AM) and application library (AL)
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'bundles';
     }

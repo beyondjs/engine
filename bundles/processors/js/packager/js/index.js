@@ -1,9 +1,10 @@
+const {header} = require('beyond/utils/code');
+
 module.exports = class extends global.ProcessorCode {
     _build() {
         const {files} = this;
         const sourcemap = new global.SourceMap();
 
-        const {header} = global.utils.code;
         sourcemap.concat(header('JS PROCESSOR'));
 
         files.forEach(source => {

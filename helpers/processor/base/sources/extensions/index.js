@@ -1,10 +1,10 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ProcessorsExtensionsHashes = (require('./processors'));
 
 /**
  * The files collected from the extensions of the current processor
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'processor.sources.extensions';
     }
