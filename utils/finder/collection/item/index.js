@@ -1,8 +1,8 @@
 const ItemBase = require('./base');
-const DynamicProcessor = require('../../../dynamic-processor')(ItemBase);
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const fs = require('../../../fs');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(ItemBase) {
     get dp() {
         return 'utils.finder-collection.item';
     }

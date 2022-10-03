@@ -1,3 +1,5 @@
+const PendingPromise = require('beyond/utils/pending-promise');
+
 module.exports = class {
     // The process on which the actions will be executed
     #process;
@@ -31,7 +33,7 @@ module.exports = class {
         }
 
         const id = ++this.#id;
-        const promise = Promise.pending();
+        const promise = new PendingPromise();
         promise.value.id = id;
 
         const rq = {

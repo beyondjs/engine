@@ -1,6 +1,7 @@
 const sqlite = require('sqlite3');
 const {fs} = global.utils;
 const {promisify} = require('util');
+const PendingPromise = require('beyond/utils/pending-promise');
 
 module.exports = new class {
     #db;
@@ -24,7 +25,7 @@ module.exports = new class {
 
     ready = async () => {
         if (this.#ready) return this.#ready.value;
-        this.#ready = Promise.pending();
+        this.#ready = new PendingPromise();
 
         const name = 'preprocessors.db';
         const dirname = require('path').join(process.cwd(), '.beyond/cache');

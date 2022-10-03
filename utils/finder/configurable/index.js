@@ -1,8 +1,9 @@
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const equal = require('beyond/utils/equal');
 const Files = require('../files');
-const DynamicProcessor = require('../../dynamic-processor')(Files);
 const Finder = (require('../finder'));
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Files) {
     get dp() {
         return 'utils.configurable-finder';
     }
@@ -59,7 +60,6 @@ module.exports = class extends DynamicProcessor {
         if (this.destroyed) throw new Error('Configurable finder is destroyed');
         if (!path && specs) throw new Error('Invalid parameters');
 
-        const {equal} = global.utils;
         const config = {path: path, specs: specs};
         if (equal(this.#previous, config)) return;
         this.#previous = config;

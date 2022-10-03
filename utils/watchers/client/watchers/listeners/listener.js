@@ -1,4 +1,5 @@
-const {ipc} = global.utils;
+const ipc = require('beyond/utils/ipc');
+const PendingPromise = require('beyond/utils/pending-promise');
 const {EventEmitter} = require('events');
 
 module.exports = class extends EventEmitter {
@@ -35,7 +36,7 @@ module.exports = class extends EventEmitter {
         const watcher = this.#watcher;
 
         if (promises.start) return await promises.start.value;
-        promises.start = Promise.pending();
+        promises.start = new PendingPromise();
 
         await watcher.start();
         if (!watcher.id) {
@@ -71,7 +72,7 @@ module.exports = class extends EventEmitter {
         if (promises.stop) await promises.stop.value;
 
         if (promises.stop) return await promises.stop.value;
-        promises.stop = Promise.pending();
+        promises.stop = new PendingPromise();
 
         if (!watcher.id) throw new Error('Watcher not started');
 

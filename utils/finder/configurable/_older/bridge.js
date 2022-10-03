@@ -1,11 +1,11 @@
 const Files = require('../files');
-const DynamicProcessor = require('../../dynamic-processor')(Files);
 const Finder = (require('../finder'));
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
  * Bridge to the finder instance
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Files) {
     get dp() {
         return 'utils.configurable-finder';
     }

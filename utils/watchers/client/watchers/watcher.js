@@ -1,4 +1,5 @@
-const {ipc} = global.utils;
+const PendingPromise = require('beyond/utils/pending-promise');
+const ipc = require('beyond/utils/ipc');
 
 module.exports = class {
     #id;
@@ -38,7 +39,7 @@ module.exports = class {
 
         const promises = this.#promises;
         if (promises.start) return await promises.start.value;
-        const promise = Promise.pending();
+        const promise = new PendingPromise();
         promises.start = promise;
 
         if (promises.stop) await promises.stop.value;
@@ -67,7 +68,7 @@ module.exports = class {
         if (promises.start) await promises.start.value;
 
         if (promises.stop) return await promises.stop.value;
-        promises.stop = Promise.pending();
+        promises.stop = new PendingPromise();
 
         const error = new Error('Error stopping watcher');
         try {

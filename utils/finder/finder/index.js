@@ -1,6 +1,7 @@
-const DynamicProcessor = require('../../dynamic-processor')();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const WatchersService = require('beyond/utils/watchers/service');
 
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'utils.finder';
     }
@@ -85,7 +86,7 @@ module.exports = class extends DynamicProcessor {
      */
     constructor(path, specs, watcher) {
         super();
-        if (watcher && !(watcher instanceof global.utils.watchers.BackgroundWatcher)) {
+        if (watcher && !(watcher instanceof WatchersService)) {
             throw new Error('watcher parameter is not a valid background watcher');
         }
 

@@ -1,4 +1,5 @@
 const {EventEmitter} = require('events');
+const PendingPromise = require('beyond/utils/pending-promise');
 
 const Nothing = class {
 };
@@ -70,11 +71,11 @@ module.exports = (Base = Nothing) => class extends Base {
     }
 
     // Is a property that is defined only when processing and before initialised
-    #ready = Promise.pending();
+    #ready = new PendingPromise();
     get ready() {
         if (this.#processed || this.#destroyed) return Promise.resolve();
 
-        this.#ready = this.#ready || Promise.pending();
+        this.#ready = this.#ready || new PendingPromise();
 
         if (!this.#initialising && !this.#initialised) {
             // Initialization triggers processing, and promise resolution

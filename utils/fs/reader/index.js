@@ -1,7 +1,7 @@
+const {fs} = global.utils;
+
 module.exports = function (root, file) {
     'use strict';
-
-    const fs = global.utils.fs;
 
     file = require('path').join(root, file);
 

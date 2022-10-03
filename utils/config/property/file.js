@@ -1,8 +1,10 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const fs = (require('../../fs'));
 const chokidar = require('chokidar');
 
-module.exports = class extends DynamicProcessor {
+console.log('eliminar fs');
+
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'utils.config.property.file';
     }
