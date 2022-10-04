@@ -8,10 +8,4 @@ const args = (() => {
     return args;
 })();
 
-const inspect = (() => {
-    if (!args.has('workspace')) return;
-    const workspace = parseInt(args.get('workspace'));
-    return Number.isInteger(workspace) ? workspace : void 0;
-})();
-
-new (require('beyond'))({inspect});
+new (require('beyond'))(args);

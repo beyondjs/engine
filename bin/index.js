@@ -1,30 +1,9 @@
 #!/usr/bin/env node
-require('colors');
-const ports = require('beyond/utils/ports');
 
 module.exports = new class {
     #start(argv) {
-        const done = ({error, params}) => {
-            if (error) {
-                console.log('Cannot run BeyondJS: '.red, error);
-                return;
-            }
-
-            params = params ? params : {};
-            new (require('beyond'))(params);
-        }
-
-        const {workspace} = argv;
-        if (workspace) {
-            ports.check(workspace)
-                .then(ok => ok ?
-                    done({params: {workspace}}) :
-                    done({error: `Workspace port ${workspace} is already in use`}))
-                .catch(exc => done(exc.message));
-        }
-        else {
-            done({});
-        }
+        const {workspace, repository} = argv;
+        new (require('beyond'))(new Map(Object.entries({workspace, repository})));
     }
 
     constructor() {
@@ -33,11 +12,19 @@ module.exports = new class {
         void require('yargs')
             .scriptName('beyond')
             .usage(usage)
-            .command('run [workspace]', 'Welcome to BeyondJS', yargs => {
+            .command('run [workspace] [repository]', 'Execute the BeyondJS packages engine.', yargs => {
                 yargs.positional('workspace', {
                     type: 'number',
                     default: 4000,
-                    describe: 'The port on which the http workspace will work'
+                    optional: true,
+                    describe: 'The inspection port required by the workspace to connect with the engine'
+                })
+                yargs.positional('repository', {
+                    type: 'number',
+                    required: true,
+                    optional: true,
+                    default: 8080,
+                    describe: 'The port on which the packages repository will work'
                 })
             }, this.#start)
             .help()
