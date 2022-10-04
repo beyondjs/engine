@@ -1,7 +1,8 @@
 const sass = require('sass');
 const toHtml = new (require('ansi-to-html'));
+const {ProcessorAnalyzer} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorAnalyzer {
+module.exports = class extends ProcessorAnalyzer {
     get dp() {
         return 'sass.analyzer';
     }

@@ -1,6 +1,7 @@
 const vue = require('vue/compiler-sfc');
+const {ProcessorsExtenderSinglyPreprocessor} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorsExtenderSinglyPreprocessor {
+module.exports = class extends ProcessorsExtenderSinglyPreprocessor {
     async _preprocessSource(source) {
         const filename = source.relative.file;
         const scopeId = filename

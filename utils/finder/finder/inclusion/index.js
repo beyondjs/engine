@@ -1,4 +1,4 @@
-const {fs} = global.utils;
+const fs = require('beyond/utils/fs');
 const Files = require('./files');
 const File = require('../../files/file');
 

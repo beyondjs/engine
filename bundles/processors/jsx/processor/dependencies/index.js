@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorSourcesDependencies {
+const {ProcessorSourcesDependencies} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorSourcesDependencies {
     get dp() {
         return 'jsx.dependencies';
     }

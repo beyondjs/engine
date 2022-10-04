@@ -19,8 +19,7 @@ module.exports = new class {
     }
 
     async #initialise() {
-        const is = global.dashboard ? 'dashboard' : 'main';
-        const name = `${is}-${process.pid}.log`;
+        const name = `dp-${process.pid}.log`;
         const dirname = require('path').join(process.cwd(), '.beyond/dps');
         const store = this.#store = require('path').join(dirname, name);
 

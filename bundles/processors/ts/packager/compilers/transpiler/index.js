@@ -1,7 +1,8 @@
 const ts = require('typescript');
 const Diagnostic = require('../diagnostic');
+const {ProcessorSinglyCompiler} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorSinglyCompiler {
+module.exports = class extends ProcessorSinglyCompiler {
     get dp() {
         return 'ts.compiler.transpiler';
     }

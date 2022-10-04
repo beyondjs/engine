@@ -1,4 +1,6 @@
-module.exports = class extends global.TransversalPackager {
+const {TransversalPackager} = require('beyond/bundler-helpers');
+
+module.exports = class extends TransversalPackager {
     constructor(...params) {
         super(...params);
 

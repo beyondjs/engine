@@ -1,6 +1,7 @@
 const svelte = require('svelte/compiler');
+const {ProcessorsExtenderSinglyPreprocessor} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorsExtenderSinglyPreprocessor {
+module.exports = class extends ProcessorsExtenderSinglyPreprocessor {
     async _preprocessSource(source) {
         try {
             const extensions = new Map();

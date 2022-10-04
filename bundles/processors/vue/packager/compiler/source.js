@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorCompiledSource {
+const {ProcessorCompiledSource} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorCompiledSource {
     #scopeId;
     get scopeId() {
         return this.#scopeId;

@@ -1,6 +1,7 @@
 const crc32 = require('beyond/utils/crc32');
+const {ProcessorCode} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorCode {
+module.exports = class extends ProcessorCode {
     get dp() {
         return 'txt.code.js';
     }

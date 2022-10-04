@@ -1,6 +1,7 @@
 const vue = require('vue/compiler-sfc');
+const {ProcessorSinglyCompiler} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorSinglyCompiler {
+module.exports = class extends ProcessorSinglyCompiler {
     #CompiledSource = require('./source');
     get CompiledSource() {
         return this.#CompiledSource;

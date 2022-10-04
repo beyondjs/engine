@@ -1,6 +1,7 @@
 const svelte = require('svelte/compiler');
+const {ProcessorSinglyCompiler} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorSinglyCompiler {
+module.exports = class extends ProcessorSinglyCompiler {
     get dp() {
         return 'svelte.compiler';
     }

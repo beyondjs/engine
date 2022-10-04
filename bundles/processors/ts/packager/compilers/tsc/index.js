@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorCompiler {
+const {ProcessorCompiler} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorCompiler {
     get dp() {
         return 'ts.compiler';
     }

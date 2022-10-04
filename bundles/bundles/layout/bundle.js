@@ -1,5 +1,7 @@
-module.exports = class extends global.Bundle {
-    // "id" is reserved by the global.Bundle class
+const {Bundle} = require('beyond/bundler-helpers');
+
+module.exports = class extends Bundle {
+    // "id" is reserved by the Bundle superclass
     #layoutId;
     get layoutId() {
         return this.#layoutId;

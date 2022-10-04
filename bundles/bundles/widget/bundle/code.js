@@ -1,4 +1,6 @@
-module.exports = class extends global.BundleJsCode {
+const {BundleJsCode} = require('beyond/bundler-helpers');
+
+module.exports = class extends BundleJsCode {
     constructor(...params) {
         super(...params);
     }

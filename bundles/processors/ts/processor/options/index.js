@@ -1,6 +1,7 @@
 const ts = require('typescript');
+const {ProcessorOptions} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorOptions {
+module.exports = class extends ProcessorOptions {
     #errors = [];
     get errors() {
         return this.#errors;

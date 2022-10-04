@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const equal = require('beyond/utils/equal');
+const {platforms} = require('beyond/cspecs');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -15,7 +16,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     static dependencies(distribution) {
-        if (global.dashboard || !global.platforms.webAndMobile.includes(distribution.platform)) return [];
+        if (!platforms.webAndMobile.includes(distribution.platform)) return [];
         return ['@beyond-js/widgets/render'];
     }
 

@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorCode {
+const {ProcessorCode, SourceMap} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorCode {
     get dp() {
         return 'sass.code.css';
     }
@@ -16,7 +18,7 @@ module.exports = class extends global.ProcessorCode {
         void (diagnostics);
 
         if (this.#sourcemap !== void 0) return {sourcemap: this.#sourcemap};
-        const sourcemap = this.#sourcemap = new global.SourceMap();
+        const sourcemap = this.#sourcemap = new SourceMap();
 
         this.compiler.files.forEach(({code, url, map}) => sourcemap.concat(code, url, map));
         return {code: sourcemap};

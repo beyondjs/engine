@@ -1,6 +1,7 @@
+const {ProcessorSources} = require('beyond/bundler-helpers');
 const instances = new Map();
 
-module.exports = class extends global.ProcessorSources {
+module.exports = class extends ProcessorSources {
     #functions;
     get functions() {
         return this.#functions;

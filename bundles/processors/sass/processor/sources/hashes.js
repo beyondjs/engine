@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorSourcesHashes {
+const {ProcessorSourcesHashes} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorSourcesHashes {
     get dp() {
         return 'sass.processor.sources.hashes';
     }

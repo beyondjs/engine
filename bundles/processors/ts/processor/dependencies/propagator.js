@@ -1,4 +1,6 @@
-module.exports = class extends global.DependenciesPropagator {
+const {DependenciesPropagator} = require('beyond/bundler-helpers');
+
+module.exports = class extends DependenciesPropagator {
     #listeners = new Map();
 
     constructor(emitter) {

@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorDeclaration {
+const {ProcessorDeclaration} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorDeclaration {
     get dp() {
         return 'ts.declaration';
     }

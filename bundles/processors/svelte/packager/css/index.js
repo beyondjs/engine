@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorCode {
+const {ProcessorCode, SourceMap} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorCode {
     get dp() {
         return 'svelte.code.css';
     }
@@ -7,7 +9,7 @@ module.exports = class extends global.ProcessorCode {
         void (hmr);
         void (diagnostics);
 
-        const sourcemap = new global.SourceMap();
+        const sourcemap = new SourceMap();
 
         this.compiler.files.forEach(compiled => {
             if (!compiled.css) return;

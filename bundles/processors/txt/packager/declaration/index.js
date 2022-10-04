@@ -1,6 +1,7 @@
 const ts = require('typescript');
+const {ProcessorDeclaration} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorDeclaration {
+module.exports = class extends ProcessorDeclaration {
     get dp() {
         return 'txt.declaration';
     }

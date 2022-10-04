@@ -1,3 +1,5 @@
+const {Transversal} = require('beyond/bundler-helpers');
+
 module.exports = {
     name: 'start',
     extname: ['.js', '.css'],
@@ -7,7 +9,7 @@ module.exports = {
     },
     transversal: {
         Packager: require('./packager'),
-        Transversal: global.Transversal,
+        Transversal,
         JsPackager: require('./js')
     }
 };

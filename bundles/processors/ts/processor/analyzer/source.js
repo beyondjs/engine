@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorAnalyzerSource {
+const {ProcessorAnalyzerSource} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorAnalyzerSource {
     #bridge;
     get bridge() {
         return this.#bridge;

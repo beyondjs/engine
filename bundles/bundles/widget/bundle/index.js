@@ -1,4 +1,6 @@
-module.exports = class extends global.Bundle {
+const {Bundle} = require('beyond/bundler-helpers');
+
+module.exports = class extends Bundle {
     #properties;
     get properties() {
         return this.#properties;

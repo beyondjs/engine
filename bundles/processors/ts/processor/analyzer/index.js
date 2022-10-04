@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorSinglyAnalyzer {
+const {ProcessorSinglyAnalyzer} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorSinglyAnalyzer {
     // The information of the classes and methods exposed by the bridges required by the server to verify the requests
     #bridges = new Map();
     get bridges() {

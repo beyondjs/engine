@@ -1,6 +1,7 @@
 const {header} = require('beyond/utils/code');
+const {ProcessorCode} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorCode {
+module.exports = class extends ProcessorCode {
     get dp() {
         return 'css.code';
     }

@@ -1,4 +1,6 @@
-module.exports = class extends global.TransversalCodePackager {
+const {TransversalCodePackager} = require('beyond/bundler-helpers');
+
+module.exports = class extends TransversalCodePackager {
     /**
      * Start transversal code packager constructor
      *

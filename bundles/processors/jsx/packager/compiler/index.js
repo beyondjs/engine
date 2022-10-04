@@ -1,9 +1,10 @@
 const {header} = require('beyond/utils/code');
+const {ProcessorCompiler, SourceMap} = require('beyond/bundler-helpers');
 
 /**
  * The jsx compiler
  */
-module.exports = class extends global.ProcessorCompiler {
+module.exports = class extends ProcessorCompiler {
     get dp() {
         return 'jsx.compiler';
     }
@@ -16,7 +17,7 @@ module.exports = class extends global.ProcessorCompiler {
     _compile(updated, diagnostics) {
         const files = this.children.get('files').child;
 
-        const sourcemap = new global.SourceMap();
+        const sourcemap = new SourceMap();
         files.forEach(source => {
             const {file} = source.relative;
             sourcemap.concat(header(file));

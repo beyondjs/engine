@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorAnalyzerDependencies {
+const {ProcessorAnalyzerDependencies} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorAnalyzerDependencies {
     get dp() {
         return 'ts.dependencies';
     }

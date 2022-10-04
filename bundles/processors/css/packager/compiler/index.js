@@ -1,7 +1,9 @@
+const {ProcessorCompiler} = require('beyond/bundler-helpers');
+
 /**
  * The BeyondJS compiler for less and scss
  */
-module.exports = class extends global.ProcessorCompiler {
+module.exports = class extends ProcessorCompiler {
     get dp() {
         return 'css.compiler';
     }

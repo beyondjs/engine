@@ -1,6 +1,7 @@
 const mformat = require('beyond/mformat');
+const {ProcessorSinglyCode} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorSinglyCode {
+module.exports = class extends ProcessorSinglyCode {
     get dp() {
         return 'svelte.code.js';
     }

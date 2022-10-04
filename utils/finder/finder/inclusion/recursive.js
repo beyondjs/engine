@@ -1,4 +1,4 @@
-const {fs} = global.utils;
+const fs = require('beyond/utils/fs');
 const {relative} = require('path');
 
 /**

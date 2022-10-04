@@ -65,6 +65,7 @@
     "./mformat": "./utils/mformat/index.js",
     "./utils/ports": "./utils/ports/index.js",
     "./utils/finder": "./utils/finder/index.js",
+    "./utils/fs": "./utils/fs/index.js",
     "./utils/dynamic-processor": "./utils/dynamic-processor/index.js",
     "./utils/config": "./utils/config/index.js",
     "./utils/code": "./utils/code/index.js",
@@ -75,7 +76,8 @@
     "./utils/equal": "./utils/equal/index.js",
     "./utils/md5": "./utils/md5/index.js",
     "./utils/crc32": "./utils/crc32/index.js",
-    "./helpers": "./helpers/index.js"
+    "./bundler-helpers": "./bundler-helpers/index.js",
+    "./cspecs": "./lib/core/packages/cspecs/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",

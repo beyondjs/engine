@@ -1,10 +1,12 @@
-module.exports = class extends global.Bundle {
+const {Bundle} = require('beyond/bundler-helpers');
+
+module.exports = class extends Bundle {
     #route;
     get route() {
         return this.#route;
     }
 
-    // "is" is reserved by the global.Bundle class
+    // "is" is reserved by the Bundle superclass
     #pageIs;
     get pageIs() {
         return this.#pageIs;

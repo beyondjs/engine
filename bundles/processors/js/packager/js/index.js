@@ -1,9 +1,10 @@
 const {header} = require('beyond/utils/code');
+const {ProcessorCode, SourceMap} = require('beyond/bundler-helpers');
 
-module.exports = class extends global.ProcessorCode {
+module.exports = class extends ProcessorCode {
     _build() {
         const {files} = this;
-        const sourcemap = new global.SourceMap();
+        const sourcemap = new SourceMap();
 
         sourcemap.concat(header('JS PROCESSOR'));
 

@@ -1,4 +1,6 @@
-module.exports = class extends global.Dependency {
+const {Dependency} = require('beyond/bundler-helpers');
+
+module.exports = class extends Dependency {
     get dp() {
         return 'sass.dependency';
     }

@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {header} = require('beyond/utils/code');
+const {platforms} = require('beyond/cspecs');
 
 /**
  * Processes the start code required by the bundles,
@@ -20,7 +21,6 @@ module.exports = class extends DynamicProcessor() {
         const application = this.#application;
         const distribution = this.#distribution;
         const {platform} = distribution;
-        const {platforms} = global;
 
         let code = '';
         for (const [name, {child}] of this.children) {

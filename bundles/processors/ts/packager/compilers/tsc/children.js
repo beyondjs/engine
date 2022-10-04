@@ -1,4 +1,6 @@
-module.exports = class extends global.ProcessorCompilerChildren {
+const {ProcessorCompilerChildren} = require('beyond/bundler-helpers');
+
+module.exports = class extends ProcessorCompilerChildren {
     dispose() {
         const {processor} = this.compiler.packager;
         const {dependencies} = processor;
