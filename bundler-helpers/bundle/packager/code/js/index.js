@@ -1,3 +1,5 @@
+const {bundles} = require('beyond/bundlers');
+
 module.exports = class extends require('../base') {
     get dp() {
         return 'bundler.bundle.packager.code.js';
@@ -50,7 +52,7 @@ module.exports = class extends require('../base') {
         }
 
         const {packager} = this;
-        const transversal = !!global.bundles.get(packager.bundle.type).transversal;
+        const transversal = !!bundles.get(packager.bundle.type).transversal;
 
         return require('./package')(this, hmr, transversal);
     }

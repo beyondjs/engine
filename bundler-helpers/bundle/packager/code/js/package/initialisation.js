@@ -1,3 +1,5 @@
+const {bundles} = require('beyond/bundlers');
+
 /**
  * Package initialisation
  *
@@ -7,7 +9,7 @@
  */
 module.exports = function (packager, hmr) {
     const {bundle} = packager;
-    const transversal = !!global.bundles.get(bundle.type).transversal;
+    const transversal = !!bundles.get(bundle.type).transversal;
 
     if (!hmr && transversal) {
         const imports = [...packager.dependencies.code.keys()]

@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
+const {bundles} = require('beyond/bundlers');
 
 /**
  * Bundles collection used by application module (AM) and application library (AL)
@@ -44,7 +45,7 @@ module.exports = class extends DynamicProcessor(Map) {
         // Consider that it is multiplied by the number of distributions.
         this.setMaxListeners(100);
 
-        const children = [['global.bundles', {child: global.bundles}]];
+        const children = [['bundles', {child: bundles}]];
 
         // If the container is an application.library, bundles are actually supported only if they are legacy
         // (not imported projects)
@@ -79,7 +80,7 @@ module.exports = class extends DynamicProcessor(Map) {
         config?.forEach((config, name) => {
             let bundle = this.has(name) && this.get(name);
             if (!bundle) {
-                const meta = global.bundles.get(name);
+                const meta = bundles.get(name);
                 const Bundle = meta.bundle?.Bundle ? meta.bundle.Bundle : require('../bundle');
                 bundle = new Bundle(this.#container, name, config);
                 changed = true;

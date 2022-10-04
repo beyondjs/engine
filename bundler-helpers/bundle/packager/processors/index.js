@@ -1,4 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {processors} = require('beyond/bundlers');
+const {ProcessorBase} = require('beyond/bundler-helpers');
 
 /**
  * The processors of a packager
@@ -47,7 +49,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         this.#packager = packager;
         const {bundle} = packager;
-        this.#supported = global.bundles.get(bundle.type).bundle.processors;
+        this.#supported = bundlers.get(bundle.type).bundle.processors;
         if (!(this.#supported instanceof Array)) {
             throw new Error(`Supported processors property is not defined in "${bundle.type}" bundle`);
         }
@@ -57,7 +59,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         super.setup(new Map([
             ['bundle', {child: bundle}],
-            ['global.processors', {child: global.processors}]
+            ['processors', {child: processors}]
         ]));
     }
 
@@ -75,7 +77,7 @@ module.exports = class extends DynamicProcessor(Map) {
         for (const [name, config] of processors) {
             if (reserved.includes(name)) continue;
 
-            if (this.#supported.includes(name) && !global.processors.has(name)) {
+            if (this.#supported.includes(name) && !processors.has(name)) {
                 this.#errors.push(`Processor "${name}" is not registered`);
                 continue;
             }
@@ -89,8 +91,8 @@ module.exports = class extends DynamicProcessor(Map) {
             const packager = this.#packager;
             const specs = {watcher, bundle, packager, distribution, language, application};
 
-            const meta = global.processors.get(name);
-            const Processor = meta.Processor ? meta.Processor : global.ProcessorBase;
+            const meta = processors.get(name);
+            const Processor = meta.Processor ? meta.Processor : ProcessorBase;
             const processor = this.has(name) ? this.get(name) : (changed = true) && new Processor(name, specs);
 
             // Allow the processor to modify the config object without affecting the original configuration

@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const bundlers = require('beyond/bundlers');
 
 /**
  * Transversal bundler abstract class
@@ -80,7 +81,7 @@ module.exports = class extends DynamicProcessor() {
         this.#hash = bundles.hash;
         this.#dependencies = new (require('./dependencies'))(this, bundles);
 
-        const meta = global.bundles.get(transversal.name);
+        const meta = bundlers.bundles.get(transversal.name);
         let Js = meta.transversal.JsPackager;
         Js = Js ? Js : require('./code');
         this.#js = new Js(this, bundles);

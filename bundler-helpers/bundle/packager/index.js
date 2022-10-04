@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {bundles} = require('beyond/bundlers');
 
 /**
  * Bundler abstract class
@@ -95,7 +96,7 @@ module.exports = class extends DynamicProcessor() {
         this.#hash = new (require('./hash'))(this);
         this.#consumers = new (require('./consumers'))(this);
 
-        const meta = global.bundles.get(bundle.type);
+        const meta = bundles.get(bundle.type);
         if (!(meta.extname instanceof Array)) {
             throw new Error(`Property extname in bundle "${bundle.type}" specification must be an array`);
         }

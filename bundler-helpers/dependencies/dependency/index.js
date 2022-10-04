@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {bundles} = require('beyond/bundlers');
 
 /**
  * The Dependency object required by:
@@ -83,7 +84,7 @@ module.exports = class extends DynamicProcessor() {
         if (this.external) return 'external';
 
         const {bundle} = this.seeker;
-        const transversal = !!global.bundles.get(bundle.type).transversal;
+        const transversal = !!bundles.get(bundle.type).transversal;
         return transversal ? 'transversal' : 'bundle';
     }
 

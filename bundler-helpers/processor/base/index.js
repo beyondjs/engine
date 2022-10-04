@@ -1,3 +1,5 @@
+const {processors} = require('beyond/bundlers');
+
 /**
  * Processor's base class
  */
@@ -127,7 +129,7 @@ module.exports = class {
             throw new Error('Invalid "specs" parameter');
         }
 
-        const meta = this.#meta = global.processors.get(name);
+        const meta = this.#meta = processors.get(name);
         if (!meta?.sources) {
             throw new Error(`Processor "${name}", sources specification is invalid`);
         }

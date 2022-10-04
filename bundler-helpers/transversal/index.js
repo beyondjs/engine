@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {bundles} = require('beyond/bundlers');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -51,7 +52,7 @@ module.exports = class extends DynamicProcessor() {
      */
     constructor(application, name, config) {
         if (!application || !name) throw new Error('Invalid parameters');
-        if (!global.bundles.has(name) || !global.bundles.get(name).transversal) {
+        if (!bundles.has(name) || !bundles.get(name).transversal) {
             throw new Error(`Bundle "${name}" is not registered`);
         }
 
@@ -60,7 +61,7 @@ module.exports = class extends DynamicProcessor() {
         this.#name = name;
         this.#packagers = new (require('./packagers'))(this);
 
-        this.#multilanguage = !!global.bundles.get(name).multilanguage;
+        this.#multilanguage = !!bundles.get(name).multilanguage;
 
         super.setup(new Map([['config', {child: config}]]));
     }

@@ -77,7 +77,8 @@
     "./utils/md5": "./utils/md5/index.js",
     "./utils/crc32": "./utils/crc32/index.js",
     "./bundler-helpers": "./bundler-helpers/index.js",
-    "./cspecs": "./lib/core/packages/cspecs/index.js"
+    "./cspecs": "./lib/core/packages/cspecs/index.js",
+    "./bundlers": "./lib/core/bundlers/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",

@@ -1,5 +1,7 @@
+const {bundles} = require('beyond/bundlers');
+
 module.exports = function (bundle) {
-    const transversal = global.bundles.get(bundle.type).Transversal;
+    const transversal = bundles.get(bundle.type).Transversal;
     if (transversal) return '';
 
     const excludes = [

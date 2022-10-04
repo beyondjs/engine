@@ -1,6 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const equal = require('beyond/utils/equal');
 const cspecs = require('beyond/cspecs');
+const {bundles} = require('beyond/bundlers');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -157,12 +158,10 @@ module.exports = class extends DynamicProcessor() {
      */
     constructor(module, type, config) {
         if (!module || !type) throw new Error('Invalid parameters');
-        if (!global.bundles.has(type)) {
-            throw new Error(`Bundle "${type}" is not registered`);
-        }
+        if (!bundles.has(type)) throw new Error(`Bundle "${type}" is not registered`);
 
         super();
-        this.#meta = global.bundles.get(type);
+        this.#meta = bundles.get(type);
         this.#module = module;
         this.#type = type;
         this.#packagers = new (require('./packagers'))(this);

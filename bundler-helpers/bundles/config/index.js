@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const equal = require('beyond/utils/equal');
+const {bundles} = require('beyond/bundlers');
 
 /**
  * The bundles of the module or project
@@ -36,7 +37,7 @@ module.exports = class extends DynamicProcessor(Map) {
         super();
 
         this.#container = container;
-        super.setup(new Map([['global.bundles', {child: global.bundles}]]));
+        super.setup(new Map([['bundles', {child: bundles}]]));
     }
 
     _prepared() {
@@ -48,7 +49,7 @@ module.exports = class extends DynamicProcessor(Map) {
         const warnings = [];
         const updated = new Map();
         [...Object.entries(this.#config)].forEach(([name, config]) => {
-            if (!global.bundles.has(name)) {
+            if (!bundles.has(name)) {
                 warnings.push(`Bundle "${name}" not found`);
                 return;
             }

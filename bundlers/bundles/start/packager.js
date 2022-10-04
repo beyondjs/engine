@@ -1,4 +1,5 @@
 const {TransversalPackager} = require('beyond/bundler-helpers');
+const {bundles} = require('beyond/bundlers');
 
 module.exports = class extends TransversalPackager {
     constructor(...params) {
@@ -10,7 +11,7 @@ module.exports = class extends TransversalPackager {
             dependencies.add('@beyond-js/kernel/routing');
         }
 
-        for (let bundle of global.bundles.values()) {
+        for (let bundle of bundles.values()) {
             if (!bundle.start?.Start) continue;
             if (typeof bundle.start.Start.dependencies !== 'function') continue;
 
