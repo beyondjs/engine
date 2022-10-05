@@ -1,6 +1,6 @@
 const ConfigurableFinder = require('../configurable');
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const WatchersService = require('beyond/utils/watchers/service');
+const WatchersClient = require('beyond/utils/watchers/client');
 
 class FinderCollection extends DynamicProcessor(Map) {
     get dp() {
@@ -59,8 +59,8 @@ class FinderCollection extends DynamicProcessor(Map) {
         this.#Item = Item;
 
         if (!Item) throw new Error('Parameter Item is required');
-        if (watcher && !(watcher instanceof WatchersService)) {
-            throw new Error('watcher parameter is not a valid background watcher');
+        if (watcher && !(watcher instanceof WatchersClient)) {
+            throw new Error('Parameter watcher is not a valid background watcher');
         }
 
         this.#finder = new ConfigurableFinder(watcher);
