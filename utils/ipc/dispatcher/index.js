@@ -47,7 +47,7 @@ module.exports = class {
         this.#pendings.set(id, promise);
         this.#process.send(rq);
 
-        return promise.value;
+        return promise;
     }
 
     /**

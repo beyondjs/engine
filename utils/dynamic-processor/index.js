@@ -77,11 +77,9 @@ module.exports = (Base = Nothing) => class extends Base {
 
         this.#ready = this.#ready || new PendingPromise();
 
-        if (!this.#initialising && !this.#initialised) {
-            // Initialization triggers processing, and promise resolution
-            this.initialise().catch(exc => console.error(exc.stack));
-        }
-        return this.#ready.value;
+        // Initialization triggers processing, and promise resolution
+        !this.#initialising && !this.#initialised && this.initialise().catch(exc => console.error(exc.stack));
+        return this.#ready;
     }
 
     constructor(...params) {

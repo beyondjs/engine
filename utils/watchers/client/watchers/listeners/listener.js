@@ -35,7 +35,7 @@ module.exports = class extends EventEmitter {
         const promises = this.#promises;
         const watcher = this.#watcher;
 
-        if (promises.start) return await promises.start.value;
+        if (promises.start) return await promises.start;
         promises.start = new PendingPromise();
 
         await watcher.start();
@@ -69,15 +69,15 @@ module.exports = class extends EventEmitter {
         const watcher = this.#watcher;
 
         // If stopping the watcher when it is already starting, wait the start be completed
-        if (promises.stop) await promises.stop.value;
+        if (promises.stop) await promises.stop;
 
-        if (promises.stop) return await promises.stop.value;
+        if (promises.stop) return await promises.stop;
         promises.stop = new PendingPromise();
 
         if (!watcher.id) throw new Error('Watcher not started');
 
         // If stopping the listener when it is already starting, wait the start be completed
-        if (promises.start) await promises.start.value;
+        if (promises.start) await promises.start;
 
         if (!this.#id) throw new Error('Listener not started');
 

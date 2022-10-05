@@ -165,24 +165,26 @@ module.exports = class extends DynamicProcessor {
     }
 
     _process() {
-        const previous = {value: this.#value, errors: this.#errors};
-
-        this.#errors = [];
+        const done = ({value, errors}) => {
+            errors = errors ? errors : [];
+            const changed = !equal({value: this.#value, errors: this.#errors}, {value, errors});
+            this.#value = value;
+            this.#errors = errors;
+            return changed;
+        }
 
         if (['object', 'undefined'].includes(typeof this.#data)) {
-            this.#value = this.#data;
+            return done({value: this.#data});
         }
         else if (typeof this.#data === 'string') {
             const file = this.children.get('file').child;
-            this.#errors = file.errors;
-            this.#value = file.value;
+            const {errors, value} = file;
+            return done({errors, value});
         }
         else {
-            this.#errors.push(`Configuration value is invalid, value type must be an object, ` +
-                `a string or undefined, but it is "${typeof this.#data}"`);
-            this.#value = void 0;
+            const error = `Configuration value is invalid, value type must be an object, ` +
+                `a string or undefined, but it is "${typeof this.#data}"`;
+            return done({errors: [error]});
         }
-
-        return !equal(previous, {value: this.#value, errors: this.#errors});
     }
 }

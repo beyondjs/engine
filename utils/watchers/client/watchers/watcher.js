@@ -38,11 +38,11 @@ module.exports = class {
         if (this.#id) return; // Watcher already started
 
         const promises = this.#promises;
-        if (promises.start) return await promises.start.value;
+        if (promises.start) return await promises.start;
         const promise = new PendingPromise();
         promises.start = promise;
 
-        if (promises.stop) await promises.stop.value;
+        if (promises.stop) await promises.stop;
 
         const error = new Error('Error starting watcher');
         try {
@@ -57,7 +57,7 @@ module.exports = class {
             delete promises.start;
         }
 
-        return await promise.value;
+        return await promise;
     }
 
     async stop() {
@@ -65,9 +65,9 @@ module.exports = class {
 
         // If stopping the watcher when it is already starting, wait the start be completed
         const promises = this.#promises;
-        if (promises.start) await promises.start.value;
+        if (promises.start) await promises.start;
 
-        if (promises.stop) return await promises.stop.value;
+        if (promises.stop) return await promises.stop;
         promises.stop = new PendingPromise();
 
         const error = new Error('Error stopping watcher');

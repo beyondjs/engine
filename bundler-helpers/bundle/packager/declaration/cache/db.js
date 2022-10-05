@@ -24,7 +24,7 @@ module.exports = new class {
     }
 
     ready = async () => {
-        if (this.#ready) return this.#ready.value;
+        if (this.#ready) return this.#ready;
         this.#ready = new PendingPromise();
 
         const name = 'declarations.db';

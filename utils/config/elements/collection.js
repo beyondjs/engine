@@ -5,8 +5,6 @@ module.exports = class extends DynamicProcessor(Map) {
         return 'utils.config.collection';
     }
 
-    #propagator;
-
     get config() {
         return this.children.get('config').child;
     }
@@ -25,11 +23,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     constructor(config) {
         super();
-        this.#propagator = new (require('./propagator'))(this._events);
-
-        const children = new Map();
-        children.set('config', {child: config});
-        super.setup(children);
+        super.setup(new Map([['config', {child: config}]]));
     }
 
     // This method should be overridden to process the configuration, and also can be used
@@ -65,12 +59,6 @@ module.exports = class extends DynamicProcessor(Map) {
             updated.set(path, item);
         }
 
-        // Subscribe modules that are new to the collection
-        this.#propagator.subscribe([...updated].filter(([path]) => !this.has(path)).map(([, item]) => item));
-
-        // Unsubscribe unused modules
-        this.#propagator.unsubscribe([...this].filter(([path]) => !updated.has(path)).map(([, item]) => item));
-
         // Destroy unused items
         this.forEach(item => !updated.has(item.path) && this._deleteItem(item));
 
@@ -81,7 +69,6 @@ module.exports = class extends DynamicProcessor(Map) {
 
     clear() {
         this.forEach(item => item.destroy());
-        this.#propagator.unsubscribe([...this.values()]);
         super.clear();
     }
 
