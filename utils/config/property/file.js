@@ -1,8 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const fs = (require('../../fs'));
+const fs = require('beyond/utils/fs');
 const chokidar = require('chokidar');
-
-console.log('eliminar fs');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
