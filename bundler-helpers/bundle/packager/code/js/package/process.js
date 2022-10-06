@@ -1,6 +1,6 @@
 const {header} = require('beyond/utils/code');
 const {platforms} = require('beyond/cspecs');
-const {SourceMap} = require('beyond/bundler-helpers');
+const SourceMap = require('../../../../../sourcemap');
 
 /**
  * Process the bundle code

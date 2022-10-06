@@ -1,4 +1,4 @@
-const {SourceMap} = require('beyond/bundler-helpers');
+const SourceMap = require('../../../../sourcemap');
 
 module.exports = class extends require('../base') {
     get dp() {

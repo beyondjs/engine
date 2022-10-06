@@ -1,5 +1,6 @@
 const PendingPromise = require('beyond/utils/pending-promise');
 const ipc = require('beyond/utils/ipc');
+const ChainedException = require('./chained-exception');
 
 module.exports = class {
     #id;
@@ -51,7 +52,7 @@ module.exports = class {
             promises.start.resolve(this.#id);
         }
         catch (exc) {
-            promises.start.reject(new global.errors.ChainedException(error, exc));
+            promises.start.reject(new ChainedException(error, exc));
         }
         finally {
             delete promises.start;
@@ -78,7 +79,7 @@ module.exports = class {
             promises.stop.resolve();
         }
         catch (exc) {
-            exc = new global.errors.ChainedException(error, exc);
+            exc = new ChainedException(error, exc);
             promises.stop.reject(exc);
             throw exc;
         }

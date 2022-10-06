@@ -20,6 +20,5 @@ module.exports = function () {
 
         }
     };
-    Object.defineProperty(this, 'ChainedException', {'get': () => ChainedException});
 
 };

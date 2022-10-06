@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {processors} = require('beyond/bundlers');
-const {ProcessorBase} = require('beyond/bundler-helpers');
+const ProcessorBase = require('../../../processor/base');
 
 /**
  * The processors of a packager

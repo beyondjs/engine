@@ -34,7 +34,7 @@ module.exports = class {
 
         const id = ++this.#id;
         const promise = new PendingPromise();
-        promise.value.id = id;
+        promise.id = id;
 
         const rq = {
             type: 'ipc.request',

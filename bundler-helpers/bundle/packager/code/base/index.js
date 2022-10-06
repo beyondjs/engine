@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
-const {SourceMap} = require('beyond/bundler-helpers');
+const SourceMap = require('../../../../sourcemap');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {

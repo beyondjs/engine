@@ -1,7 +1,7 @@
 const {Config} = require('beyond/utils/config');
 const equal = require('beyond/utils/equal');
 const sep = require('path').sep;
-const {BundlesConfig} = require('beyond/bundler-helpers');
+const BundlesConfig = require('../bundles/config');
 
 module.exports = class extends require('./attributes') {
     get is() {
