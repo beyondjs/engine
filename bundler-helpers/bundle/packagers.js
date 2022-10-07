@@ -1,14 +1,13 @@
 const {EventEmitter} = require('events');
+const PackagerBase = require('./packager');
 
 module.exports = class extends EventEmitter {
     #bundle;
     #packagers = new Map();
-    #propagator;
 
     constructor(bundle) {
         super();
         this.#bundle = bundle;
-        this.#propagator = new (require('./propagator'))(this);
     }
 
     get(distribution, language) {
@@ -17,9 +16,8 @@ module.exports = class extends EventEmitter {
         if (this.#packagers.has(key)) return this.#packagers.get(key);
 
         const {meta} = this.#bundle;
-        const Packager = meta.bundle?.Packager ? meta.bundle.Packager : require('./packager');
+        const Packager = meta.bundle?.Packager ? meta.bundle.Packager : PackagerBase;
         const packager = new Packager(this.#bundle, distribution, language);
-        this.#propagator.subscribe(packager);
         this.#packagers.set(key, packager);
         return packager;
     }
@@ -30,10 +28,7 @@ module.exports = class extends EventEmitter {
     }
 
     #clear = () => {
-        this.#packagers.forEach(packager => {
-            this.#propagator.unsubscribe(packager);
-            packager.destroy();
-        });
+        this.#packagers.forEach(packager => packager.destroy());
     }
 
     destroy() {
