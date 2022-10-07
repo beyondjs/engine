@@ -7,13 +7,13 @@ module.exports = class extends DynamicProcessor() {
         return 'bundler.bundle.packager.code';
     }
 
-    get id() {
-        return this.#packager.id;
-    }
-
     #packager;
     get packager() {
         return this.#packager;
+    }
+
+    get id() {
+        return this.#packager.id;
     }
 
     #extname;
