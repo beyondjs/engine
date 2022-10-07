@@ -61,7 +61,8 @@ module.exports = class extends DynamicProcessor(Map) {
         super();
         this.#bundle = bundle;
 
-        const sources = this.#sources = new (require('./sources'))(bundle.watcher);
+        const {watcher} = bundle.module.pkg;
+        const sources = this.#sources = new (require('./sources'))(watcher);
         super.setup(new Map([['sources', {child: sources}]]));
 
         this.#hash = new (require('./hash'))(this);

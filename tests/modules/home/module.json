@@ -1,4 +1,5 @@
 {
   "bundle": "ts",
+  "name": "home",
   "files": "*"
 }

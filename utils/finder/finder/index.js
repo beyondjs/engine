@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const WatchersService = require('beyond/utils/watchers/service');
+const WatchersClient = require('beyond/utils/watchers/client');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -86,8 +86,8 @@ module.exports = class extends DynamicProcessor() {
      */
     constructor(path, specs, watcher) {
         super();
-        if (watcher && !(watcher instanceof WatchersService)) {
-            throw new Error('watcher parameter is not a valid background watcher');
+        if (watcher && !(watcher instanceof WatchersClient)) {
+            throw new Error('Watcher parameter is not a valid client watcher');
         }
 
         specs = require('./parameters.js')(path, specs);

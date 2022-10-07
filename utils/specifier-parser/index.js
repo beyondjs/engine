@@ -14,6 +14,16 @@ module.exports = class {
         return this.#subpath;
     }
 
+    #bundle;
+    get bundle() {
+        return this.#bundle;
+    }
+
+    #language;
+    get language() {
+        return this.#language;
+    }
+
     constructor(specifier) {
         const split = specifier.split('/');
 
@@ -24,6 +34,6 @@ module.exports = class {
 
         this.#pkg = scope ? `${scope}/${name}` : name;
         this.#version = version;
-        this.#subpath = split.join('/');
+        this.#subpath = split.length ? split.join('/') : '.';
     }
 }

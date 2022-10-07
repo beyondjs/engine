@@ -39,16 +39,6 @@ module.exports = new class {
         return this.#BundleDependencies;
     }
 
-    #Bundles = (require('./bundles'));
-    get Bundles() {
-        return this.#Bundles;
-    }
-
-    #BundlesConfig = (require('./bundles/config'));
-    get BundlesConfig() {
-        return this.#BundlesConfig;
-    }
-
     #TxtBundle = (require('./txt/bundle'));
     get TxtBundle() {
         return this.#TxtBundle;

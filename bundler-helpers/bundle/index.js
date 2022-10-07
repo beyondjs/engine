@@ -1,15 +1,9 @@
 const {bundles: registry} = require('beyond/bundlers');
+const equal = require('beyond/utils/equal');
 
 module.exports = class extends (require('./attributes')) {
     #module;
     get module() {
-        return this.#module;
-    }
-
-    /**
-     * @deprecated Use property .module instead of container
-     */
-    get container() {
         return this.#module;
     }
 
@@ -39,20 +33,6 @@ module.exports = class extends (require('./attributes')) {
     #packagers;
     get packagers() {
         return this.#packagers;
-    }
-
-    #errors = [];
-    get errors() {
-        return this.#errors;
-    }
-
-    get valid() {
-        return !this.#errors.length;
-    }
-
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
     }
 
     /**

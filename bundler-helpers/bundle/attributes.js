@@ -7,6 +7,20 @@ module.exports = class extends DynamicProcessor() {
         return 'bundler.bundle';
     }
 
+    #errors = [];
+    get errors() {
+        return this.#errors;
+    }
+
+    get valid() {
+        return !this.#errors.length;
+    }
+
+    #warnings = [];
+    get warnings() {
+        return this.#warnings;
+    }
+
     #values;
 
     /**
@@ -64,7 +78,7 @@ module.exports = class extends DynamicProcessor() {
             if (errors?.length) return [];
 
             let {all} = cspecs.platforms;
-            let platforms = config.value.platforms ? config.value.platforms : all;
+            let platforms = config.platforms ? config.platforms : all;
             platforms = typeof platforms === 'string' ? [platforms] : platforms;
             platforms = platforms instanceof Array ? platforms : all;
             platforms = platforms.includes('*') ? all : platforms;
