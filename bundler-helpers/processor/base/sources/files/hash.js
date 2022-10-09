@@ -3,7 +3,7 @@ const crc32 = require('beyond/utils/crc32');
 const equal = require('beyond/utils/equal');
 
 /**
- * Hash of a collection of sources. It is used by files and overwrites
+ * Hash of a collection of sources. It is used by the files
  */
 module.exports = class extends DynamicProcessor() {
     get dp() {

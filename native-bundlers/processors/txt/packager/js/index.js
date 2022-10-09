@@ -15,7 +15,6 @@ module.exports = class extends ProcessorCode {
         // Merge the texts of the different json files into one object
         const merged = {};
         compiler.files.forEach(source => require('./merge')(merged, source.compiled.code));
-        compiler.overwrites.forEach(source => require('./merge')(merged, source.compiled.code));
 
         let json = this.multilanguage ? merged[language] : merged;
         json = typeof json === 'object' ? json : {};

@@ -35,7 +35,7 @@ module.exports = class extends require('./index') {
                 const {errors, extensions} = response;
 
                 if (errors?.length) {
-                    const is = source.is === 'source' ? 'files' : (source.is === 'extension' ? 'extensions' : 'overwrites');
+                    const is = source.is === 'source' ? 'files' : 'extensions';
                     diagnostics[is].set(source.relative.file, errors);
                     continue;
                 }
@@ -44,13 +44,6 @@ module.exports = class extends require('./index') {
             }
         }
 
-        if (this.analyzer) {
-            await process(this.analyzer);
-        }
-        else {
-            await process(this.sources.files);
-            if (this._request !== request) return;
-            this.sources.overwrites && await process(this.sources.overwrites);
-        }
+        this.analyzer ? await process(this.analyzer) : await process(this.sources.files);
     }
 }

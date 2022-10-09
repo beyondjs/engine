@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const bundlers = require('beyond/bundlers');
+const bundlers = require('beyond/bundlers-registry');
 
 /**
  * Transversal bundler abstract class
@@ -9,13 +9,9 @@ module.exports = class extends DynamicProcessor() {
         return 'transversal.packager';
     }
 
-    get is() {
-        return 'transversalPackager';
-    }
-
     get id() {
         const language = this.#language ? `//${this.#language}` : '//.';
-        return `${this.#transversal.id}//${this.#distribution.key}${language}`;
+        return `${this.#transversal.id}//${this.#cspecs.key}${language}`;
     }
 
     // The transversal bundle
@@ -28,9 +24,9 @@ module.exports = class extends DynamicProcessor() {
         return this.#transversal.application;
     }
 
-    #distribution;
-    get distribution() {
-        return this.#distribution;
+    #cspecs;
+    get cspecs() {
+        return this.#cspecs;
     }
 
     #language;
@@ -66,13 +62,13 @@ module.exports = class extends DynamicProcessor() {
      * Transversal bundle packager constructor
      *
      * @param transversal {object} The transversal bundle
-     * @param distribution {object} The distribution specification
+     * @param cspecs {object} The compilation specification
      * @param language {string} The language
      */
-    constructor(transversal, distribution, language) {
+    constructor(transversal, cspecs, language) {
         super();
         this.#transversal = transversal;
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
         this.#language = language;
 
         // The bundles packagers of transversal bundle of the modules and libraries of the application

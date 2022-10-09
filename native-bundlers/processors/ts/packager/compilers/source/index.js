@@ -27,14 +27,14 @@ module.exports = class extends AnalyzerSource {
      * Compiler source constructor
      *
      * @param processor {object} The processor object
-     * @param distribution {object} The distribution specification
+     * @param cspecs {object} The compiler specification
      * @param is {string} Can be 'source' or 'overwrite'
      * @param source {object} Optional. If not specified, the source will be hydrated
      * @param compiled {any} Optional. If not specified, the compiled information be hydrated
      */
-    constructor(processor, distribution, is, source, compiled) {
+    constructor(processor, cspecs, is, source, compiled) {
         const _interface = source ? {dependencies: source?.dependencies, exports: source?.exports} : void 0;
-        super(processor, distribution, is, source, _interface, source?.bridge, source?.content);
+        super(processor, cspecs, is, source, _interface, source?.bridge, source?.content);
 
         this.#compiled = compiled;
     }

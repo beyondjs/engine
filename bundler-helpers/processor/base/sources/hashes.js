@@ -37,14 +37,13 @@ module.exports = class extends DynamicProcessor() {
     constructor(sources) {
         super();
         this.#processor = sources.processor;
-        const {files, overwrites, extensions, options} = sources;
+        const {files, extensions, options} = sources;
 
         const children = [
             ['files.hash', {child: files.hash}],
             ['extensions.hashes', {child: extensions.hashes}]
         ];
 
-        overwrites && children.push(['overwrites.hash', {child: overwrites.hash}]);
         options && children.push(['options.hash', {child: options}]);
         super.setup(new Map(children));
     }
@@ -65,20 +64,17 @@ module.exports = class extends DynamicProcessor() {
 
         const {children} = this;
         const files = children.get('files.hash').child.value;
-        const overwrites = children.get('overwrites.hash')?.child.value;
         const options = children.get('options.hash')?.child.hash;
         const extensions = children.get('extensions.hashes').child.sources;
         const inheritance = this._compute();
 
         const compute = {
             files, extensions,
-            overwrites: overwrites ?? 0,
             options: options ?? 0,
             inheritance
         };
 
-        if (compute.files === 0 && compute.extensions === 0 && compute.overwrites === 0 &&
-            compute.options === 0 && compute.inheritance === 0) {
+        if (compute.files === 0 && compute.extensions === 0 && compute.options === 0 && compute.inheritance === 0) {
             return this.#sources = 0;
         }
         return this.#sources = crc32(equal.generate(compute));

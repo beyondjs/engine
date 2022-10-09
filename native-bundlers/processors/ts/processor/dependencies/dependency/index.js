@@ -11,7 +11,7 @@ module.exports = class extends Dependency {
     }
 
     constructor(specifier, processor) {
-        super(specifier, processor, require('./propagator'));
+        super(specifier, processor);
         this.#declaration = new (require('./declaration'))(this);
     }
 }

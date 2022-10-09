@@ -1,7 +1,7 @@
 const CompiledSource = (require('../../source'));
 
 module.exports = function (compiler, sources, updated, emitted, diagnostics) {
-    const {processor, distribution} = compiler.packager;
+    const {processor, cspecs} = compiler.packager;
 
     const processSource = (is, source) => {
         const {file} = source.relative;
@@ -40,7 +40,7 @@ module.exports = function (compiler, sources, updated, emitted, diagnostics) {
             }
 
             // Create a new compiled source object
-            return new CompiledSource(processor, distribution, is, source, {declaration, code, map});
+            return new CompiledSource(processor, cspecs, is, source, {declaration, code, map});
         })();
 
         updated[is === 'source' ? 'files' : 'extensions'].set(file, compiled);

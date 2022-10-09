@@ -43,9 +43,9 @@ module.exports = class extends DynamicProcessor() {
     _process() {
         const packager = this.#packager;
 
-        const {dependencies, distribution, language} = packager;
+        const {dependencies, cspecs, language} = packager;
         const {bundle} = packager.processor.specs;
-        const {mode} = distribution.bundles;
+        const {format} = cspecs;
 
         this.#sourcemap = void 0;
         const sourcemap = new (require('./sourcemap'));
@@ -67,7 +67,7 @@ module.exports = class extends DynamicProcessor() {
         sourcemap.concat(code.code, code.map);
 
         let map, errors;
-        ({code, map, errors} = mformat({code: sourcemap.code, map: sourcemap.map, mode}));
+        ({code, map, errors} = mformat({code: sourcemap.code, map: sourcemap.map, format}));
         if (errors) {
             this.#errors = errors;
             return;

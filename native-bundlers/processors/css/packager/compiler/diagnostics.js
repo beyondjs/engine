@@ -18,18 +18,8 @@ module.exports = (errors, input, functions, diagnostics) => errors.forEach(error
         return true;
     });
 
-    let e;
-    if (found.is === 'source') {
-        e = diagnostics.files.has(found.file) ? diagnostics.files.get(found.file) : [];
-        diagnostics.files.set(found.relative.file, e);
-    }
-    else {
-        e = diagnostics.overwrites.has(found.file) ? diagnostics.overwrites.get(found.file) : [];
-        diagnostics.overwrites.set(found.relative.file, e);
-    }
+    const e = diagnostics.files.has(found.file) ? diagnostics.files.get(found.file) : [];
+    diagnostics.files.set(found.relative.file, e);
+
     e.push({line, character, message: text});
 });
-
-
-
-

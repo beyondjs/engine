@@ -5,16 +5,16 @@ module.exports = class extends DynamicProcessor() {
         return 'layout-bundle.start';
     }
 
-    #distribution;
+    #cspecs;
 
     #code;
     get code() {
         return this.#code;
     }
 
-    constructor(application, distribution) {
+    constructor(application, cspecs) {
         super();
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
 
         const children = new Map();
         children.set('modules', {child: application.modules});
@@ -35,10 +35,7 @@ module.exports = class extends DynamicProcessor() {
             if (!module.bundles.has('layout')) return;
 
             const bundle = module.bundles.get('layout');
-            bundle.layoutId && layouts.push({
-                name: bundle.layoutId,
-                bundle: bundle.resource(this.#distribution)
-            });
+            bundle.layoutId && layouts.push({name: bundle.layoutId, bundle: bundle.specifier});
         });
 
         this.#code = layouts.length ?

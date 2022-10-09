@@ -31,14 +31,11 @@ module.exports = class extends FinderCollection {
 
     _notify() {
         let table = 'processors-sources';
-        let {application, bundle: {id}} = this.#processor.specs;
-        id = id.split('//').pop();
-        id.includes('template.') && (table = `${id.replace('.', '-')}-sources`);
 
         ipc.notify('data-notification', {
             type: 'list/update',
             table: table,
-            filter: {application: application.id}
+            filter: {processor: this.#processor.id}
         });
     }
 }

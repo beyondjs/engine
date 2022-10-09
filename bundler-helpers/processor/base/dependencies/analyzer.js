@@ -22,7 +22,7 @@ module.exports = class extends require('./') {
         // Clean data of previously created dependencies
         this.forEach(dependency => dependency.clear());
 
-        const {files, overwrites, extensions} = this.processor.analyzer;
+        const {files, extensions} = this.processor.analyzer;
 
         // Check for errors in the sources of the analyzer
         const errors = (() => {
@@ -30,7 +30,6 @@ module.exports = class extends require('./') {
             const validate = source => source.errors?.length && (count++);
 
             files.forEach(source => validate(source));
-            overwrites.forEach(source => validate(source));
             extensions.forEach(source => validate(source));
 
             return count ? [`There are ${count} sources analyzed with errors`] : void 0;
@@ -55,7 +54,6 @@ module.exports = class extends require('./') {
         }
 
         files.forEach(source => process(source));
-        overwrites.forEach(source => process(source));
         extensions.forEach(source => process(source));
 
         return {updated};

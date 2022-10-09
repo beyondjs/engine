@@ -39,11 +39,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     get sources() {
-        return {
-            files: this.#children.files,
-            extensions: this.#children.extensions,
-            overwrites: this.#children.overwrites
-        };
+        return {files: this.#children.files, extensions: this.#children.extensions};
     }
 
     get extended() {
@@ -58,11 +54,6 @@ module.exports = class extends DynamicProcessor() {
     #extensions = new Map();
     get extensions() {
         return this.#extensions;
-    }
-
-    #overwrites = new Map();
-    get overwrites() {
-        return this.#overwrites;
     }
 
     #meta;
@@ -141,7 +132,6 @@ module.exports = class extends DynamicProcessor() {
         this.#children.dispose();
 
         this.sources.files?.forEach(source => require(source));
-        this.sources.overwrites?.forEach(source => require(source));
 
         const {analyzer, dependencies, extended} = this;
         if (analyzer && (!require(analyzer) || !analyzer.synchronized)) return 'analyzer is not synchronized';
@@ -163,7 +153,7 @@ module.exports = class extends DynamicProcessor() {
 
         const meta = new Meta();
         const diagnostics = new Diagnostics();
-        const updated = {files: new Map(), extensions: new Map(), overwrites: new Map()};
+        const updated = {files: new Map(), extensions: new Map()};
 
         const done = () => {
             this.#hashes.update();
@@ -172,10 +162,8 @@ module.exports = class extends DynamicProcessor() {
 
             this.#files.clear();
             this.#extensions.clear();
-            this.#overwrites.clear();
             updated.files.forEach((value, key) => this.#files.set(key, value));
             updated.extensions.forEach((value, key) => this.#extensions.set(key, value));
-            updated.overwrites.forEach((value, key) => this.#overwrites.set(key, value));
 
             // Save the new compilation into cache
             this.#cache.save().catch(exc => console.log(exc.stack));
@@ -235,13 +223,13 @@ module.exports = class extends DynamicProcessor() {
     // Hydrate from cache
     hydrate(cached) {
         // Convert raw data object into source objects
-        let {hashes, files, extensions, overwrites, diagnostics, meta} = cached;
+        let {hashes, files, extensions, diagnostics, meta} = cached;
 
         this.#hashes.hydrate(hashes);
 
         const hydrate = (is, cached) => {
-            const {processor, distribution} = this.#packager;
-            const source = new this.CompiledSource(processor, distribution, is);
+            const {processor, cspecs} = this.#packager;
+            const source = new this.CompiledSource(processor, cspecs, is);
             source.hydrate(cached);
             return source;
         }
@@ -254,10 +242,6 @@ module.exports = class extends DynamicProcessor() {
         extensions.forEach((cached, key) => extensions.set(key, hydrate('source', cached)));
         extensions.forEach((source, key) => this.#extensions.set(key, source));
 
-        overwrites = new Map(overwrites);
-        overwrites.forEach((cached, key) => overwrites.set(key, hydrate('overwrite', cached)));
-        overwrites.forEach((source, key) => this.#overwrites.set(key, source));
-
         this.#diagnostics = new Diagnostics();
         this.#diagnostics.hydrate(diagnostics);
 
@@ -266,7 +250,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     toJSON() {
-        const {files, extensions, overwrites} = this;
+        const {files, extensions} = this;
         const diagnostics = this.diagnostics.toJSON();
         const meta = this.meta;
 
@@ -274,7 +258,6 @@ module.exports = class extends DynamicProcessor() {
             hashes: this.#hashes.toJSON(),
             files: [...files],
             extensions: [...extensions],
-            overwrites: [...overwrites],
             diagnostics,
             meta
         };

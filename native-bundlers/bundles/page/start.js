@@ -5,16 +5,16 @@ module.exports = class extends DynamicProcessor() {
         return 'page-bundle.start';
     }
 
-    #distribution;
+    #cspecs;
 
     #code;
     get code() {
         return this.#code;
     }
 
-    constructor(application, distribution) {
+    constructor(application, cspecs) {
         super();
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
 
         const children = new Map();
         children.set('modules', {child: application.modules});
@@ -39,7 +39,7 @@ module.exports = class extends DynamicProcessor() {
                 const vdir = !!bundle.vdir;
                 routes.push({
                     route: bundle.route,
-                    bundle: bundle.resource(this.#distribution),
+                    bundle: bundle.specifier,
                     vdir: vdir,
                     layout: bundle.layout
                 });

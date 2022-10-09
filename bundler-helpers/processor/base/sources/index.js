@@ -1,5 +1,4 @@
-const Files = require('./files-overwrites/files');
-const Overwrites = require('./files-overwrites/overwrites');
+const Files = require('./files');
 const Extensions = require('./extensions');
 
 /**
@@ -14,11 +13,6 @@ module.exports = class {
     #files;
     get files() {
         return this.#files;
-    }
-
-    #overwrites;
-    get overwrites() {
-        return this.#overwrites;
     }
 
     #extensions;
@@ -49,14 +43,7 @@ module.exports = class {
         extname = typeof extname === 'string' ? [extname] : extname;
         if (!(extname instanceof Array)) throw new Error(`Processor extname sources specification is invalid`);
 
-        const {bundle} = processor.specs;
-
-        // Create the overwrites instance only if the processor specifies that it uses overwrites
-        // Do not create the overwrites instance if it is a template (template.processors)
-        const overwrites = processor.meta.sources.overwrites && !bundle.type.startsWith('template/');
-
         this.#files = new Files(processor, extname);
-        this.#overwrites = overwrites ? new Overwrites(processor, extname) : void 0;
         this.#extensions = new Extensions(processor);
 
         const {options} = processor.meta;
@@ -74,7 +61,6 @@ module.exports = class {
 
     destroy() {
         this.#files.destroy();
-        this.#overwrites?.destroy();
         this.#options?.destroy();
     }
 }

@@ -3,7 +3,6 @@ const specs = {
     config: require('./config'),
     Hashes: require('./processor/hashes'),
     sources: {
-        overwrites: true,
         Sources: require('./processor/sources'),
         extname: '.scss'
     },

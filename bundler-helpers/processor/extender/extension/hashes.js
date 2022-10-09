@@ -40,13 +40,12 @@ module.exports = class extends DynamicProcessor() {
     get sources() {
         if (this.#sources !== void 0) return this.#sources;
 
-        const compute = {files: {}, overwrites: {}};
+        const compute = {files: {}};
         const {extension} = this;
 
         let sources;
         if (extension.valid) {
             extension.files.forEach((source, file) => compute.files[file] = source.hashes.preprocessed);
-            extension.overwrites.forEach((source, file) => compute.overwrites[file] = source.hashes.preprocessed);
             sources = crc32(equal.generate(compute));
         }
         else {

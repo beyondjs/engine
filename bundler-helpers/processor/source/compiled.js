@@ -38,13 +38,13 @@ module.exports = class extends require('./index') {
      * Compiler source constructor
      *
      * @param processor {object} The processor object
-     * @param distribution {object} The distribution specification
+     * @param cspecs {object} The compilation specification
      * @param is {string} Can be 'source' or 'overwrite'
      * @param source {object} Optional. If not specified, the source will be hydrated
      * @param compiled? {object} Optional. If not specified, the compiled information be hydrated
      */
-    constructor(processor, distribution, is, source, compiled) {
-        super(processor, distribution, is, source);
+    constructor(processor, cspecs, is, source, compiled) {
+        super(processor, cspecs, is, source);
         this.#compiled = compiled;
     }
 

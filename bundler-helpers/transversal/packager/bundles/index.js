@@ -1,10 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const cspecs = require('beyond/cspecs');
 
-/**
- * All the packagers of the modules and libraries of the application for the distribution and language
- * of the transversal code packager
- */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'bundler.transversal.packagers';
@@ -12,7 +7,6 @@ module.exports = class extends DynamicProcessor(Map) {
 
     // The transversal packager
     #tp;
-    #propagator;
 
     #errors = [];
     get errors() {
@@ -45,87 +39,49 @@ module.exports = class extends DynamicProcessor(Map) {
     constructor(tp) {
         super();
         this.#tp = tp;
-        const {libraries, modules} = tp.transversal.application;
+        const {libraries, modules} = tp.transversal.pkg;
         super.setup(new Map([['libraries', {child: libraries}], ['modules', {child: modules}]]));
 
-        this.#propagator = new (require('./propagator'))(this._events);
         this.#hash = new (require('./hash'))(this);
         this.#code = new (require('./code'))(this.#tp, this);
     }
 
-    /**
-     * Check if the dynamic processor is prepared or not
-     *
-     * @param collection {object} Can be a collection of libraries or a collection of application modules
-     * @param require {function}
-     */
-    #prepared(collection, require) {
-        const {transversal, distribution, language} = this.#tp;
-        const {name} = transversal;
+    _prepared(require) {
+        const {transversal, cspecs, language} = this.#tp;
 
-        collection.forEach(container => {
+        const modules = this.children.get('modules').child;
+        modules.forEach(container => {
             const {bundles, id} = container;
             if (!require(container, id) || !require(bundles, id)) return;
 
-            if (!bundles.has(name)) return;
-            const packager = bundles.get(name).packagers.get(distribution, language);
-            require(packager, packager.id);
+            if (!bundles.has(transversal.name)) return;
+            const packager = bundles.get(transversal.name).packagers.get(cspecs, language);
+            require(packager);
         });
     }
 
-    _prepared(require) {
-        this.#prepared(this.children.get('libraries').child, require);
-        this.#prepared(this.children.get('modules').child, require);
-    }
+    _process() {
+        const {transversal, cspecs, language} = this.#tp;
+        const {platform} = cspecs;
 
-    /**
-     * Create the map of packagers
-     *
-     * @param collection {object} Can be a collection of libraries or a collection of application modules
-     * @param updated {Map} The collection of packagers that are being processed
-     * @param errors {Array} The array of errors
-     */
-    #process(collection, updated, errors) {
-        const {transversal, distribution, language} = this.#tp;
-        const {platform} = distribution;
-        const {platforms} = cspecs;
-        const {name} = transversal;
+        const errors = this.#errors = [];
+        const updated = new Map();
 
-        collection.forEach(container => {
-            if (!container.bundles.has(name)) return;
-            const bundle = container.bundles.get(name);
+        const modules = this.children.get('modules').child;
 
-            // Check if the packager have to be excluded because
-            // the distribution platform is not reached by the module where the bundle is contained
-            if (bundle.container.is === 'application.module' && !bundle.container.platforms.has(platform)) return;
-
-            // If the container is a library, the start bundles should not be included in node projects
-            if (bundle.container.is === 'library' &&
-                bundle.type === 'start' && platforms.nodeExceptSSR.includes(platform)) return;
+        modules.forEach(module => {
+            if (!module.bundles.has(transversal.name)) return;
+            const bundle = module.bundles.get(transversal.name);
+            if (!bundle.platforms.has(platform)) return;
 
             if (!bundle.valid) {
                 errors.push(`Bundle "${bundle.pathname}" has reported errors`);
                 return;
             }
-            const packager = bundle.packagers.get(distribution, language);
-            !bundle.processed && console.log(bundle.id, 'is not processed');
+
+            const packager = bundle.packagers.get(cspecs, language);
             updated.set(bundle.path, packager);
         });
-    }
-
-    _process() {
-        const errors = [];
-        const updated = new Map();
-        this.#process(this.children.get('libraries').child, updated, errors);
-        this.#process(this.children.get('modules').child, updated, errors);
-
-        this.#errors = errors;
-
-        // Subscribe modules that are new to the collection
-        this.#propagator.subscribe([...updated.values()].filter(({bundle}) => !this.has(bundle.path)));
-
-        // Unsubscribe unused modules
-        this.#propagator.unsubscribe([...this.values()].filter(({bundle}) => !updated.has(bundle.path)));
 
         // Set the updated data into the collection
         super.clear();

@@ -51,8 +51,8 @@ module.exports = class extends ProcessorSinglyCompiler {
         const script = extended.get('ts').has(source.relative.file) ?
             extended.get('ts').get(source.relative.file) : void 0;
 
-        const {distribution} = this.packager;
-        const compiled = new this.#CompiledSource(processor, distribution, is, source, {
+        const {cspecs} = this.packager;
+        const compiled = new this.#CompiledSource(processor, cspecs, is, source, {
             scopeId,
             code: script.code, map: script.map,
             css: css?.code, cssMap: css?.map,

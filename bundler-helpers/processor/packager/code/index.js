@@ -43,10 +43,6 @@ module.exports = class extends DynamicProcessor() {
         return this.children.get('files')?.child;
     }
 
-    get overwrites() {
-        return this.children.get('overwrites')?.child;
-    }
-
     #hashes;
     get hashes() {
         return this.#hashes;
@@ -61,13 +57,13 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _notify() {
-        const {name, specs, distribution, language} = this.#packager.processor;
+        const {name, specs, cspecs, language} = this.#packager.processor;
         const message = {
             type: 'change',
             bundle: specs.bundle.specifier,
             extname: this.#extname,
             processor: name,
-            distribution: distribution.key,
+            cspecs: cspecs.key,
             language
         };
         ipc.notify('processors', message);
@@ -106,8 +102,8 @@ module.exports = class extends DynamicProcessor() {
         const children = [];
 
         // The children can be the compiler if it exists, otherwise it could be the analyzer if it exists,
-        // or the processor sources (files and overwrites)
-        const {processor: {analyzer, files, overwrites}, compiler} = packager;
+        // or the processor sources
+        const {processor: {analyzer, files}, compiler} = packager;
         if (compiler) {
             children.push(['compiler', {'child': compiler}]);
         }
@@ -116,7 +112,6 @@ module.exports = class extends DynamicProcessor() {
         }
         else {
             children.push(['files', {'child': files}]);
-            overwrites && children.push(['overwrites', {'child': overwrites}]);
         }
 
         super.setup(new Map(children));
@@ -144,11 +139,9 @@ module.exports = class extends DynamicProcessor() {
     _prepared(require) {
         if (!this.#configured) return;
         this.files?.forEach(source => require(source));
-        this.overwrites?.forEach(source => require(source));
     }
 
     _build(diagnostics) {
-        void (hmr);
         void (diagnostics);
         throw new Error('Method must be overridden');
     }

@@ -7,11 +7,11 @@ const printer = ts.createPrinter();
  * Process a bridge source file
  *
  * @param source {object} The source being analyzed
- * @param distribution {object} The distribution specification
+ * @param cspecs {object} The compilation specification
  * @return {{content: string, info: Map<any, any>} | undefined}
  * If undefined, it means that the source that not expose any actions
  */
-module.exports = function (source, distribution) {
+module.exports = function (source, cspecs) {
     const {content} = source;
     const {file} = source.relative;
     const tsource = ts.createSourceFile(file, content);
@@ -65,7 +65,7 @@ module.exports = function (source, distribution) {
                         factory.createSuper(),
                         undefined,
                         [
-                            factory.createStringLiteral(distribution.backend ? distribution.backend : 'unknown'),
+                            factory.createStringLiteral(cspecs.backend ? cspecs.backend : 'unknown'),
                             factory.createIdentifier('bundle')
                         ]
                     ))],

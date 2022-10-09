@@ -18,7 +18,6 @@ interface IProcessorBase {
     language: string;
     sources: IProcessorSources;
     files: FinderCollection; // Shortcut to sources.files;
-    overwrites: FinderCollection; // Shortcut to sources.overwrites;
     multilanguge: boolean;
     hash: IProcessorHash;
     packager: IProcessorPackager;
@@ -52,9 +51,6 @@ interface IProcessorSpecs {
 ```typescript
 interface IProcessorSources {
     files: FinderCollection;
-
-    overwrites: FinderCollection;
-
     constructor(processor: IProcessorBase);
 }
 ```

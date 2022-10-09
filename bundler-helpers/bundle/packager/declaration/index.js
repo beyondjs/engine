@@ -93,7 +93,7 @@ module.exports = class extends DynamicProcessor() {
         if (this.#processed) return; // Already processed
 
         const hash = this.children.get('hash').child.value;
-        const tsc = this.#packager.distribution?.ts?.compiler === 'tsc';
+        const tsc = this.#packager.cspecs.tsc === 'tsc';
 
         const done = ({code, errors}) => {
             this.#code = code;

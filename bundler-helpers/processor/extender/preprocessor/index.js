@@ -33,10 +33,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     get sources() {
-        return {
-            files: this.#children.files,
-            overwrites: this.#children.overwrites
-        };
+        return {files: this.#children.files};
     }
 
     #diagnostics;
@@ -99,7 +96,6 @@ module.exports = class extends DynamicProcessor() {
         this.#children.dispose();
 
         this.sources.files?.forEach(source => require(source));
-        this.sources.overwrites?.forEach(source => require(source));
     }
 
     async _preprocess(preprocessed, diagnostics, request) {

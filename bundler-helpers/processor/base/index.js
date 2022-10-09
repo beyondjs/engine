@@ -1,4 +1,4 @@
-const {processors} = require('beyond/bundlers');
+const {processors} = require('beyond/bundlers-registry');
 
 /**
  * Processor's base class
@@ -28,7 +28,7 @@ module.exports = class {
     }
 
     get id() {
-        return `${this.#specs.bundle.id}//${this.#name}//${this.distribution.key}//${this.language}`;
+        return `${this.#specs.bundle.id}//${this.#name}//${this.cspecs.key()}//${this.language}`;
     }
 
     #meta;
@@ -40,8 +40,8 @@ module.exports = class {
         return this.#specs.application;
     }
 
-    get distribution() {
-        return this.#specs.distribution;
+    get cspecs() {
+        return this.#specs.cspecs;
     }
 
     get language() {
@@ -55,10 +55,6 @@ module.exports = class {
 
     get files() {
         return this.#sources.files;
-    }
-
-    get overwrites() {
-        return this.#sources.overwrites;
     }
 
     get options() {
@@ -118,7 +114,7 @@ module.exports = class {
      * Processor constructor
      *
      * @param name {string} The processor's name
-     * @param specs {{bundle: object, distribution: object, application: object, watcher: object}}
+     * @param specs {{bundle, cspecs, application, watcher}}
      */
     constructor(name, specs) {
         if (!specs || !specs.bundle?.type || !specs.bundle.container || !specs.bundle.path ||

@@ -79,7 +79,7 @@
     "./utils/specifier-parser": "./utils/specifier-parser/index.js",
     "./bundler-helpers": "./bundler-helpers/index.js",
     "./cspecs": "./lib/core/packages/cspecs/index.js",
-    "./bundlers": "./lib/core/bundlers/index.js",
+    "./bundlers-registry": "./lib/core/bundlers-registry/index.js",
     "./native-bundlers/bundles": "./native-bundlers/bundles/index.js",
     "./native-bundlers/processors": "./native-bundlers/processors/index.js"
   },

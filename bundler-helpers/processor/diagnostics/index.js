@@ -14,12 +14,6 @@ module.exports = class {
         return this.#files;
     }
 
-    #overwrites;
-    get overwrites() {
-        this.#overwrites = this.#overwrites ? this.#overwrites : new Map();
-        return this.#overwrites;
-    }
-
     #extensions;
     get extensions() {
         this.#extensions = this.#extensions ? this.#extensions : new Map();
@@ -36,10 +30,9 @@ module.exports = class {
         const general = this.#general;
         const files = this.#files;
         const extensions = this.#extensions;
-        const overwrites = this.#overwrites;
         const dependencies = this.#dependencies;
 
-        const invalid = general?.length || files?.size || extensions?.size || overwrites?.size || dependencies?.size;
+        const invalid = general?.length || files?.size || extensions?.size || dependencies?.size;
         return !invalid;
     }
 
@@ -58,7 +51,6 @@ module.exports = class {
         this.#general = data.general;
         this.#files = new Map(data.files);
         this.#extensions = new Map(data.extensions);
-        this.#overwrites = new Map(data.overwrites);
         this.#dependencies = new Map(data.dependencies);
     }
 
@@ -67,7 +59,6 @@ module.exports = class {
             general: this.general,
             files: [...this.files],
             extensions: [...this.extensions],
-            overwrites: [...this.overwrites],
             dependencies: [...this.dependencies]
         };
     }

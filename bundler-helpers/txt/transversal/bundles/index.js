@@ -1,7 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {header} = require('beyond/utils/code');
 const {platforms} = require('beyond/cspecs');
-const {bundles} = require('beyond/bundlers');
+const {bundles} = require('beyond/bundlers-registry');
 
 /**
  * Processes the start code required by the bundles,
@@ -13,15 +13,15 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #application;
-    #distribution;
+    #cspecs;
 
     #code;
     get code() {
         if (this.#code !== undefined) return this.#code;
 
         const application = this.#application;
-        const distribution = this.#distribution;
-        const {platform} = distribution;
+        const cspecs = this.#cspecs;
+        const {platform} = cspecs;
 
         let code = '';
         for (const [name, {child}] of this.children) {
@@ -38,15 +38,15 @@ module.exports = class extends DynamicProcessor() {
         return (this.#code = code);
     }
 
-    constructor(application, distribution) {
+    constructor(application, cspecs) {
         super();
         this.#application = application;
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
 
         const children = new Map();
         for (let bundle of bundles.values()) {
             if (!bundle.start?.Start) continue;
-            const start = new bundle.start.Start(application, distribution);
+            const start = new bundle.start.Start(application, cspecs);
             children.set(bundle.type, {child: start});
         }
         super.setup(children);

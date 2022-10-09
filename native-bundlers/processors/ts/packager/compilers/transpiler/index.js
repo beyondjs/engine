@@ -26,7 +26,7 @@ module.exports = class extends ProcessorSinglyCompiler {
             reportDiagnostics: true
         };
 
-        const {processor, distribution} = this.packager;
+        const {processor, cspecs} = this.packager;
 
         // Transpile the code of the source file
         let transpiled;
@@ -35,7 +35,7 @@ module.exports = class extends ProcessorSinglyCompiler {
             transpiled = ts.transpileModule(content, ovalue);
         }
         catch (exc) {
-            const compiled = new this.#CompiledSource(processor, distribution, is, source, {});
+            const compiled = new this.#CompiledSource(processor, cspecs, is, source, {});
             const errors = [exc.message];
             return {compiled, errors};
         }
@@ -47,7 +47,7 @@ module.exports = class extends ProcessorSinglyCompiler {
         const errors = [];
         transpiled.diagnostics?.forEach(diagnostic => errors.push(new Diagnostic(diagnostic)));
 
-        const compiled = new this.#CompiledSource(processor, distribution, is, source, {code, map});
+        const compiled = new this.#CompiledSource(processor, cspecs, is, source, {code, map});
         return {compiled, errors};
     }
 }

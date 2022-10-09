@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {processors} = require('beyond/bundlers');
+const {processors} = require('beyond/bundlers-registry');
 const ProcessorBase = require('../../../processor/base');
 
 /**
@@ -22,7 +22,6 @@ module.exports = class extends DynamicProcessor(Map) {
 
     // The names of the processors supported by the bundler
     #supported;
-    #propagator;
 
     #hashes;
     get hashes() {
@@ -54,7 +53,6 @@ module.exports = class extends DynamicProcessor(Map) {
             throw new Error(`Supported processors property is not defined in "${bundle.type}" bundle`);
         }
 
-        this.#propagator = new (require('./propagator'))(this._events);
         this.#hashes = new (require('./hashes'))(this);
 
         super.setup(new Map([
@@ -86,10 +84,10 @@ module.exports = class extends DynamicProcessor(Map) {
                 continue;
             }
 
-            const {bundle, distribution, language} = this.#packager;
+            const {bundle, cspecs, language} = this.#packager;
             const {container: {application}, watcher} = bundle;
             const packager = this.#packager;
-            const specs = {watcher, bundle, packager, distribution, language, application};
+            const specs = {application, watcher, bundle, packager, cspecs, language};
 
             const meta = processors.get(name);
             const Processor = meta.Processor ? meta.Processor : ProcessorBase;
@@ -104,12 +102,6 @@ module.exports = class extends DynamicProcessor(Map) {
             processor.configure(cloned, multilanguage);
             updated.set(name, processor);
         }
-
-        // Subscribe modules that are new to the collection
-        this.#propagator.subscribe([...updated.values()].filter(processor => !this.has(processor.name)));
-
-        // Unsubscribe unused modules
-        this.#propagator.unsubscribe([...this.values()].filter(processor => !updated.has(processor.name)));
 
         // Destroy unused processors
         this.forEach((processor, name) => !updated.has(name) && processor.destroy());

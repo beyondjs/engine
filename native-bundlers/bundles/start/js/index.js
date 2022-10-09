@@ -9,12 +9,10 @@ module.exports = class extends TransversalCodePackager {
      */
     constructor(tp, ...params) {
         super(tp, ...params);
-        const {distribution} = tp;
-        const {application} = tp.transversal;
+        const {cspecs} = tp;
+        const {pkg} = tp.transversal;
 
-        super.setup(new Map([
-            ['bundles', {child: new (require('./bundles'))(application, distribution)}]
-        ]));
+        super.setup(new Map([['bundles', {child: new (require('./bundles'))(pkg, cspecs)}]]));
     }
 
     _generate() {
@@ -31,9 +29,7 @@ module.exports = class extends TransversalCodePackager {
         sourcemap.concat(input.code, input.map);
 
         // Only required by the dashboard
-        this.tp.application.engine === 'legacy' &&
-        sourcemap.concat('routing.setup(1);');
-
+        this.tp.pkg.engine === 'legacy' && sourcemap.concat('routing.setup(1);');
         return {sourcemap};
     }
 }

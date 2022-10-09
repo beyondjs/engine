@@ -1,38 +1,57 @@
 const toHtml = new (require('ansi-to-html'));
+const {minify} = require('uglify-js');
 
-// Convert from ES6 module to AMD, CJS, SystemJS
+/**
+ * Transform from esm to sjs and/or minify code
+ *
+ * @param specs {{code: string, map: *, format: 'sjs' | 'amd' | 'cjs' | 'esm' | undefined, minify: boolean}}
+ * @return {{code, map, errors}}
+ */
 module.exports = function (specs) {
     'use strict';
 
-    const {code, map, mode} = specs;
+    specs.format = !specs.format ? 'esm' : specs.format;
 
-    if (!['amd', 'esm', 'cjs', 'sjs'].includes(mode)) {
-        throw new Error('Invalid parameters');
-    }
+    if (!specs.code) throw new Error('Code specification is not defined');
+    if (!['amd', 'esm', 'cjs', 'sjs'].includes(specs.format)) throw new Error('Invalid parameters');
 
-    if (mode === 'esm') return {code, map};
-    const plugin = mode === 'amd' ?
-        '@babel/plugin-transform-modules-amd' :
-        (mode === 'cjs' ? '@babel/plugin-transform-modules-commonjs' :
-            '@babel/plugin-transform-modules-systemjs');
+    let {code, map, errors} = (() => {
+        const {code, map} = specs;
+        if (specs.format === 'esm') return {code, map};
 
-    let output;
+        const plugin = specs.format === 'amd' ?
+            '@babel/plugin-transform-modules-amd' :
+            (specs.format === 'cjs' ? '@babel/plugin-transform-modules-commonjs' :
+                '@babel/plugin-transform-modules-systemjs');
+
+        let transform;
+        try {
+            transform = require('@babel/core').transform(code, {
+                cwd: __dirname,
+                sourceMaps: !!map,
+                inputSourceMap: map,
+                compact: false,
+                plugins: [[plugin, {importInterop: 'none'}]]
+            });
+            return {code: transform.code, map: transform.map ? transform.map : void 0};
+        }
+        catch (exc) {
+            let message = toHtml.toHtml(exc.message);
+            message = message.replace(/\n/g, '<br/>');
+            message = `<div style="background: #333; color: white;">${message}</div>`;
+            message = `Error transforming to ${specs.format} module: <br/><br/>${message}`;
+            return {errors: [message]};
+        }
+    })();
+    if (errors) return {errors};
+
+    if (!specs.minify) return {code, map};
+
     try {
-        output = require('@babel/core').transform(code, {
-            cwd: __dirname,
-            sourceMaps: !!map,
-            inputSourceMap: map,
-            compact: false,
-            plugins: [[plugin, {importInterop: 'none'}]]
-        });
+        const minified = minify(code, {sourceMap: {content: map}});
+        return {code: minified.code, map: minified.map ? minified.map : void 0}
     }
     catch (exc) {
-        let message = toHtml.toHtml(exc.message);
-        message = message.replace(/\n/g, '<br/>');
-        message = `<div style="background: #333; color: white;">${message}</div>`;
-        message = `Error transforming to ${mode} module: <br/><br/>${message}`;
-        return {errors: [message]};
+        return {errors: [exc.message]};
     }
-
-    return {code: output.code, map: output.map === null ? void 0 : output.map};
 }

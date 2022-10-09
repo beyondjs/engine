@@ -53,13 +53,13 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _notify() {
-        const {bundle, distribution, language} = this.#packager;
+        const {bundle, cspecs, language} = this.#packager;
         const message = {
             type: 'change',
             specifier: bundle.specifier,
             vspecifier: bundle.vspecifier,
             extname: this.#extname,
-            distribution: distribution.key,
+            cspecs: cspecs.key(),
             language
         };
         ipc.notify('bundles', message);

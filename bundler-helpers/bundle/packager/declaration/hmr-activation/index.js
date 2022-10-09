@@ -1,4 +1,4 @@
-const {bundles} = require('beyond/bundlers');
+const {bundles} = require('beyond/bundlers-registry');
 
 module.exports = function (bundle) {
     const transversal = bundles.get(bundle.type).Transversal;

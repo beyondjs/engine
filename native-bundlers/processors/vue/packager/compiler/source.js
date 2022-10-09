@@ -16,8 +16,8 @@ module.exports = class extends ProcessorCompiledSource {
         return this.#templateMap;
     }
 
-    constructor(processor, distribution, is, source, compiled) {
-        super(processor, distribution, is, source, compiled);
+    constructor(processor, cspecs, is, source, compiled) {
+        super(processor, cspecs, is, source, compiled);
         this.#scopeId = compiled?.scopeId;
         this.#template = compiled?.template;
         this.#templateMap = compiled?.templateMap;

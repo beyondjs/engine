@@ -19,8 +19,8 @@ module.exports = class {
         return this.#processor.application;
     }
 
-    get distribution() {
-        return this.#processor.distribution;
+    get cspecs() {
+        return this.#processor.cspecs;
     }
 
     get language() {

@@ -1,4 +1,4 @@
-const {bundles} = require('beyond/bundlers');
+const {bundles} = require('beyond/bundlers-registry');
 
 module.exports = class {
     #transversal;
@@ -8,14 +8,14 @@ module.exports = class {
         this.#transversal = transversal;
     }
 
-    get(distribution, language) {
+    get(cspecs, language) {
         language = language ? language : '.';
-        const key = `${distribution.key}//${language}`;
+        const key = `${cspecs.key}//${language}`;
         if (this.#packagers.has(key)) return this.#packagers.get(key);
 
         let {Packager} = bundles.get(this.#transversal.name).transversal;
         Packager = Packager ? Packager : require('./packager');
-        const packager = new Packager(this.#transversal, distribution, language);
+        const packager = new Packager(this.#transversal, cspecs, language);
 
         this.#packagers.set(key, packager);
         return packager;

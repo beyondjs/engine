@@ -1,4 +1,4 @@
-const {bundles} = require('beyond/bundlers');
+const {bundles} = require('beyond/bundlers-registry');
 
 /**
  * Package initialisation

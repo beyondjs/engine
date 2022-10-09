@@ -5,7 +5,7 @@ module.exports = class extends ProcessorSources {
         const {processor} = this;
         if (processor.specs.bundle.type === 'template/application') return;
 
-        const {application, distribution} = processor.specs;
-        return application.template.application.processors.get(distribution);
+        const {application, cspecs} = processor.specs;
+        return application.template.application.processors.get(cspecs);
     }
 }

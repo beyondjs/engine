@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {bundles} = require('beyond/bundlers');
+const {bundles: registry} = require('beyond/bundlers-registry');
 
 /**
  * Bundler abstract class
@@ -9,13 +9,19 @@ module.exports = class extends DynamicProcessor() {
         return 'bundle.packager';
     }
 
-    get is() {
-        return 'bundlePackager';
-    }
+    /**
+     * The compilation specification key
+     * @type {number}
+     */
+    #ckey;
 
+    /**
+     * The PLM packager id
+     * @return {string}
+     */
     get id() {
         const language = this.#language ? `//${this.#language}` : '//.';
-        return `${this.bundle.id}//${this.#distribution.key}${language}`;
+        return `${this.bundle.id}//${this.#ckey}${language}`;
     }
 
     get bundle() {
@@ -26,13 +32,13 @@ module.exports = class extends DynamicProcessor() {
         return this.bundle.path;
     }
 
-    get application() {
-        return this.bundle.application;
+    get pkg() {
+        return this.bundle.pkg;
     }
 
-    #distribution;
-    get distribution() {
-        return this.#distribution;
+    #cspecs;
+    get cspecs() {
+        return this.#cspecs;
     }
 
     #language;
@@ -79,14 +85,12 @@ module.exports = class extends DynamicProcessor() {
      * Bundler constructor
      *
      * @param bundle {object} The bundle
-     * @param distribution {object} The distribution specification
+     * @param cspecs {object} The compilation specification
      * @param language {string} The language
      */
-    constructor(bundle, distribution, language) {
-        if (!distribution || !distribution.key) throw new Error('Invalid parameters');
-
+    constructor(bundle, cspecs, language) {
         super();
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
         this.#language = language;
 
         super.setup(new Map([['bundle', {child: bundle}]]));
@@ -96,7 +100,7 @@ module.exports = class extends DynamicProcessor() {
         this.#hash = new (require('./hash'))(this);
         this.#consumers = new (require('./consumers'))(this);
 
-        const meta = bundles.get(bundle.type);
+        const meta = registry.get(bundle.type);
         if (!(meta.extname instanceof Array)) {
             throw new Error(`Property extname in bundle "${bundle.type}" specification must be an array`);
         }
@@ -104,11 +108,11 @@ module.exports = class extends DynamicProcessor() {
             throw new Error(`Property extname in bundle "${bundle.type}" specification must include the entries '.js' and/or '.css'`);
         }
 
-        const JsCode = meta.bundle?.Js ? meta.bundle.Js : require('./code/js');
-        this.#js = meta.extname.includes('.js') ? new JsCode(this) : void 0;
+        const Js = meta.bundle?.Js ? meta.bundle.Js : require('./code/js');
+        this.#js = meta.extname.includes('.js') ? new Js(this) : void 0;
 
-        const CssCode = meta.bundle?.Css ? meta.bundle.Css : require('./code/css');
-        this.#css = meta.extname.includes('.css') ? new CssCode(this) : void 0;
+        const Css = meta.bundle?.Css ? meta.bundle.Css : require('./code/css');
+        this.#css = meta.extname.includes('.css') ? new Css(this) : void 0;
 
         this.#declaration = new (require('./declaration'))(this);
     }

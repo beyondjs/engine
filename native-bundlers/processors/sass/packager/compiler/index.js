@@ -19,7 +19,7 @@ module.exports = class extends ProcessorCompiler {
         if (source.basename.startsWith('_')) return {};
 
         const importer = new (require('./importer'))(source, this);
-        const {processor, distribution} = this.packager;
+        const {processor, cspecs} = this.packager;
         const options = {sourceMap: true, importer};
 
         let result;
@@ -31,7 +31,7 @@ module.exports = class extends ProcessorCompiler {
             message = message.replace(/\n/g, '<br/>');
             message = `<div style="background: #ddd; color: #333;">${message}</div>`;
 
-            const compiled = new this.CompiledSource(processor, distribution, source.is, source, {});
+            const compiled = new this.CompiledSource(processor, cspecs, source.is, source, {});
             const errors = [{message}];
             return {compiled, errors};
         }
@@ -40,13 +40,13 @@ module.exports = class extends ProcessorCompiler {
         const code = css.toString();
         map.sources[0] = source.url;
 
-        const compiled = new this.CompiledSource(processor, distribution, source.is, source, {code, map});
+        const compiled = new this.CompiledSource(processor, cspecs, source.is, source, {code, map});
         return {compiled};
     }
 
     async _compile(updated, diagnostics, meta, request) {
         const analyzer = this.children.get('analyzer').child;
-        const {files, extensions, overwrites} = analyzer;
+        const {files, extensions} = analyzer;
 
         const process = async (sources, is) => {
             for (const source of sources.values()) {
@@ -68,6 +68,5 @@ module.exports = class extends ProcessorCompiler {
 
         await process(files, 'files');
         await process(extensions, 'extensions');
-        overwrites && await process(overwrites, 'overwrites');
     }
 }

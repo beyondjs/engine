@@ -9,7 +9,7 @@ module.exports = class extends ProcessorSinglyCompiler {
     async _compileSource(source, is, request) {
         const {extended} = this;
         const processor = this.packager;
-        const {distribution} = processor;
+        const {cspecs} = processor;
 
         let preprocessed;
         try {
@@ -54,8 +54,8 @@ module.exports = class extends ProcessorSinglyCompiler {
 
         let css, js;
         try {
-            const generate = distribution.platform === 'ssr' ? 'ssr' : 'dom';
-            const hydratable = distribution.platform === 'web' && !!distribution.ssr;
+            const generate = cspecs.platform === 'ssr' ? 'ssr' : 'dom';
+            const hydratable = cspecs.platform === 'web' && !!cspecs.ssr;
             ({css, js} = svelte.compile(preprocessed.code, {css: false, generate, hydratable}));
         }
         catch (exc) {
@@ -65,7 +65,7 @@ module.exports = class extends ProcessorSinglyCompiler {
 
         if (!js.code) return;
 
-        const compiled = new this.CompiledSource(processor, distribution, is, source, {
+        const compiled = new this.CompiledSource(processor, cspecs, is, source, {
             code: js.code,
             map: js.map,
             css: css.code,

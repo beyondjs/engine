@@ -1,4 +1,4 @@
-const {bundles: registry} = require('beyond/bundlers');
+const {bundles: registry} = require('beyond/bundlers-registry');
 const equal = require('beyond/utils/equal');
 
 module.exports = class extends (require('./attributes')) {

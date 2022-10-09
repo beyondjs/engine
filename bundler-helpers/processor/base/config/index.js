@@ -1,3 +1,10 @@
+/**
+ * Process the configuration of the processor to do it friendly
+ *
+ * @param config {*} The configuration as it is in the module.json file
+ * @param meta {*} The meta configuration of the processor
+ * @return {*}
+ */
 module.exports = function (config, meta) {
     let warnings = [];
 

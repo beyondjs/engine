@@ -7,25 +7,24 @@ module.exports = class extends DynamicProcessor() {
         return 'widget-bundle.start';
     }
 
-    #application;
-    #distribution;
+    #pkg;
+    #cspecs;
 
     #code;
     get code() {
         return this.#code;
     }
 
-    static dependencies(distribution) {
-        if (!platforms.webAndMobile.includes(distribution.platform)) return [];
-        return ['@beyond-js/widgets/render'];
+    static dependencies(cspecs) {
+        return platforms.webAndMobile.includes(cspecs.platform) ? ['@beyond-js/widgets/render'] : [];
     }
 
-    constructor(application, distribution) {
+    constructor(pkg, cspecs) {
         super();
-        this.#application = application;
-        this.#distribution = distribution;
+        this.#pkg = pkg;
+        this.#cspecs = cspecs;
 
-        super.setup(new Map([['modules', {child: application.modules}]]));
+        super.setup(new Map([['modules', {child: pkg.modules}]]));
     }
 
     _prepared(require) {
@@ -49,7 +48,7 @@ module.exports = class extends DynamicProcessor() {
      * @private
      */
     _process() {
-        if (this.#application.engine === 'legacy') {
+        if (this.#pkg.engine === 'legacy') {
             this.#code = '';
             return;
         }

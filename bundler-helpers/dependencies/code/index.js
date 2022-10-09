@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {platforms} = require('beyond/cspecs');
+const {TransversalPackager} = require('beyond/bundler-helpers');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -61,7 +61,7 @@ module.exports = class extends DynamicProcessor(Map) {
         this.clear();
         dependencies.forEach((dependency, specifier) => {
             if (!dependency) throw new Error(`Dependency "${specifier}" is not defined`);
-            const {valid, is, kind, bundle, external} = dependency;
+            const {valid, is, kind, bundle} = dependency;
 
             if (!valid) {
                 this.#errors.push(`Dependency "${specifier}" is invalid`);
@@ -69,7 +69,7 @@ module.exports = class extends DynamicProcessor(Map) {
             }
             if (!is.has('import')) return;
 
-            if (this.#container.is === 'transversalPackager' && kind === 'transversal') {
+            if (this.#container instanceof TransversalPackager && kind === 'transversal') {
                 // Exclude the imports that refers to bundles that are part of the actual transversal
                 if (this.#container.transversal.name === bundle.type) return;
             }
@@ -83,21 +83,9 @@ module.exports = class extends DynamicProcessor(Map) {
 
             // Process the url of the import
             code += (() => {
-                const {application, distribution} = this.#container;
+                const {application} = this.#container;
 
-                const resource = (() => {
-                    if (kind === 'node.internal') return specifier;
-                    if (kind === 'beyond.reserved') {
-                        // Actually only config.js is a beyond reserved bundle
-                        const {platform} = distribution;
-                        return platforms.node.includes(platform) ?
-                            `${application.specifier}/config` : `${application.vspecifier}/config`;
-                    }
-                    if (kind === 'transversal') return `${application.package}/${bundle.type}`;
-                    if (kind === 'external') return external.resource(distribution);
-                    if (kind === 'bundle') return bundle.resource(distribution);
-                })();
-
+                const resource = kind === 'transversal' ? `${application.package}/${bundle.type}` : specifier;
                 if (resources.has(resource)) return '';
                 resources.add(resource);
                 count++;

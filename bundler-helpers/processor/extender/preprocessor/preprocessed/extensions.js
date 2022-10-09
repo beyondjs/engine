@@ -25,8 +25,8 @@ module.exports = class {
         const {extends: _extends} = meta.extender;
         _extends.forEach(processor => this.#available.add(processor));
 
-        const {distribution} = processor;
-        this.#source = source ? new Source(processor, distribution, is, source) : void 0;
+        const {cspecs} = processor;
+        this.#source = source ? new Source(processor, cspecs, is, source) : void 0;
     }
 
     get(processor) {
@@ -42,8 +42,8 @@ module.exports = class {
     }
 
     hydrate(cached) {
-        const {distribution} = this.#processor;
-        this.#source = new Source(this.#processor, distribution, cached.source.is);
+        const {cspecs} = this.#processor;
+        this.#source = new Source(this.#processor, cspecs, cached.source.is);
         this.#source.hydrate(cached.source);
 
         this.#extensions = new Map(cached.extensions);

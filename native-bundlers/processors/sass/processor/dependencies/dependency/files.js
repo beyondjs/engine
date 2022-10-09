@@ -31,8 +31,8 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _prepared(require) {
         const {dependency} = this;
-        const {valid, bundle, distribution, language} = dependency;
-        const {processors} = bundle ? bundle.packagers.get(distribution, language) : {};
+        const {valid, bundle, cspecs, language} = dependency;
+        const {processors} = bundle ? bundle.packagers.get(cspecs, language) : {};
         if (!processors || (processors && !require(processors))) return;
 
         this.#files = processors.has('sass') ? processors.get('sass').files : void 0;

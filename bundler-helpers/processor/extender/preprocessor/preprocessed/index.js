@@ -7,11 +7,6 @@ module.exports = class {
         return this.#files;
     }
 
-    #overwrites = new Map();
-    get overwrites() {
-        return this.#overwrites;
-    }
-
     constructor(processor) {
         this.#processor = processor;
 
@@ -20,10 +15,8 @@ module.exports = class {
         _extends.forEach(processor => this.#available.add(processor));
     }
 
-    _getSources(source) {
-        const {is} = source;
-        if (!['source', 'overwrite'].includes(is)) throw new Error(`Invalid source.is "${is}" property`);
-        return is === 'source' ? this.#files : this.#overwrites;
+    _getSources() {
+        return this.#files;
     }
 
     has(source, processor) {
@@ -76,12 +69,9 @@ module.exports = class {
 
         this.#files = new Map(cached.files);
         this.#files.forEach((cached, file) => hydrateExtensions(this.#files, file, cached));
-
-        this.#overwrites = new Map(cached.overwrites);
-        this.#overwrites.forEach((cached, file) => hydrateExtensions(this.#overwrites, file, cached));
     }
 
     toJSON() {
-        return {files: [...this.#files], overwrites: [...this.#overwrites]};
+        return {files: [...this.#files]};
     }
 }

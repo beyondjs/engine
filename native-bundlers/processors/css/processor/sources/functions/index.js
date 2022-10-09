@@ -12,7 +12,7 @@ module.exports = class {
     constructor(processor) {
         const {name, specs} = processor;
         const {application} = specs;
-        const template = application.template.processors[name].get(specs.distribution);
+        const template = application.template.processors[name].get(specs.cspecs);
 
         this.#code = new (require('./code'))(template);
         this.#hash = new (require('./hash'))(template);

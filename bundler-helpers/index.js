@@ -4,11 +4,6 @@ module.exports = new class {
         return this.#Dependency;
     }
 
-    #DependenciesPropagator = (require('./dependencies/propagator'));
-    get DependenciesPropagator() {
-        return this.#DependenciesPropagator;
-    }
-
     #Bundle = (require('./bundle'));
     get Bundle() {
         return this.#Bundle;

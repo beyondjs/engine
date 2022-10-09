@@ -25,7 +25,6 @@ interface IProcessorMetaProperties {
     name: string;
     Processor?: IProcessor;
     sources: {
-        overwrites: boolean;
         Sources?: IProcessorSources;
         extname: string [] | string;
     }
@@ -64,5 +63,4 @@ Optional properties;
   not have an analyzer.
 * **packager.Packager**: If not specified, then **global.ProcessorPackager** is going to be used.
 * **Hash**: If not specified, then **global.ProcessorHash** is going to be used.
-* **sources.overwrites**: Default is false.
 * **sources.Sources**: If not specified, then **global.ProcessorSources** is going to be used.

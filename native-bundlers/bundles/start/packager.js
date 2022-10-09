@@ -1,11 +1,11 @@
 const {TransversalPackager} = require('beyond/bundler-helpers');
-const {bundles} = require('beyond/bundlers');
+const {bundles} = require('beyond/bundlers-registry');
 
 module.exports = class extends TransversalPackager {
     constructor(...params) {
         super(...params);
 
-        const {dependencies, application, distribution} = this;
+        const {dependencies, application, cspecs} = this;
         if (application.engine === 'legacy') {
             dependencies.add('@beyond-js/kernel/core');
             dependencies.add('@beyond-js/kernel/routing');
@@ -15,7 +15,7 @@ module.exports = class extends TransversalPackager {
             if (!bundle.start?.Start) continue;
             if (typeof bundle.start.Start.dependencies !== 'function') continue;
 
-            bundle.start.Start.dependencies(distribution).forEach(dependency => dependencies.add(dependency));
+            bundle.start.Start.dependencies(cspecs).forEach(dependency => dependencies.add(dependency));
         }
     }
 }

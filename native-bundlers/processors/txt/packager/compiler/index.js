@@ -6,11 +6,11 @@ module.exports = class extends ProcessorSinglyCompiler {
     }
 
     _compileSource(source) {
-        const {processor, distribution} = this.packager;
+        const {processor, cspecs} = this.packager;
 
         try {
             const code = JSON.parse(source.content);
-            const compiled = new this.CompiledSource(processor, distribution, source.is, source, {code});
+            const compiled = new this.CompiledSource(processor, cspecs, source.is, source, {code});
             return {compiled};
         }
         catch (exc) {

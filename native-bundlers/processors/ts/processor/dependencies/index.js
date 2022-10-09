@@ -11,7 +11,7 @@ module.exports = class extends ProcessorAnalyzerDependencies {
     }
 
     constructor(processor) {
-        super(processor, require('./dependency'), require('./propagator'));
+        super(processor, require('./dependency'));
         this.#declarations = new (require('./declarations'))(this);
     }
 

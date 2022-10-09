@@ -28,13 +28,13 @@ module.exports = class extends require('../../../source') {
      * Analyzer source constructor
      *
      * @param processor {object} The processor object
-     * @param distribution {object} The distribution specification
+     * @param cspecs {object} The compilation specification
      * @param is {string} Can be 'source', 'overwrite' or 'extension'
      * @param source {object} Optional. If not specified, the source will be hydrated
      * @param data {{dependencies?: object, exports?: object, content?: string, errors?: string[]}} Optional. If not specified, it will be hydrated
      */
-    constructor(processor, distribution, is, source, data) {
-        super(processor, distribution, is, source);
+    constructor(processor, cspecs, is, source, data) {
+        super(processor, cspecs, is, source);
 
         this.#errors = data?.errors ? data.errors : [];
         this.#dependencies = data?.dependencies ? data.dependencies : new Map();

@@ -7,12 +7,10 @@ module.exports = class extends require('../../transversal/packager/code') {
      */
     constructor(tp, ...params) {
         super(tp, ...params);
-        const {distribution} = tp;
-        const {application} = tp.transversal;
+        const {cspecs} = tp;
+        const {pkg} = tp.transversal;
 
-        super.setup(new Map([
-            ['bundles', {child: new (require('./bundles'))(application, distribution)}]
-        ]));
+        super.setup(new Map([['bundles', {child: new (require('./bundles'))(pkg, cspecs)}]]));
     }
 
     _generate() {

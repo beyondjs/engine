@@ -24,8 +24,8 @@ module.exports = class extends ProcessorAnalyzer {
             message = `<div style="background: #ddd; color: #333;">${message}</div>`;
 
             const {processor} = this;
-            const {distribution} = processor;
-            return new this.AnalyzedSource(processor, distribution, source.is, source, {errors: [{message}]});
+            const {cspecs} = processor;
+            return new this.AnalyzedSource(processor, cspecs, source.is, source, {errors: [{message}]});
         }
 
         // Dependencies must be a Map<{resource, Set<is>}>
@@ -33,8 +33,8 @@ module.exports = class extends ProcessorAnalyzer {
             [resource, new Set(['css.import'])]));
 
         const {processor} = this;
-        const {distribution} = processor;
-        return new this.AnalyzedSource(processor, distribution, source.is, source, {dependencies});
+        const {cspecs} = processor;
+        return new this.AnalyzedSource(processor, cspecs, source.is, source, {dependencies});
     }
 
     async _analyze(updated, diagnostics, request) {
@@ -51,9 +51,8 @@ module.exports = class extends ProcessorAnalyzer {
             }
         }
 
-        const {files, overwrites, extensions} = this.processor.sources;
+        const {files, extensions} = this.processor.sources;
         await process(files, 'files');
         await process(extensions, 'extensions');
-        overwrites && await process(overwrites, 'overwrites');
     }
 }

@@ -1,9 +1,6 @@
 module.exports = {
     name: 'txt',
-    sources: {
-        overwrites: true,
-        extname: '.json'
-    },
+    sources: {extname: '.json'},
     packager: {
         compiler: () => require('./packager/compiler'),
         declaration: () => require('./packager/declaration'),

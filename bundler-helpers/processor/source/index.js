@@ -7,7 +7,7 @@ module.exports = class {
         return this.#processor;
     }
 
-    #distribution;
+    #cspecs;
     #source;
 
     get id() {
@@ -73,16 +73,16 @@ module.exports = class {
      * Source constructor
      *
      * @param processor {object} The processor object
-     * @param distribution {object} The distribution specification
+     * @param cspecs {object} The compilation specification
      * @param is {string} Can be 'source' or 'overwrite'
      * @param source? {object} Optional. If undefined, the source object is set when it is hydrated
      */
-    constructor(processor, distribution, is, source) {
+    constructor(processor, cspecs, is, source) {
         if (typeof is !== 'string') throw new Error('Invalid parameters');
-        if (!distribution.platform) throw new Error('Invalid parameters');
+        if (!cspecs.platform) throw new Error('Invalid parameters');
 
         this.#processor = processor;
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
         this.#is = is;
 
         this.#source = source;

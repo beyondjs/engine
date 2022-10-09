@@ -38,11 +38,6 @@ module.exports = class extends DynamicProcessor() {
         return this.#files;
     }
 
-    #overwrites = new Map();
-    get overwrites() {
-        return this.#overwrites;
-    }
-
     /**
      * Processor extension constructor
      *
@@ -60,26 +55,24 @@ module.exports = class extends DynamicProcessor() {
 
     _process() {
         const {preprocessed, processor} = this.#preprocessor;
-        const {distribution} = processor;
+        const {cspecs} = processor;
         const extending = this.#extending;
 
         /**
          * Create the source object
          *
-         * @param sources {object} The files or overwrites map
+         * @param sources {object} The files map
          * @param file {string} The file to be set
          * @param extensions {object} The preprocessed extensions of a source
          * @return {object}
          */
         const createSource = (sources, file, extensions) => {
             const extension = extensions.get(extending);
-            const source = extension && new (require('./source'))(distribution, extensions.source, extension);
+            const source = extension && new (require('./source'))(cspecs, extensions.source, extension);
             source && sources.set(file, source);
         }
 
         this.#files.clear();
         preprocessed.files.forEach((extensions, file) => createSource(this.#files, file, extensions));
-        this.#overwrites.clear();
-        preprocessed.overwrites.forEach((extensions, file) => createSource(this.#overwrites, file, extensions));
     }
 }

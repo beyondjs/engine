@@ -31,9 +31,8 @@ module.exports = class extends require('./') {
             }
         }
 
-        const {files, overwrites, extensions} = this.processor.sources;
+        const {files, extensions} = this.processor.sources;
         await process(files, 'files');
         await process(extensions, 'extensions');
-        overwrites && await process(overwrites, 'overwrites');
     }
 }

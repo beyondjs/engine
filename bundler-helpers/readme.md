@@ -3,10 +3,6 @@
 ## Bundles
 
 * Bundle
-* Bundles
-
-## Transversals
-
 * Transversal
 * TransversalPackager
 * TransversalCodePackager

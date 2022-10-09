@@ -13,12 +13,9 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#processor;
     }
 
-    #propagator;
-
     constructor(processor) {
         super();
         this.#processor = processor;
-        this.#propagator = new (require('./propagator'))(this._events);
 
         const {processors} = processor.specs.packager;
         super.setup(new Map([['processors', {child: processors}]]));
@@ -39,17 +36,9 @@ module.exports = class extends DynamicProcessor(Map) {
         });
 
         // Subscribe extended compilers that are new to the collection
-        const subscribe = [];
-        updated.forEach((compiler, processor) => !this.has(processor) && subscribe.push(compiler));
-        this.#propagator.subscribe(subscribe);
-        let changed = !!subscribe.length;
-
-        // Unsubscribe unused extended compilers
-        const unsubscribe = [];
-        this.forEach((extension, compiler) => !updated.has(compiler) && unsubscribe.push(extension));
-        this.#propagator.subscribe(unsubscribe);
-        changed = changed || unsubscribe.length;
-
+        let changed = false;
+        updated.forEach((compiler, processor) => !this.has(processor) && (changed = true));
+        this.forEach((extension, compiler) => !updated.has(compiler) && (changed = true));
         if (!changed) return false;
 
         super.clear(); // Do not use this.clear() as it would destroy still used extensions

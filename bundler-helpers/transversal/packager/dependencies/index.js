@@ -13,7 +13,6 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     #Dependency;
-    #propagator;
     #bundles;
 
     #hash;
@@ -60,9 +59,8 @@ module.exports = class extends DynamicProcessor(Map) {
      * @param tp {object} The transversal packager
      * @param bundles {object} The bundles packagers
      * @param Dependency= {object} An specialized Dependency class
-     * @param Propagator {object} An specialized Propagator class
      */
-    constructor(tp, bundles, Dependency, Propagator) {
+    constructor(tp, bundles, Dependency) {
         super();
         this.#tp = tp;
         this.#bundles = bundles;
@@ -70,9 +68,6 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#hash = new (require('./hash'))(bundles);
         this.#code = new (require('../../../dependencies/code'))(this, tp);
         this.#added = new (require('./added'))(this);
-
-        Propagator = Propagator ? Propagator : require('../../../dependencies/propagator');
-        this.#propagator = new Propagator(this._events);
     }
 
     _prepared(require) {
@@ -105,12 +100,6 @@ module.exports = class extends DynamicProcessor(Map) {
         }));
 
         this.#errors = errors;
-
-        // Subscribe modules that are new to the collection
-        updated && this.#propagator.subscribe([...updated.values()].filter(dependency => !this.has(dependency.specifier)));
-
-        // Unsubscribe unused modules
-        this.#propagator.unsubscribe([...this.values()].filter(dependency => !updated?.has(dependency.specifier)));
 
         // Destroy unused processors
         this.forEach((dependency, specifier) => !updated?.has(specifier) && dependency.destroy());

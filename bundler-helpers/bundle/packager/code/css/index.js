@@ -15,7 +15,7 @@ module.exports = class extends require('../base') {
 
     _update() {
         let sourcemap = new SourceMap();
-        const {processors, distribution} = this.packager;
+        const {processors, cspecs} = this.packager;
 
         // Process the code of each processor
         processors.forEach(processor => {
@@ -34,7 +34,7 @@ module.exports = class extends require('../base') {
 
         let errors, warnings;
         ({sourcemap, errors, warnings} = (() => {
-            if (!distribution.minify?.css) return {sourcemap};
+            if (!cspecs.minify) return {sourcemap};
 
             const {code, map} = sourcemap;
             const cleaned = new (require('clean-css'))({sourceMap: true, target: '/'}).minify(code, map);
@@ -47,7 +47,7 @@ module.exports = class extends require('../base') {
             return {sourcemap, warnings};
         })());
 
-        sourcemap.map.sourceRoot = distribution.platform === 'web' ? '/' : `${process.cwd()}/`;
+        sourcemap.map.sourceRoot = cspecs.platform === 'web' ? '/' : `${process.cwd()}/`;
 
         this.#sourcemap = sourcemap;
         return {sourcemap, errors, warnings};

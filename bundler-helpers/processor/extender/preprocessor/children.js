@@ -27,10 +27,6 @@ module.exports = class {
         return this._get('files');
     }
 
-    get overwrites() {
-        return this._get('overwrites');
-    }
-
     /**
      * When the processor is updated, the data is taken from the cache, otherwise the children must be set.
      * This method can be overridden.
@@ -47,14 +43,7 @@ module.exports = class {
         children = children ? children : new Map();
 
         // If children of the preprocessor can be the analyzer, if it exists, or the processor sources
-        if (analyzer) {
-            children.set('analyzer', {child: analyzer});
-        }
-        else {
-            const {files, overwrites} = sources;
-            children.set('files', {child: files});
-            overwrites && children.set('overwrites', {child: overwrites});
-        }
+        analyzer ? children.set('analyzer', {child: analyzer}) : children.set('files', {child: sources.files});
 
         this.#preprocessor.children.register(children);
     }

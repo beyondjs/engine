@@ -2,7 +2,6 @@ module.exports = {
     name: 'sass',
     Hashes: require('./processor/hashes'),
     sources: {
-        overwrites: true,
         Sources: require('./processor/sources'),
         Hashes: require('./processor/sources/hashes'),
         extname: '.scss'

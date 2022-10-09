@@ -58,10 +58,6 @@ module.exports = class extends DynamicProcessor() {
         return {sourcemap};
     }
 
-    _post(sourcemap) {
-        return sourcemap;
-    }
-
     _process() {
         this.#code = this.#map = this.#errors = this.#warnings = undefined;
     }
@@ -108,32 +104,11 @@ module.exports = class extends DynamicProcessor() {
 
         sourcemap.concat(generated.code, void 0, generated.map);
 
-        // Transform to module system type according to distribution configuration
-        const {mode} = this.#tp.distribution.bundles;
-
+        // Transform to module system type according to cspecs configuration
         let map, code;
-        ({errors, map, code} = mformat({code: sourcemap.code, map: sourcemap.map, mode}));
+        const {format, minify} = this.#tp.cspecs;
+        ({errors, map, code} = mformat({code: sourcemap.code, map: sourcemap.map, format, minify}));
         this.#errors = errors;
-        if (this.#errors) return;
-
-        // Post process. Required for the start bundle to prepend the requirejs config
-        const response = this._post({code, map});
-        if (!response) throw new Error(`Transversal packager "${transversal.name}" _post method returned undefined`);
-
-        ({errors, code, map} = response);
-        this.#errors = errors;
-        if (this.#errors) return;
-
-        // Minify the .js bundle
-        ({code, map} = (() => {
-            const {distribution} = this.#tp;
-            if (!distribution.minify?.js) return {code, map};
-
-            ({code, map} = minify(code, {sourceMap: {content: map}}));
-            map = typeof map === 'string' ? JSON.parse(map) : map;
-            return {code, map};
-        })());
-
         this.#code = code;
         this.#map = map;
     }

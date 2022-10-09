@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {bundles} = require('beyond/bundlers');
+const {bundles} = require('beyond/bundlers-registry');
 
 /**
  * The Dependency object required by:
@@ -17,14 +17,13 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #container;
-    #propagator;
 
     get id() {
         return `${this.#container.id}//dependency//${this.specifier}`;
     }
 
-    get distribution() {
-        return this.#container.distribution;
+    get cspecs() {
+        return this.#container.cspecs;
     }
 
     get language() {
@@ -104,20 +103,16 @@ module.exports = class extends DynamicProcessor() {
      * Processor dependency constructor
      *
      * @param specifier {string} The dependency specifier
-     * @param container {{application: object, distribution: object, language: string}}
-     * @param Propagator? {object}
+     * @param container {{application: object, cspecs: object, language: string}}
      */
-    constructor(specifier, container, Propagator) {
+    constructor(specifier, container,) {
         super();
         this.#specifier = specifier;
         this.#container = container;
 
-        const {application, distribution} = container;
-        const seeker = application.modules.seekers.create(specifier, distribution);
+        const {application, cspecs} = container;
+        const seeker = application.modules.seekers.create(specifier, cspecs);
         super.setup(new Map([['seeker', {child: seeker}]]));
-
-        this.#propagator = Propagator ? new Propagator(this._events) : void 0;
-        this.#propagator?.subscribe(this);
     }
 
     clear() {
@@ -137,6 +132,5 @@ module.exports = class extends DynamicProcessor() {
     destroy() {
         this.children.get('seeker').child.destroy();
         super.destroy();
-        this.#propagator?.unsubscribe(this);
     }
 }

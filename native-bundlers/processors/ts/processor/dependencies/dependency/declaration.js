@@ -37,8 +37,8 @@ module.exports = class extends DynamicProcessor() {
 
     _prepared() {
         const {dependency} = this;
-        const {valid, external, bundle, distribution, language} = dependency;
-        const {declaration} = bundle ? bundle.packagers.get(distribution, language) : {};
+        const {valid, external, bundle, cspecs, language} = dependency;
+        const {declaration} = bundle ? bundle.packagers.get(cspecs, language) : {};
 
         const {children} = this;
         const previous = {

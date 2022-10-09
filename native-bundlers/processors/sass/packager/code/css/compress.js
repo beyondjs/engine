@@ -1,3 +1,5 @@
+const CleanCSS = require('clean-css');
+
 /**
  * Minify css
  *
@@ -6,7 +8,7 @@
 module.exports = function (source) {
     'use strict';
 
-    const cleaned = new (require('clean-css'))().minify(source);
+    const cleaned = (new CleanCSS()).minify(source);
     const {errors, warnings} = cleaned;
 
     if (errors.length) return {errors};

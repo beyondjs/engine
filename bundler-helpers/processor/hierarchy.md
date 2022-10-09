@@ -13,10 +13,9 @@ It is not a DynamicProcessor.
 
 ## ProcessorSources
 
-The **files** and **overwrites** objects each have the *.hash* property.
+The **files** have the *.hash* property.
 
 * Files
-* Overwrites
 
 The *.configure* method is responsible to configuring the files finder property. \
 
@@ -46,7 +45,6 @@ It is a DynamicProcessor.
 ### Children:
 
 * files
-* overwrites
 
 ## ProcessorCode
 

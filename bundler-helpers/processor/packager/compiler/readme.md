@@ -57,7 +57,6 @@ interface ICompilerDiagnostics {
     valid: boolean;
     general: string[];
     files: Map<string, ICompilerDiagnostic>;
-    overwrites: Map<string, ICompilerDiagnostic>;
 }
 
 interface ICompilerDiagnostic {

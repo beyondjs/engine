@@ -22,7 +22,6 @@ module.exports = class extends ProcessorCompiler {
 
     async _compile(updated, diagnostics, meta, request) {
         const files = this.children.get('files').child;
-        const overwrites = this.children.get('overwrites')?.child;
         const functions = this.children.get('functions')?.child;
 
         // Check if functions are valid
@@ -40,12 +39,10 @@ module.exports = class extends ProcessorCompiler {
         }
 
         let input = {sources: [], code: ''};
-        const addSources = collection => collection.forEach(source => {
+        files.forEach(source => {
             input.sources.push(source);
             input.code += source.content + '\n';
         });
-        addSources(files);
-        overwrites && addSources(overwrites);
 
         const data = (functions?.source ? functions.source.code : '') + input.code;
         const {name} = this.packager.processor;

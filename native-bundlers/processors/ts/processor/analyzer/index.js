@@ -14,10 +14,10 @@ module.exports = class extends ProcessorSinglyAnalyzer {
     // Analyze a source
     _analyzeSource(source) {
         const {specs} = this.processor;
-        const {bundle, distribution} = specs;
-        const {platform} = distribution;
+        const {bundle, cspecs} = specs;
+        const {platform} = cspecs;
 
-        const bridge = bundle.type === 'bridge' ? require('./bridge')(source, distribution) : void 0;
+        const bridge = bundle.type === 'bridge' ? require('./bridge')(source, cspecs) : void 0;
         const is = bundle.type === 'bridge' && platform !== 'backend' ? 'bridge' : 'file';
 
         // The files of the bridges that doesn't expose any actions are undefined and must be discarded
@@ -28,7 +28,7 @@ module.exports = class extends ProcessorSinglyAnalyzer {
         // Extract the dependencies and exports information from the file
         const {dependencies, exports} = require('./interface')(source.relative.file, content);
         const data = {dependencies, exports, bridge: bridge?.info, content};
-        return new this.AnalyzedSource(this.processor, distribution, 'source', source, data);
+        return new this.AnalyzedSource(this.processor, cspecs, 'source', source, data);
     }
 
     // Once all files were individually analyzed

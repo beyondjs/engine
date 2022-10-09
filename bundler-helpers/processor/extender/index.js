@@ -7,9 +7,9 @@ module.exports = class extends Map {
         return this.#processor;
     }
 
-    #distribution;
-    get distribution() {
-        return this.#distribution;
+    #cspecs;
+    get cspecs() {
+        return this.#cspecs;
     }
 
     #preprocessor;
@@ -17,14 +17,14 @@ module.exports = class extends Map {
         return this.#preprocessor;
     }
 
-    constructor(processor, distribution) {
+    constructor(processor, cspecs) {
         super();
         this.#processor = processor;
-        this.#distribution = distribution;
+        this.#cspecs = cspecs;
 
         const {meta} = processor;
         const {Preprocessor, extends: _extends} = meta.extender;
-        this.#preprocessor = new Preprocessor(processor, distribution);
+        this.#preprocessor = new Preprocessor(processor, cspecs);
 
         _extends.forEach(processorName => {
             const extension = new (require('./extension'))(processorName, this.#preprocessor);

@@ -35,15 +35,14 @@ module.exports = class extends (require('./index')) {
     async _compile(updated, diagnostics, meta, request) {
         const {children} = this;
 
-        let files, extensions, overwrites;
+        let files, extensions;
         if (children.has('analyzer')) {
             const analyzer = this.children.get('analyzer').child;
-            ({files, extensions, overwrites} = analyzer);
+            ({files, extensions} = analyzer);
         }
         else {
             files = children.get('files').child;
             extensions = children.get('extensions').child;
-            overwrites = children.get('overwrites')?.child;
         }
 
         const process = async (sources, is) => {
@@ -55,6 +54,5 @@ module.exports = class extends (require('./index')) {
 
         await process(files, 'files');
         await process(extensions, 'extensions');
-        overwrites && await process(overwrites, 'overwrites');
     }
 }

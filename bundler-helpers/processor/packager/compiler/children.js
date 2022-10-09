@@ -46,10 +46,6 @@ module.exports = class {
         return this._get('extended');
     }
 
-    get overwrites() {
-        return this._get('overwrites');
-    }
-
     /**
      * When the processor is updated, the data is taken from the cache, otherwise the children must be set.
      * This method can be overridden.
@@ -73,12 +69,11 @@ module.exports = class {
         }
         // If the compiler doesn't have an analyzer, then take the sources from the sources object
         else {
-            const {files, extensions, overwrites} = sources;
+            const {files, extensions} = sources;
 
             const events = ['item.initialised', 'item.change'];
             children.set('files', {child: files, events});
             children.set('extensions', {child: extensions, events});
-            overwrites && children.set('overwrites', {child: overwrites, events});
         }
 
         const extended = meta.extender ? new (require('./extended'))(processor) : void 0;
