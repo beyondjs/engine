@@ -10,7 +10,7 @@ module.exports = class extends ProcessorSinglyCode {
         let {code, map, url, hash} = compiled;
 
         // Transform to CJS
-        const cjs = mformat({code, map, mode: 'cjs'});
+        const cjs = mformat({code, map, format: 'cjs'});
         if (cjs.errors?.length) return {errors: [{message: cjs.errors, kind: 'html'}]};
 
         let id = this.createImID(compiled.relative.file);

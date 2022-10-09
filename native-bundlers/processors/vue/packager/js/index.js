@@ -23,7 +23,7 @@ module.exports = class extends ProcessorSinglyCode {
 
         // Set template IM
         // Transform template script to CJS
-        const cjsTemplate = mformat({code: template, map: templateMap, mode: 'cjs'});
+        const cjsTemplate = mformat({code: template, map: templateMap, format: 'cjs'});
         if (cjsTemplate.errors?.length) return {errors: [{message: cjsTemplate.errors, kind: 'html'}]};
 
         let id = this.createImID(compiled.relative.file);
