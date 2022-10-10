@@ -20,23 +20,21 @@ module.exports = class extends ProcessorAnalyzerDependencies {
         if (errors?.length) return {errors};
 
         // Processor 'ts' requires '@beyond-js/kernel/bundle' as a dependency, except itself
-        (() => {
-            const core = '@beyond-js/kernel/bundle';
+        const bkb = '@beyond-js/kernel/bundle';
 
-            const {bundle} = this.processor.specs;
-            if ([core].includes(bundle.specifier) || updated.has(core)) return;
+        const {bundle} = this.processor.specs;
+        if (bkb === bundle.specifier || updated.has(bkb)) return {updated};
 
-            if (this.has(core)) {
-                const bundle = this.get(core);
-                bundle.is.add('import');
-                updated.set(core, bundle);
-                return;
-            }
-
-            const dependency = this._create(core);
+        if (this.has(bkb)) {
+            const bundle = this.get(bkb);
+            bundle.is.add('import');
+            updated.set(bkb, bundle);
+        }
+        else {
+            const dependency = this._create(bkb);
             dependency.is.add('import');
-            updated.set(core, dependency);
-        })();
+            updated.set(bkb, dependency);
+        }
 
         return {updated};
     }

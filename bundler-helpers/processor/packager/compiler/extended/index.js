@@ -3,6 +3,7 @@ const ExtendedCompilers = (require('./compilers'));
 
 /**
  * The compiled files from the compilers of the processors being extended
+ * Ex: the ts compiled files that vue uses as its sources
  */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {

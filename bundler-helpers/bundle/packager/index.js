@@ -105,7 +105,8 @@ module.exports = class extends DynamicProcessor() {
             throw new Error(`Property extname in bundle "${bundle.type}" specification must be an array`);
         }
         if (!meta.extname.includes('.js') && !meta.extname.includes('.css')) {
-            throw new Error(`Property extname in bundle "${bundle.type}" specification must include the entries '.js' and/or '.css'`);
+            throw new Error(`Property extname in bundle "${bundle.type}" ` +
+                `specification must include the entries '.js' and/or '.css'`);
         }
 
         const Js = meta.bundle?.Js ? meta.bundle.Js : require('./code/js');

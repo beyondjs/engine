@@ -1,3 +1,6 @@
+/**
+ * Meta is no longer used. Should be removed.
+ */
 module.exports = class {
     #files = new Map();
     get files() {

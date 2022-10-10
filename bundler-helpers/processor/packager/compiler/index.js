@@ -141,6 +141,20 @@ module.exports = class extends DynamicProcessor() {
         dependencies?.forEach(dependency => require(dependency));
     }
 
+    /**
+     * Method to be overridden by the specialized compiler
+     *
+     * @param updated
+     * @param diagnostics
+     * @param meta {*} Deprecated. Should be removed.
+     * @param request
+     * @return {Promise<void>}
+     * @private
+     */
+    async _compile(updated, diagnostics, meta, request) {
+        throw new Error('This method should be overridden');
+    }
+
     async _process(request) {
         const {processor} = this.#packager;
         if (this.updated) {
