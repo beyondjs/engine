@@ -61,7 +61,7 @@
     "npm": ">=6.0.0"
   },
   "exports": {
-    ".": "./lib/index.js",
+    ".": "./index.js",
     "./mformat": "./utils/mformat/index.js",
     "./utils/ports": "./utils/ports/index.js",
     "./utils/finder": "./utils/finder/index.js",
@@ -78,12 +78,12 @@
     "./utils/crc32": "./utils/crc32/index.js",
     "./utils/specifier-parser": "./utils/specifier-parser/index.js",
     "./bundler-helpers": "./bundler-helpers/index.js",
-    "./cspecs": "./lib/core/packages/cspecs/index.js",
-    "./bundlers-registry": "./lib/core/bundlers-registry/index.js",
+    "./cspecs": "./core/packages/cspecs/index.js",
+    "./bundlers-registry": "./core/bundlers-registry/index.js",
     "./native-bundlers/bundles": "./native-bundlers/bundles/index.js",
     "./native-bundlers/processors": "./native-bundlers/processors/index.js",
-    "./externals": "./lib/core/externals/index.js",
-    "./package": "./lib/core/package/index.js"
+    "./externals": "./core/externals/index.js",
+    "./package": "./core/package/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",

@@ -106,7 +106,7 @@ module.exports = class extends require('./attributes') {
         const config = !valid || !value ? {} : value;
         super._process(config);
 
-        this.#_static.configure(this.#path, config.static);
+        this.#_static.configure(this.path, config.static);
         this.#modules.configure(config.modules);
     }
 
