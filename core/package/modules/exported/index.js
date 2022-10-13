@@ -27,6 +27,11 @@ module.exports = class extends DynamicProcessor() {
         return this.#platforms;
     }
 
+    #conditional;
+    get conditional() {
+        return this.#conditional;
+    }
+
     constructor(pkg, subpath) {
         super();
         this.#pkg = pkg;
@@ -35,7 +40,34 @@ module.exports = class extends DynamicProcessor() {
         this.#vspecifier = pkg.vspecifier + (subpath === '.' ? '' : subpath.slice(1));
     }
 
-    configure() {
-        this.#platforms = [];
+    configure(conditional) {
+        conditional = typeof conditional === 'string' ? {default: conditional} : conditional;
+        conditional = typeof conditional === 'object' ? conditional : {};
+
+        this.#conditional = new Map(Object.entries(conditional));
+
+        this.#platforms = (() => {
+            const conditional = this.#conditional;
+
+            if (conditional.has('default')) return new Set(['web', 'node', 'deno']);
+
+            const platforms = new Set();
+            conditional.has('browser') && platforms.add('web');
+            conditional.has('node') && platforms.add('node');
+            conditional.has('deno') && platforms.add('deno');
+            return platforms;
+        })();
+    }
+
+    solve({platform, format}) {
+        const order = (() => {
+            if (platform === 'web') return ['browser', 'module', 'default'];
+            if (platform === 'node') return ['node', 'module', 'default'];
+            if (platform === 'deno') return ['deno', 'module', 'default'];
+        })();
+
+        const conditional = this.#conditional;
+        const found = order.find(condition => conditional.has(condition) && conditional.get(condition));
+        return found ? conditional.get(found) : void 0;
     }
 }

@@ -107,7 +107,7 @@ module.exports = class extends require('./attributes') {
         super._process(config);
 
         this.#_static.configure(this.path, config.static);
-        this.#modules.configure(config.modules);
+        this.#modules.configure(config.modules, config.exports);
     }
 
     destroy() {

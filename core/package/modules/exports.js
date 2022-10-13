@@ -1,59 +1,60 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const Module = require('./exported');
 
 module.exports = class extends DynamicProcessor(Map) {
-    /**
-     * Normalized exports
-     *
-     * @type {Map<string, Map<string, string>>}
-     */
-    #entries = new Map();
+    #pkg;
+    #config;
 
-    /**
-     * Normalize the different alternatives to specify the exports in the package.json into
-     * a Map of exports/conditions
-     *
-     * @param json
-     * @return {*}
-     */
-    #normalize(json) {
-        const entries = typeof json.exports === 'object' ? Object.entries(json.exports) : void 0;
+    constructor(pkg) {
+        super();
+        this.#pkg = pkg;
+    }
+
+    _prepared() {
+        return !!this.#config;
+    }
+
+    _process() {
+        const updated = new Map();
+        let changed = false;
+
+        exports.forEach((conditional, subpath) => {
+            const module = this.has(subpath) ? this.get(subpath) : (changed = true) && new Module(this.#pkg, subpath);
+            updated.set(subpath, module);
+
+            module.configure(conditional);
+
+            // Move to the bundle
+            // conditional = typeof conditional === 'string' ? {default: conditional} : conditional;
+            // exports.set(subpath, new Map(Object.entries(conditional)));
+        });
+
+        // Destroy unused modules
+        this.forEach((module, subpath) => !updated.has(subpath) && (changed = true) && module.destroy());
+
+        // Set the modules in the collection
+        this.clear();
+        updated.forEach((value, key) => this.set(key, value));
+
+        return changed;
+    }
+
+    configure(config) {
+        const entries = typeof config.exports === 'object' ? Object.entries(config) : void 0;
         const exports = new Map(entries);
 
+        /**
+         * Normalise the export of the main bundle
+         */
         if (!exports.has('.')) {
             const conditional = {};
             const sanitize = path => !path.startsWith('./') ? `./${path}` : path;
-            json.module && (conditional.module = conditional.browser = sanitize(json.module));
-            json.main && (conditional.default = sanitize(json.main));
+            config.module && (conditional.module = conditional.browser = sanitize(config.module));
+            config.main && (conditional.default = sanitize(config.main));
 
             exports.set('.', conditional);
         }
 
-        // Convert the conditional exports of each subpath in a map instead of an object
-        exports.forEach((conditions, subpath) => {
-            conditions = typeof conditions === 'string' ? {default: conditions} : conditions;
-            exports.set(subpath, new Map(Object.entries(conditions)));
-        });
-        return exports;
-    }
-
-    constructor(json) {
-        super();
-        this.#entries = this.#normalize(json);
-    }
-
-    solve(subpath, {platform, kind}) {
-        subpath = subpath ? subpath : '.';
-        if (!this.#entries.has(subpath)) return;
-
-        const order = (() => {
-            const formatted = ['require-call', 'require-resolve'].includes(kind) ? 'require' : 'import';
-            if (platform === 'web') return ['browser', 'module', formatted, 'default'];
-            if (platform === 'node') return ['node', 'module', formatted, 'default'];
-            if (platform === 'deno') return ['deno', 'module', formatted, 'default'];
-        })();
-
-        const conditions = this.#entries.get(subpath);
-        const found = order.find(condition => conditions.has(condition) && conditions.get(condition));
-        return found ? conditions.get(found) : void 0;
+        this.#config = exports;
     }
 }

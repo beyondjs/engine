@@ -14,7 +14,7 @@ module.exports = class extends FinderCollection {
     }
 
     constructor(pkg) {
-        super(pkg.watcher, require('./module'), {items: {subscriptions: ['change']}});
+        super(pkg.watcher, require('./module'));
         this.#pkg = pkg;
     }
 
