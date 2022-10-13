@@ -141,8 +141,7 @@ module.exports = class Distribution extends require('../../file-manager') {
 
     hasPorts(toCheck) {
         const {ports: {http, inspect, bundles}} = this;
-        const ports = [...new Set([http, inspect, bundles])].filter(item => item !== undefined)
-        const answer = Object.keys(toCheck).find(item => ([http, inspect, bundles].includes(toCheck[item])));
-        return answer;
+        // const ports = [...new Set([http, inspect, bundles])].filter(item => item !== void 0);
+        return Object.keys(toCheck).find(item => ([http, inspect, bundles].includes(toCheck[item])));
     }
 }

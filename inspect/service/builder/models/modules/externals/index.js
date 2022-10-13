@@ -1,5 +1,4 @@
 module.exports = class Externals extends require('../../file-manager') {
-
     #packages = [];
     #custom = new Map();
 
@@ -30,7 +29,7 @@ module.exports = class Externals extends require('../../file-manager') {
         }
 
         if (typeof data === 'object') {
-            Object.keys(data).forEach((property, key) => this.#custom.set(property, data[property]));
+            Object.keys(data).forEach(property => this.#custom.set(property, data[property]));
         }
     }
 }

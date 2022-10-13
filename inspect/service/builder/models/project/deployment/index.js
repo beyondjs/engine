@@ -44,7 +44,6 @@ module.exports = class Deployment extends require('../../file-manager') {
     }
 
     setDistribution = (distribution, edit) => {
-
         if (!distribution.ports || !distribution.platform) {
             return {error: 'INVALID_CONFIG', code: 1};
         }
@@ -98,5 +97,4 @@ module.exports = class Deployment extends require('../../file-manager') {
         }
         Object.keys(data).forEach(property => this[property] = data[property]);
     }
-
 }
