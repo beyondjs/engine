@@ -1,5 +1,5 @@
 {
-  "name": "tests",
+  "name": "contoso",
   "version": "0.0.1",
   "modules": {
     "path": "./modules"
@@ -8,6 +8,7 @@
     "react-dom": "^18.2.0"
   },
   "exports": {
-    ".": "./lib/index.js"
+    ".": "./lib/index.js",
+    "./analytics": "./lib/analytics/index.js"
   }
 }

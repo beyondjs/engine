@@ -1,5 +1,6 @@
 {
   "packages": [
-    "./package.json"
+    "./package.json",
+    "./@beyond-js/backend/package.json"
   ]
 }
