@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {bundles: registry} = require('beyond/bundlers-registry');
+const Declaration = require('./declaration');
 
 /**
  * Bundler abstract class
@@ -115,6 +116,6 @@ module.exports = class extends DynamicProcessor() {
         const Css = meta.bundle?.Css ? meta.bundle.Css : require('./code/css');
         this.#css = meta.extname.includes('.css') ? new Css(this) : void 0;
 
-        this.#declaration = new (require('./declaration'))(this);
+        this.#declaration = new Declaration(this);
     }
 }
