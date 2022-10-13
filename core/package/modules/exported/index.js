@@ -1,4 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const Packagers = require('./packagers');
+const registry = require('beyond/native-bundlers/bundles');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -6,6 +8,10 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #pkg;
+
+    get id() {
+        return `${this.#pkg.id}//${this.#subpath}`;
+    }
 
     #subpath;
     get subpath() {
@@ -32,12 +38,23 @@ module.exports = class extends DynamicProcessor() {
         return this.#conditional;
     }
 
+    get meta() {
+        return registry.get('esbuild');
+    }
+
+    #packagers;
+    get packagers() {
+        return this.#packagers;
+    }
+
     constructor(pkg, subpath) {
         super();
         this.#pkg = pkg;
         this.#subpath = subpath;
         this.#specifier = pkg.specifier + (subpath === '.' ? '' : subpath.slice(1));
         this.#vspecifier = pkg.vspecifier + (subpath === '.' ? '' : subpath.slice(1));
+
+        this.#packagers = new Packagers(this);
     }
 
     configure(conditional) {
