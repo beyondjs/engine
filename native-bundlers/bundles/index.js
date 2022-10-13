@@ -11,6 +11,7 @@ try {
     bundles.push(require('./sass'));
     bundles.push(require('./widget'));
     bundles.push(require('./txt'));
+    bundles.push(require('./esbuild'));
     bundles.push(require('./start'));
 
     // Legacy bundles
