@@ -9,13 +9,12 @@ module.exports = class extends EventEmitter {
         this.#bundle = bundle;
     }
 
-    get(cspecs, language) {
-        language = language ? language : '.';
-        const key = `${cspecs.key()}//${language}`;
+    get(cspecs) {
+        const key = cspecs.key();
         if (this.#packagers.has(key)) return this.#packagers.get(key);
 
         const {Packager} = this.#bundle.meta.bundle;
-        const packager = new Packager(this.#bundle, cspecs, language);
+        const packager = new Packager(this.#bundle, cspecs);
         this.#packagers.set(key, packager);
         return packager;
     }

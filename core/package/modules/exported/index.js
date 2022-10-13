@@ -87,4 +87,9 @@ module.exports = class extends DynamicProcessor() {
         const found = order.find(condition => conditional.has(condition) && conditional.get(condition));
         return found ? conditional.get(found) : void 0;
     }
+
+    destroy() {
+        super.destroy();
+        this.#packagers.destroy();
+    }
 }
