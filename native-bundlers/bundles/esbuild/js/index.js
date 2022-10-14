@@ -21,9 +21,43 @@ module.exports = class extends DynamicProcessor() {
 
     #cache;
 
+    #errors = [];
+    get errors() {
+        return this.#errors;
+    }
+
+    get valid() {
+        return !this.#errors.length;
+    }
+
+    #code;
+    #map;
+
+    code(hmr) {
+        if (hmr) throw new Error(`This packager doesn't support HMR`);
+        return this.#code;
+    }
+
+    map(hmr) {
+        if (hmr) throw new Error(`This packager doesn't support HMR`);
+        return this.#map;
+    }
+
     constructor(packager) {
         super();
         this.#packager = packager;
         this.#cache = new PackagerCodeCache(this);
+    }
+
+    async _begin() {
+
+    }
+
+    hydrate(cached) {
+
+    }
+
+    toJSON() {
+
     }
 }

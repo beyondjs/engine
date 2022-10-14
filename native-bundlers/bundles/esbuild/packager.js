@@ -45,6 +45,6 @@ module.exports = class {
 
         super.setup(new Map([['bundle', {child: bundle}]]));
 
-        this.#js = new (require('./js'))();
+        this.#js = new (require('./js'))(this);
     }
 }
