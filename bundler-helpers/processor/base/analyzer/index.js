@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Diagnostics = require('../../diagnostics');
+const {ProcessorAnalyzerCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -56,7 +57,7 @@ module.exports = class extends DynamicProcessor() {
     constructor(processor) {
         super();
         this.#processor = processor;
-        this.#cache = new (require('./cache'))(this);
+        this.#cache = new ProcessorAnalyzerCache(this);
         this.#hashes = new (require('./hashes'))(this);
 
         super.setup(new Map([['sources.hashes', {child: processor.sources.hashes}]]));

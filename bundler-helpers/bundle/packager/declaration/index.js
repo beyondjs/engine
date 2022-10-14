@@ -1,6 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const {header} = require('beyond/utils/code');
+const {PackagerDeclarationCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -48,7 +49,7 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.setMaxListeners(500);
         this.#packager = packager;
-        this.#cache = new (require('./cache'))(packager);
+        this.#cache = new PackagerDeclarationCache(packager);
         super.setup(new Map([['hash', {child: packager.hash}]]));
     }
 

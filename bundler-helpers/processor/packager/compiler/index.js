@@ -2,6 +2,7 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const Diagnostics = (require('../../diagnostics'));
 const Meta = (require('./meta'));
+const {PackagerCompilerCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -109,7 +110,7 @@ module.exports = class extends DynamicProcessor() {
         Children = Children ? Children : require('./children');
         this.#children = new Children(this);
         this.#hashes = new (require('./hashes'))(this);
-        this.#cache = new (require('./cache'))(this);
+        this.#cache = new PackagerCompilerCache(this);
 
         super.setup(new Map([['processor.hashes', {child: packager.processor.hashes}]]));
     }

@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const header = require('./header');
+const {TransversalsCodeCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -46,7 +47,7 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.#tp = tp;
         this.#packagers = packagers;
-        this.#cache = new (require('./cache'))(tp);
+        this.#cache = new TransversalsCodeCache(tp);
 
         super.setup(new Map([['hash', {child: packagers.hash}]]));
     }

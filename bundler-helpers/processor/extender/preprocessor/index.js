@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {ExtenderPreprocessorCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -63,7 +64,7 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.#processor = processor;
 
-        this.#cache = new (require('./cache'))(this);
+        this.#cache = new ExtenderPreprocessorCache(this);
         this.#preprocessed = new (require('./preprocessed'))(processor);
 
         Children = Children ? Children : require('./children');

@@ -1,7 +1,14 @@
-module.exports = class {
+const crc32 = require('beyond/utils/crc32');
+
+module.exports = platforms => class {
     #tsc;
     get tsc() {
         return this.#tsc;
+    }
+
+    #platform;
+    get platform() {
+        return this.#platform;
     }
 
     #ssr;
@@ -9,14 +16,9 @@ module.exports = class {
         return this.#ssr;
     }
 
-    #format;
-    get format() {
-        return this.#format;
-    }
-
-    #minify;
-    get minify() {
-        return this.#minify;
+    #backend;
+    get backend() {
+        return this.#backend;
     }
 
     /**
@@ -26,7 +28,7 @@ module.exports = class {
      * @return {*}
      */
     key(properties) {
-        const options = ['tsc', 'ssr', 'minify', 'format'];
+        const options = ['platform', 'tsc', 'ssr', 'backend'];
 
         properties = properties ? properties : options;
         const compute = properties.forEach(property => {
@@ -38,13 +40,14 @@ module.exports = class {
 
     constructor(specs) {
         if (typeof specs !== 'object') throw new Error('Invalid compilation specification');
-        let {tsc, ssr, format, minify} = specs;
+        let {platform, tsc, ssr, backend} = specs;
+
+        if (!platforms.include(platform)) throw new Error(`Platform "${platform}" is invalid`);
 
         tsc = tsc ? tsc : 'transpiler';
         if (!['transpiler', 'compiler'].includes(tsc)) throw new Error('Property .tsc is invalid');
 
         this.#ssr = !!ssr;
-        this.#format = !!format;
-        this.#minify = !!minify;
+        this.#backend = !!backend;
     }
 }

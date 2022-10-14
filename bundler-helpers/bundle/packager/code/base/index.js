@@ -1,6 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const SourceMap = require('../../../../sourcemap');
+const {PackagerCodeCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -71,7 +72,7 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.#extname = extname;
         this.#packager = packager;
-        this.#cache = new (require('./cache'))(this);
+        this.#cache = new PackagerCodeCache(this);
 
         super.setup(new Map([['hash', {child: packager.hash}]]));
     }
@@ -183,8 +184,12 @@ module.exports = class extends DynamicProcessor() {
 
         // Update the code
         ({sourcemap, errors} = this._update(hmr));
-        if (sourcemap && errors?.length) throw new Error('Only sourcemap or errors should be returned from processor code');
-        if (!sourcemap && !errors?.length) throw new Error('Processor code packager should return a sourcemap or errors');
+        if (sourcemap && errors?.length) {
+            throw new Error('Only sourcemap or errors should be returned from processor code');
+        }
+        if (!sourcemap && !errors?.length) {
+            throw new Error('Processor code packager should return a sourcemap or errors');
+        }
 
         done({sourcemap, errors});
     }

@@ -1,40 +1,13 @@
-const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {bundles: registry} = require('beyond/bundlers-registry');
 const Declaration = require('./declaration');
 
 /**
  * Bundler abstract class
  */
-module.exports = class extends DynamicProcessor() {
-    get dp() {
-        return 'bundle.packager';
-    }
-
-    /**
-     * The compilation specification key
-     * @type {number}
-     */
-    #ckey;
-
-    /**
-     * The PLM packager id
-     * @return {string}
-     */
-    get id() {
-        const language = this.#language ? `//${this.#language}` : '//.';
-        return `${this.bundle.id}//${this.#ckey}${language}`;
-    }
-
+module.exports = class {
+    #bundle;
     get bundle() {
-        return this.children.get('bundle').child;
-    }
-
-    get path() {
-        return this.bundle.path;
-    }
-
-    get pkg() {
-        return this.bundle.pkg;
+        return this.#bundle;
     }
 
     #cspecs;
@@ -47,9 +20,10 @@ module.exports = class extends DynamicProcessor() {
         return this.#language;
     }
 
-    #declaration;
-    get declaration() {
-        return this.#declaration;
+    get id() {
+        const language = this.#language ? `//${this.#language}` : '//.';
+        const ckey = this.#cspecs.key();
+        return `${this.#bundle.id}//${ckey}${language}`;
     }
 
     #js;
@@ -60,6 +34,11 @@ module.exports = class extends DynamicProcessor() {
     #css;
     get css() {
         return this.#css;
+    }
+
+    #declaration;
+    get declaration() {
+        return this.#declaration;
     }
 
     #hash;
@@ -83,18 +62,16 @@ module.exports = class extends DynamicProcessor() {
     }
 
     /**
-     * Bundler constructor
+     * Bundle packager constructor
      *
      * @param bundle {object} The bundle
      * @param cspecs {object} The compilation specification
      * @param language {string} The language
      */
     constructor(bundle, cspecs, language) {
-        super();
+        this.#bundle = bundle;
         this.#cspecs = cspecs;
         this.#language = language;
-
-        super.setup(new Map([['bundle', {child: bundle}]]));
 
         this.#processors = new (require('./processors'))(this);
         this.#dependencies = new (require('./dependencies'))(this);
