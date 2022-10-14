@@ -1,16 +1,8 @@
-module.exports = class extends require('./attributes') {
+const PackageBase = require('./base');
+
+module.exports = class extends PackageBase {
     #packages;
     #json;
-
-    #modules;
-    get modules() {
-        return this.#modules;
-    }
-
-    #_static;
-    get static() {
-        return this.#_static;
-    }
 
     /**
      * External package constructor
@@ -25,8 +17,7 @@ module.exports = class extends require('./attributes') {
         this.#json = json;
     }
 
-    async _begin() {
-        this.#_static = new (require('./static'))();
-        this.#modules = new (require('./modules'))();
+    _process() {
+        super._process(this.#json);
     }
 }

@@ -1,109 +1,39 @@
-module.exports = class extends Map {
-    #dependencies;
-    get dependencies() {
-        return this.#dependencies;
-    }
+const Registry = require('uimport/registry');
+const DependenciesTree = require('beyond/dependencies-tree');
+const ExternalsInstalls = require('beyond/externals/installs');
 
-    #registry;
+module.exports = async function (building, specs) {
+    // Generate the dependencies tree of the package to be built
+    const tree = await (async () => {
+        const registry = new Registry(specs.registry);
 
-    #errors;
-    /**
-     * The list of errors generated while processing the dependencies tree
-     * @return {Map<string, string>}
-     */
-    get errors() {
-        return this.#errors;
-    }
+        const dependencies = new Map();
+        dependencies.set(building.pkg, {version: building.version, kind: 'main'});
 
-    #list;
-    /**
-     * The flat list of packages required by the dependency tree
-     * @return {Map<string, {version}>}
-     */
-    get list() {
-        return this.#list;
-    }
+        const tree = new DependenciesTree(dependencies, registry);
+        await tree.analyze();
+        return tree;
+    })();
 
-    constructor(dependencies, registry) {
-        super();
-        this.#dependencies = dependencies;
-        this.#registry = registry;
-    }
+    const {downloads, errors} = await (async () => {
+        const downloads = new Map();
+        const errors = [];
 
-    /**
-     * Process the flat list of packages and errors after the dependencies tree was processed
-     */
-    #process() {
-        const list = new Map();
-        const errors = new Map();
-
-        const recursive = dependencies => dependencies.forEach(({error, dependencies, version, vpackage}, name) => {
-            const vspecifier = `${name}@${version}`;
-            if (error) {
-                errors.set(vspecifier, {error});
-                return;
+        for (const [vname, {vpackage}] of tree.list) {
+            const downloader = new Downloader(vpackage, specs.downloader);
+            try {
+                await downloader.process();
+            }
+            catch (exc) {
+                errors.push(`Error downloading package "${vname}": ${exc.message}`);
+                continue;
             }
 
-            list.set(vspecifier, vpackage);
-            dependencies && recursive(dependencies);
-        });
-        recursive(this);
-
-        this.#list = list;
-        this.#errors = errors;
-    }
-
-    async analyze() {
-        this.clear();
-
-        const recursive = async dependencies => {
-            const output = new Map();
-
-            for (const [name, version] of dependencies) {
-                const pkg = this.#registry.obtain(name);
-
-                const done = ({error, vpackage, dependencies}) => {
-                    dependencies = dependencies ? dependencies : new Map();
-                    if (error) {
-                        output.set(name, {error});
-                        return;
-                    }
-
-                    const {version} = vpackage;
-                    output.set(name, {vpackage, version, dependencies});
-                }
-
-                const {error} = await pkg.fetch();
-                if (error) {
-                    done({error: `Error fetching package "${name}": ${error}`});
-                    continue;
-                }
-
-                const vpackage = pkg.version(version);
-                if (!vpackage) {
-                    done(({error: `Dependency version "${version}" is not valid`}));
-                    continue;
-                }
-
-                if (!vpackage.dependencies) {
-                    done({vpackage});
-                    continue;
-                }
-
-                const dependencies = await (async () => {
-                    if (!vpackage.dependencies) return;
-
-                    const dependencies = new Map(Object.entries(vpackage.dependencies));
-                    return await recursive(dependencies);
-                })();
-                done({vpackage, dependencies});
-            }
-
-            return output;
+            downloads.set(vname, downloader);
         }
 
-        const dependencies = await recursive(this.#dependencies);
-        dependencies.forEach((value, key) => this.set(key, value));
-        this.#process();
-    }
+        return {errors, downloads};
+    })();
+
+    return {tree, downloads, errors};
 }

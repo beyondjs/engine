@@ -16,6 +16,10 @@ module.exports = class extends ConfigurableFinder {
         return this.#warnings;
     }
 
+    constructor(pkg) {
+        super(pkg.watcher);
+    }
+
     configure(path, config) {
         this.#errors = [];
         config.includes = typeof config.includes === 'string' ? [config.includes] : config.includes;

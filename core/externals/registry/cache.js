@@ -1,4 +1,4 @@
-const path = require('path');
+const {join} = require('path');
 const fs = require('fs/promises');
 
 module.exports = class PackagesCache {
@@ -6,11 +6,11 @@ module.exports = class PackagesCache {
 
     constructor(path) {
         if (!path) throw new Error('Cache path specification not received');
-        this.#path = path;
+        this.#path = join(process.cwd(), '.beyond/externals/registry');
     }
 
     async load(name) {
-        const file = path.join(this.#path, `${name}.json`);
+        const file = join(this.#path, `${name}.json`);
         const exists = await new Promise(resolve =>
             fs.access(file).then(() => resolve(true)).catch(() => resolve(false)));
         if (!exists) return;
@@ -20,7 +20,7 @@ module.exports = class PackagesCache {
     }
 
     async save(name, json) {
-        const file = path.join(this.#path, `${name}.json`);
+        const file = join(this.#path, `${name}.json`);
 
         await fs.mkdir(this.#path, {recursive: true});
         await fs.writeFile(file, JSON.stringify(json));

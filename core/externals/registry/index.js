@@ -1,12 +1,12 @@
 const Cache = require('./cache.js');
 const Package = require('./package.js');
 
-module.exports = class extends Map {
+module.exports = new class extends Map {
     #cache;
 
-    constructor(specs) {
+    constructor() {
         super();
-        this.#cache = new Cache(specs.cache);
+        this.#cache = new Cache();
     }
 
     obtain(name) {

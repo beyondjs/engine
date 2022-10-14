@@ -1,6 +1,7 @@
+const PackageBase = require('./base');
 const WatchersClient = require('beyond/utils/watchers/client');
 
-module.exports = class extends require('./attributes') {
+module.exports = class extends PackageBase {
     #packages;
 
     #watcher;
@@ -20,11 +21,6 @@ module.exports = class extends require('./attributes') {
 
     get valid() {
         return !this.#errors.length;
-    }
-
-    #modules;
-    get modules() {
-        return this.#modules;
     }
 
     #dependencies;
@@ -47,11 +43,6 @@ module.exports = class extends require('./attributes') {
         return this.#template;
     }
 
-    #_static;
-    get static() {
-        return this.#_static;
-    }
-
     #styles;
     get styles() {
         return this.#styles;
@@ -63,20 +54,21 @@ module.exports = class extends require('./attributes') {
     }
 
     async _begin() {
-        await super._begin();
-
         // Create the files watcher for the package
         const config = this.children.get('config').child;
         await config.initialise();
 
+        /**
+         * Create the watcher before calling super._begin, as it is required by PackageBase
+         */
         this.#watcher = new WatchersClient({is: 'package', path: config.path});
         this.#watcher.start().catch(exc => console.error(exc.stack));
+
+        await super._begin();
 
         this.#config = new (require('./config'))(this);
         this.#dependencies = new (require('./dependencies'))(this, this.#packages);
         this.#consumers = new (require('./consumers'))(this);
-        this.#_static = new (require('./static'))(this.#watcher);
-        this.#modules = new (require('./modules'))(this);
         this.#transversals = new (require('./transversals'))(this);
         this.#template = new (require('./template'))(this, config.properties.get('template'));
         this.#styles = new (require('./styles'))(this);
@@ -93,9 +85,6 @@ module.exports = class extends require('./attributes') {
         this.#packages = packages;
 
         super.setup(new Map([['config', {child: config}]]));
-
-        // As the modules are subscribed to the events of the package
-        this._events.setMaxListeners(500);
     }
 
     _process() {
@@ -104,18 +93,13 @@ module.exports = class extends require('./attributes') {
         this.#errors = errors;
 
         const config = !valid || !value ? {} : value;
-        super._process(config);
-
-        this.#_static.configure(this.path, config.static);
-        this.#modules.configure(config.modules, config.exports);
+        return super._process(config);
     }
 
     destroy() {
         super.destroy();
         this.#watcher?.destroy();
         this.#template?.destroy();
-        this.#_static?.destroy();
-        this.#modules?.destroy();
         this.#styles?.destroy();
     }
 }

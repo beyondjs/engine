@@ -20,28 +20,20 @@ module.exports = class extends DynamicProcessor() {
 
     #values = {};
 
-    get scope() {
-        return this.#values.scope;
-    }
-
     get name() {
         return this.#values.name;
     }
 
-    get package() {
-        return this.#values.package;
+    get version() {
+        return this.#values.version;
     }
 
     get specifier() {
-        return this.#values.package;
+        return this.#values.name;
     }
 
     get vspecifier() {
-        return `${this.#values.package}@${this.#values.version}`;
-    }
-
-    get version() {
-        return this.#values.version;
+        return `${this.#values.name}@${this.#values.version}`;
     }
 
     get title() {
@@ -76,18 +68,6 @@ module.exports = class extends DynamicProcessor() {
         return this.#values.layout;
     }
 
-    get connect() {
-        return this.#values.connect;
-    }
-
-    get cordova() {
-        return this.#values.cordova;
-    }
-
-    get hosts() {
-        return this.#values.hosts;
-    }
-
     get engine() {
         return this.#values.engine;
     }
@@ -107,26 +87,36 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _process(config) {
-        const {scope, name, version, title, description, author, license, layout, hosts, params} = config;
+        const {version, title, description, author, license, layout, params} = config;
+
+        const name = (() => {
+            const {scope, name} = config;
+            if (name.startsWith('@')) return name;
+            return (scope ? `@${scope}/` : '') + name;
+        })();
+
         const engine = config.engine ? config.engine : 'v1';
 
-        let {languages} = config;
-        languages = typeof languages === 'string' ? [languages] : languages;
-        languages = languages instanceof Array ? {supported: languages} : languages;
-        languages = typeof languages === 'object' ? languages : {};
-        languages.supported = languages.supported instanceof Array ? languages.supported : [];
-        languages.default = languages.default && typeof languages.default === 'string' ? languages.default : 'en';
+        const languages = (() => {
+            let {languages} = config;
+            languages = typeof languages === 'string' ? [languages] : languages;
+            languages = languages instanceof Array ? {supported: languages} : languages;
+            languages = typeof languages === 'object' ? languages : {};
+            languages.supported = languages.supported instanceof Array ? languages.supported : [];
+            languages.default = languages.default && typeof languages.default === 'string' ? languages.default : 'en';
+            return languages;
+        })();
 
-        let {routing} = config;
-        routing = typeof routing === 'object' ? {mode: routing.mode, ssr: routing.ssr} : {};
-        routing.mode = routing.mode !== 'hash' ? 'pathname' : 'hash';
-        routing.ssr = routing.ssr !== void 0 ? !!routing.ssr : false;
+        const routing = (() => {
+            let {routing} = config;
+            routing = typeof routing === 'object' ? {mode: routing.mode, ssr: routing.ssr} : {};
+            routing.mode = routing.mode !== 'hash' ? 'pathname' : 'hash';
+            routing.ssr = routing.ssr !== void 0 ? !!routing.ssr : false;
+            return routing;
+        })();
 
         const values = {
-            scope, name, author, license,
-            package: (config.scope ? `@${config.scope}/` : '') + config.name,
-            version, title, description, languages, routing, layout, hosts, engine, params,
-            cordova: config.cordova
+            name, author, license, version, title, description, languages, routing, layout, engine, params
         };
 
         if (equal(values, this.#values)) return false;

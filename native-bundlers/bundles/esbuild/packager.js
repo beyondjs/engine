@@ -1,4 +1,6 @@
-module.exports = class {
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+
+module.exports = class extends DynamicProcessor {
     #bundle;
     get bundle() {
         return this.#bundle;
@@ -40,6 +42,7 @@ module.exports = class {
     }
 
     constructor(bundle, cspecs) {
+        super();
         this.#bundle = bundle;
         this.#cspecs = cspecs;
 
