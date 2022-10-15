@@ -1,39 +1,23 @@
-const Registry = require('uimport/registry');
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const installs = require('beyond/externals/installs');
 const DependenciesTree = require('beyond/dependencies-tree');
-const ExternalsInstalls = require('beyond/externals/installs');
 
-module.exports = async function (building, specs) {
-    // Generate the dependencies tree of the package to be built
-    const tree = await (async () => {
-        const registry = new Registry(specs.registry);
+module.exports = class extends DynamicProcessor() {
+    #pkg;
+    #tree;
 
-        const dependencies = new Map();
-        dependencies.set(building.pkg, {version: building.version, kind: 'main'});
+    #installed;
+    get installed() {
+        return this.#installed;
+    }
 
-        const tree = new DependenciesTree(dependencies, registry);
-        await tree.analyze();
-        return tree;
-    })();
+    constructor(pkg) {
+        super();
+        this.#pkg = pkg;
+        super.setup(new Map([['package', {child: pkg}], ['installs', {child: installs}]]));
+    }
 
-    const {downloads, errors} = await (async () => {
-        const downloads = new Map();
-        const errors = [];
+    _process() {
 
-        for (const [vname, {vpackage}] of tree.list) {
-            const downloader = new Downloader(vpackage, specs.downloader);
-            try {
-                await downloader.process();
-            }
-            catch (exc) {
-                errors.push(`Error downloading package "${vname}": ${exc.message}`);
-                continue;
-            }
-
-            downloads.set(vname, downloader);
-        }
-
-        return {errors, downloads};
-    })();
-
-    return {tree, downloads, errors};
+    }
 }

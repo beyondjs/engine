@@ -3,7 +3,7 @@ const fs = require('beyond/utils/fs');
 const {join} = require('path');
 const Downloader = require('./downloader');
 
-module.exports = class extends DynamicProcessor(Map) {
+module.exports = new class extends DynamicProcessor(Map) {
     get dp() {
         return 'externals';
     }

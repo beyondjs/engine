@@ -1,10 +1,20 @@
 const satisfies = require('semver/functions/satisfies.js');
-const fetch = require('node-fetch');
-const {PendingPromise} = require('uimport/utils');
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const {ExternalsRegistryCache} = require('beyond/cache');
+const PackageFetcher = require('./fetcher');
 
-module.exports = class Package {
+module.exports = class Package extends DynamicProcessor() {
     #name;
     #cache;
+    #fetcher;
+
+    get fetching() {
+        return this.#fetcher.fetching;
+    }
+
+    get fetched() {
+        return this.#fetcher.fetched;
+    }
 
     #error;
     get error() {
@@ -23,46 +33,49 @@ module.exports = class Package {
         return this.#versions;
     }
 
+    filled() {
+        return !!this.#versions;
+    }
+
     /**
      * Returns the version of the package that satisfies the required version
      * @param required
      */
     version(required) {
+        if (!this.#versions) return;
+
         const version = this.#versions.find(({version}) => satisfies(version, required));
         return version ? new (require('./vpackage'))(version) : void 0;
     }
 
-    constructor(name, cache) {
+    constructor(name) {
+        super();
         this.#name = name;
-        this.#cache = cache;
+        this.#cache = new ExternalsRegistryCache(name);
+        this.#fetcher = new PackageFetcher(name, this.#cache);
+
+        super.setup([['fetcher', {child: this.#fetcher}]]);
     }
 
-    #promise;
+    #process(value, time) {
+        this.#versions = Object.values(value.versions).reverse();
+        this.#time = time;
+    }
 
-    async fetch() {
-        if (this.#promise) return await this.#promise;
-        this.#promise = new PendingPromise();
+    async _begin() {
+        const cache = this.#cache;
+        await cache.load();
+        cache.value && this.#process(cache.value);
+    }
 
-        const done = ({json, error}) => {
-            if (error) {
-                this.#error = error;
-                return {error};
-            }
+    #time;
 
-            this.#versions = Object.values(json.versions).reverse();
+    _process() {
+        const {value, time} = this.#fetcher;
+        value && time !== this.#time && this.#process(value, time);
+    }
 
-            this.#promise.resolve({json});
-            return {json};
-        }
-
-        const cached = await this.#cache.load(this.#name);
-        if (cached) return done(cached);
-
-        const response = await fetch(`https://registry.npmjs.org/${this.#name}`);
-        if (!response.ok) return done({error: response.status});
-
-        const json = await response.json();
-        await this.#cache.save(this.#name, {json});
-        return done({json});
+    fetch() {
+        return this.#fetcher.fetch();
     }
 }
