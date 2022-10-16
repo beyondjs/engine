@@ -33,7 +33,7 @@ module.exports = class Package extends DynamicProcessor() {
         return this.#versions;
     }
 
-    filled() {
+    get filled() {
         return !!this.#versions;
     }
 

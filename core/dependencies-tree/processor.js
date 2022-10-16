@@ -1,13 +1,8 @@
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const registry = require('beyond/externals/registry');
 
-module.exports = class {
+module.exports = class extends DynamicProcessor() {
     #dependencies;
-    #cache;
-
-    #value;
-    get value() {
-        return this.#value;
-    }
 
     #processing = false;
     get processing() {
@@ -19,22 +14,9 @@ module.exports = class {
         return this.#processed;
     }
 
-    #errors;
-    /**
-     * The list of errors generated while processing the dependencies tree
-     * @return {Map<string, string>}
-     */
-    get errors() {
-        return this.#errors;
-    }
-
-    #list;
-    /**
-     * The flat list of packages required by the dependency tree
-     * @return {Map<string, {version}>}
-     */
-    get list() {
-        return this.#list;
+    #value;
+    get value() {
+        return this.#value;
     }
 
     #time;
@@ -46,32 +28,9 @@ module.exports = class {
         return this.#time;
     }
 
-    constructor(dependencies, cache) {
+    constructor(dependencies) {
+        super();
         this.#dependencies = dependencies;
-        this.#cache = cache;
-    }
-
-    /**
-     * Process the flat list of packages and errors after the dependencies tree was processed
-     */
-    #postprocess() {
-        const list = new Map();
-        const errors = new Map();
-
-        const recursive = dependencies => dependencies.forEach(({error, dependencies, version, vpackage}, name) => {
-            const vspecifier = `${name}@${version}`;
-            if (error) {
-                errors.set(vspecifier, {error});
-                return;
-            }
-
-            list.set(vspecifier, {vpackage, dependencies});
-            dependencies && recursive(dependencies);
-        });
-        recursive(this);
-
-        this.#list = list;
-        this.#errors = errors;
     }
 
     #request;
@@ -81,7 +40,9 @@ module.exports = class {
     }
 
     async process() {
+        if (this.#processing) return;
         this.#processing = true;
+        this._invalidate();
 
         const request = this.#request = Date.now();
 
@@ -93,34 +54,27 @@ module.exports = class {
 
                 const pkg = registry.obtain(name);
 
-                const done = data => {
-                    this.#processing = false;
-                    this.#processed = true;
-                    this.#time = Date.now();
-                    this.#cache.save(data);
-
-                    const {error, vpackage} = data;
-                    const dependencies = data.dependencies ? data.dependencies : new Map();
+                const done = ({vpackage, dependencies, error}) => {
                     if (error) {
                         output.set(name, {error});
                         return;
                     }
 
                     const {version} = vpackage;
-                    output.set(name, {vpackage, version, dependencies});
+                    output.set(name, {version, dependencies});
                 }
 
-                const {error} = await pkg.fetch();
+                await pkg.fetch();
                 if (this.#request !== request) return;
 
-                if (error) {
-                    done({error: `Error fetching package "${name}": ${error}`});
+                if (pkg.error) {
+                    done({error: `Error fetching package "${name}": ${pkg.error}`});
                     continue;
                 }
 
                 const vpackage = pkg.version(version);
                 if (!vpackage) {
-                    done(({error: `Dependency version "${version}" is not valid`}));
+                    done(({error: `Dependency version "${version}" cannot be satisfied`}));
                     continue;
                 }
 
@@ -133,8 +87,14 @@ module.exports = class {
             return output;
         }
 
-        const dependencies = await recursive(this.#dependencies);
-        dependencies.forEach((value, key) => this.set(key, value));
-        this.#postprocess();
+        const value = await recursive(this.#dependencies);
+        if (this.#request !== request) return;
+
+        this.#processing = false;
+        this.#processed = true;
+        this.#value = value;
+        this.#time = Date.now();
+
+        this._invalidate();
     }
 }

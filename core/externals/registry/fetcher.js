@@ -1,6 +1,7 @@
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const fetch = require('node-fetch');
 
-module.exports = class {
+module.exports = class extends DynamicProcessor() {
     #name;
     #cache;
 
@@ -38,13 +39,13 @@ module.exports = class {
     }
 
     constructor(name, cache) {
+        super();
         this.#name = name;
         this.#cache = cache;
     }
 
     async fetch() {
         if (this.#fetching) return;
-
         this.#fetching = true;
         this._invalidate();
 
@@ -53,6 +54,7 @@ module.exports = class {
             this.#fetching = false;
             this.#fetched = false;
             this.#error = response.status;
+            this._invalidate();
             return;
         }
 
@@ -69,5 +71,7 @@ module.exports = class {
         finally {
             this.#fetching = false;
         }
+
+        this._invalidate();
     }
 }

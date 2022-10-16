@@ -5,7 +5,16 @@ const crc32 = require('beyond/utils/crc32');
 const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor() {
-    #dependencies;
+    #vspecifier;
+    get vspecifier() {
+        return this.#vspecifier;
+    }
+
+    #config;
+    get config() {
+        return this.#config;
+    }
+
     #cache;
     #processor;
 
@@ -32,24 +41,18 @@ module.exports = class extends DynamicProcessor() {
         return this.#list;
     }
 
-    filled() {
+    get filled() {
         return !!this.#tree;
     }
 
-    constructor(dependencies) {
+    constructor(vspecifier, config) {
         super();
-        this.#dependencies = dependencies;
-        this.#cache = new DependenciesTreeCache(dependencies);
-        this.#processor = new DependenciesProcessor(dependencies, this.#cache);
+        this.#vspecifier = vspecifier;
+        this.#config = config;
+        this.#cache = new DependenciesTreeCache(this);
+        this.#processor = new DependenciesProcessor(this);
 
         super.setup([['processor', {child: this.#processor}]]);
-    }
-
-    #set({value, errors, list}, time) {
-        this.#value = value;
-        this.#errors = errors;
-        this.#list = list;
-        this.#time = time;
     }
 
     async _begin() {
@@ -61,11 +64,23 @@ module.exports = class extends DynamicProcessor() {
     #time;
 
     _process() {
-        const {value, errors, list, time} = this.#processor;
-        value && time !== this.#time && this.#set({value, errors, list}, time);
+        const {value, time} = this.#processor;
+        if (time === this.#time) return;
+
+        this.#value = value;
+        this.#time = time;
+        this.#cache.save();
     }
 
     process() {
-        return this.#processor.process();
+        this.#processor.process();
+    }
+
+    toJSON() {
+        return this.#data.toJSON();
+    }
+
+    destroy() {
+        this.#processor.cancel();
     }
 }
