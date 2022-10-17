@@ -11,10 +11,10 @@ module.exports = class extends PackageBase {
      * @param json {*} The package.json content as an object
      * @param packages {*} The packages collection
      */
-    constructor(path, packages, json) {
+    constructor(path, json, packages) {
         super(path);
-        this.#packages = packages;
         this.#json = json;
+        this.#packages = packages;
     }
 
     _process() {

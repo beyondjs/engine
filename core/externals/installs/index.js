@@ -2,6 +2,7 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const fs = require('beyond/utils/fs');
 const {join} = require('path');
 const Downloader = require('./downloader');
+const VPackage = require('./vpackage');
 
 module.exports = new class extends DynamicProcessor(Map) {
     get dp() {
@@ -24,21 +25,18 @@ module.exports = new class extends DynamicProcessor(Map) {
         const warnings = this.#warnings = [];
         await fs.mkdir(this.#path, {recursive: true});
 
-        const process = async (name) => {
-            const pkgjson = join(this.#path, name, 'package.json');
+        const process = async vspecifier => {
+            const pkgjson = join(this.#path, vspecifier, 'package.json');
             if (!(await fs.exists(pkgjson))) return;
 
-            try {
-                const content = await fs.readFile(pkgjson, 'utf8');
-                this.set(name, JSON.parse(content));
-            }
-            catch (exc) {
-                warnings.push(`Package "${name}" couldn't be processed: ${exc.message}`);
-            }
+            const vpackage = new VPackage(pkgjson, vspecifier);
+            await vpackage.process();
+            vpackage.error ?
+                `Package "${vspecifier}" couldn't be processed: ${vpackage.error}` :
+                this.set(vspecifier, vpackage);
         }
 
         const promises = [];
-
         const entries = await fs.readdir(this.#path, {withFileTypes: true});
         for (const entry of entries) {
             if (!entry.isDirectory()) continue;
