@@ -28,6 +28,7 @@ module.exports = class extends Attributes {
     }
 
     _process(config) {
+        this.#dependencies.configure(config.dependencies);
         this.#_static.configure(this.path, config.static);
         this.#modules.configure(config.modules, config.exports);
 
@@ -38,5 +39,6 @@ module.exports = class extends Attributes {
         super.destroy();
         this.#modules?.destroy();
         this.#_static?.destroy();
+        this.#dependencies?.destroy();
     }
 }

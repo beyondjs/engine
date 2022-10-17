@@ -21,7 +21,7 @@ module.exports = class {
     #list;
     /**
      * The flat list of packages required by the dependency tree
-     * @return {Map<string, {version}>}
+     * @return {Map<string, {version, dependencies}>}
      */
     get list() {
         return this.#list;
@@ -41,7 +41,7 @@ module.exports = class {
                 return;
             }
 
-            list.set(vspecifier, {vpackage, dependencies});
+            list.set(vspecifier, {version, dependencies});
             dependencies && recursive(dependencies);
         });
         recursive(tree);
@@ -51,17 +51,17 @@ module.exports = class {
     }
 
     hydrate(data) {
-        const hydrate = branch => {
+        const recursive = branch => {
             const hydrated = new Map(branch);
             hydrated.forEach(({version, dependencies}, name) => {
                 const value = {version};
-                dependencies && (value.dependencies = hydrate(dependencies));
+                dependencies && (value.dependencies = recursive(dependencies));
                 return hydrated.set(name, value);
             });
 
             return hydrated;
         };
-        const tree = hydrate(data);
+        const tree = this.#tree = recursive(data);
 
         this.#postprocess(tree);
     }

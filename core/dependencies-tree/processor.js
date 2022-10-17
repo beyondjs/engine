@@ -52,8 +52,6 @@ module.exports = class extends DynamicProcessor() {
             for (const [name, {kind, version}] of dependencies) {
                 if (kind === 'development') continue;
 
-                const pkg = registry.obtain(name);
-
                 const done = ({vpackage, dependencies, error}) => {
                     if (error) {
                         output.set(name, {error});
@@ -64,7 +62,8 @@ module.exports = class extends DynamicProcessor() {
                     output.set(name, {version, dependencies});
                 }
 
-                await pkg.fetch();
+                const pkg = registry.obtain(name);
+                await pkg.fill();
                 if (this.#request !== request) return;
 
                 if (pkg.error) {

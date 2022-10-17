@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const PendingPromise = require('beyond/utils/pending-promise');
 const fetch = require('node-fetch');
 
 module.exports = class extends DynamicProcessor() {
@@ -44,18 +45,25 @@ module.exports = class extends DynamicProcessor() {
         this.#cache = cache;
     }
 
+    #promise;
+
     async fetch() {
-        if (this.#fetching) return;
+        if (this.#promise) return await this.#promise;
         this.#fetching = true;
+        this.#promise = new PendingPromise();
         this._invalidate();
+
+        const done = () => {
+            this.#fetching = false;
+            this.#promise.resolve();
+            this._invalidate();
+        }
 
         const response = await fetch(`https://registry.npmjs.org/${this.#name}`);
         if (!response.ok) {
-            this.#fetching = false;
             this.#fetched = false;
             this.#error = response.status;
-            this._invalidate();
-            return;
+            return done();
         }
 
         try {
@@ -68,10 +76,7 @@ module.exports = class extends DynamicProcessor() {
             this.#fetched = false;
             this.#error = exc.message;
         }
-        finally {
-            this.#fetching = false;
-        }
 
-        this._invalidate();
+        done();
     }
 }

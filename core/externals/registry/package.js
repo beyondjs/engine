@@ -75,7 +75,12 @@ module.exports = class Package extends DynamicProcessor() {
         value && time !== this.#time && this.#process(value, time);
     }
 
-    fetch() {
-        return this.#fetcher.fetch();
+    async fetch() {
+        await this.#fetcher.fetch();
+    }
+
+    async fill() {
+        await this.ready;
+        !this.filled && await this.fetch();
     }
 }
