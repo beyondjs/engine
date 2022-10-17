@@ -77,7 +77,7 @@
     "./utils/md5": "./utils/md5/index.js",
     "./utils/crc32": "./utils/crc32/index.js",
     "./utils/specifier-parser": "./utils/specifier-parser/index.js",
-    "./cache": "./core/cache",
+    "./cache": "./core/cache/index.js",
     "./dependencies-tree": "./core/dependencies-tree/index.js",
     "./externals/installs": "./core/externals/installs/index.js",
     "./externals/registry": "./core/externals/registry/index.js",
@@ -112,7 +112,6 @@
     "colors": "1.4.0",
     "concat-with-sourcemaps": "^1.1.0",
     "convert-source-map": "^1.7.0",
-    "esbuild": "^0.14.48",
     "formidable": "^1.2.2",
     "html-minifier": "^4.0.0",
     "json-format": "^1.0.1",
@@ -131,6 +130,10 @@
     "uimport": "^1.1.4",
     "vue": "^3.2.37",
     "yargs": "^17.5.1",
+    "esbuild": "^0.14.48",
+    "semver": "^7.3.7",
+    "zlib": "^1.0.5",
+    "tar-stream": "^2.2.0",
     "@beyond-js/bee": "^0.0.1"
   }
 }

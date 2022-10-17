@@ -73,7 +73,6 @@ module.exports = class extends DynamicProcessor() {
         const {value, time} = this.#processor;
         if (time === this.#time) return;
 
-        this.#value = value;
         this.#data.hydrate(value);
         this.#time = time;
         this.#cache.save();

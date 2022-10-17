@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Internals = require('./internals');
-const Externals = require('beyond/externals');
+const externals = require('beyond/externals/installs');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -12,15 +12,9 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#internals;
     }
 
-    #externals;
-    get externals() {
-        return this.#externals;
-    }
-
     constructor(config) {
         super();
         const internals = this.#internals = new Internals(config);
-        const externals = this.#externals = new Externals();
 
         // Remove externals initialisation
         externals.ready
@@ -34,6 +28,6 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _process() {
-        console.log('Processing packages:', [...this.#externals.keys()]);
+        console.log('Processing packages:', [...externals.keys()]);
     }
 }

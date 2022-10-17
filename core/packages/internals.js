@@ -1,6 +1,6 @@
 const ipc = require('beyond/utils/ipc');
 const {ConfigCollection} = require('beyond/utils/config');
-const Package = require('beyond/package');
+const {Internal: InternalPackage} = require('beyond/package');
 
 module.exports = class extends ConfigCollection {
     get dp() {
@@ -22,6 +22,6 @@ module.exports = class extends ConfigCollection {
     }
 
     _createItem(config) {
-        return new Package(config, this);
+        return new InternalPackage(config, this);
     }
 }

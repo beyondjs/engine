@@ -2,6 +2,8 @@ const ipc = require('beyond/utils/ipc');
 const {ConfigurableFinder} = require('beyond/utils/finder');
 
 module.exports = class extends ConfigurableFinder {
+    #pkg;
+
     #errors = [];
     get errors() {
         return this.#errors;
@@ -18,6 +20,7 @@ module.exports = class extends ConfigurableFinder {
 
     constructor(pkg) {
         super(pkg.watcher);
+        this.#pkg = pkg;
     }
 
     configure(path, config) {
@@ -36,7 +39,7 @@ module.exports = class extends ConfigurableFinder {
         ipc.notify('data-notification', {
             type: 'list/update',
             table: 'applications-static',
-            filter: {application: this.#application.id}
+            filter: {application: this.#pkg.id}
         });
     }
 }

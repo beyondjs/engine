@@ -1,5 +1,4 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {Internal: InternalPackage} = require('beyond/package');
 const Modules = require('./modules');
 const Exports = require('./exports');
 
@@ -12,6 +11,7 @@ module.exports = class extends DynamicProcessor(Map) {
         super();
         this.#pkg = pkg;
 
+        const {Internal: InternalPackage} = require('beyond/package');
         const internal = pkg instanceof InternalPackage;
 
         this.#modules = internal ? new Modules(pkg.watcher) : void 0;
