@@ -34,8 +34,17 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #conditional;
-    get conditional() {
-        return this.#conditional;
+
+    conditional({platform, kind}) {
+        const order = (() => {
+            if (platform === 'web') return ['browser', 'module', 'default'];
+            if (platform === 'node') return ['node', 'module', 'default'];
+            if (platform === 'deno') return ['deno', 'module', 'default'];
+        })();
+
+        const conditional = this.#conditional;
+        const found = order.find(condition => conditional.has(condition) && conditional.get(condition));
+        return found ? conditional.get(found) : void 0;
     }
 
     get meta() {
@@ -74,18 +83,6 @@ module.exports = class extends DynamicProcessor() {
             conditional.has('deno') && platforms.add('deno');
             return platforms;
         })();
-    }
-
-    solve({platform, format}) {
-        const order = (() => {
-            if (platform === 'web') return ['browser', 'module', 'default'];
-            if (platform === 'node') return ['node', 'module', 'default'];
-            if (platform === 'deno') return ['deno', 'module', 'default'];
-        })();
-
-        const conditional = this.#conditional;
-        const found = order.find(condition => conditional.has(condition) && conditional.get(condition));
-        return found ? conditional.get(found) : void 0;
     }
 
     destroy() {

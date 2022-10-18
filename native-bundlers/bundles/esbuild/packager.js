@@ -1,6 +1,6 @@
-const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const Builder = require('./builder');
 
-module.exports = class extends DynamicProcessor() {
+module.exports = class {
     #bundle;
     get bundle() {
         return this.#bundle;
@@ -42,12 +42,12 @@ module.exports = class extends DynamicProcessor() {
     }
 
     constructor(bundle, cspecs) {
-        super();
         this.#bundle = bundle;
         this.#cspecs = cspecs;
 
         super.setup(new Map([['bundle', {child: bundle}]]));
 
-        this.#js = new (require('./js'))(this);
+        const builder = new Builder(bundle, cspecs);
+        this.#js = new (require('./js'))(this, builder);
     }
 }
