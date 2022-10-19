@@ -9,14 +9,15 @@ module.exports = async function (url, packages) {
     await Promise.all([...packages.values()].map(pkg => pkg.ready));
 
     const vpkg = `${specifier.pkg}@${specifier.version}`;
-    if (!packages.has(vpkg)) return;
-
-    const pkg = packages.get(vpkg);
+    const pkg = packages.find({vspecifier: vpkg});
+    if (!pkg) return;
     await pkg.modules.ready;
-    const vspecifier = vpkg + (specifier.subpath ? `/${specifier.subpath}` : '');
+
+    const vspecifier = vpkg + (specifier.subpath !== '.' ? `/${specifier.subpath}` : '');
 
     await Promise.all([...pkg.modules.values()].map(module => module.ready));
     const module = pkg.modules.find({vspecifier});
+    if (!module) return;
     await module.ready;
     await module.bundles.ready;
     if (!module.bundles.size) return;

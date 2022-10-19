@@ -11,11 +11,6 @@ module.exports = class extends DynamicProcessor(Map) {
     #modules;
     #exports;
 
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
-    }
-
     constructor(pkg) {
         super();
         this.#pkg = pkg;
@@ -47,24 +42,15 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _process() {
         const updated = new Map();
-        const warnings = [];
         let changed = false;
 
         const set = module => {
-            if (!module.valid) {
-                warnings.push(`Module "${module.subpath}" is invalid: ${JSON.stringify(module.errors)}`);
-                return;
-            }
-
-            const {vspecifier} = module;
-            !this.has(vspecifier) && (changed = true) && updated.set(vspecifier, module);
+            const {id} = module;
+            !this.has(id) && (changed = true) && updated.set(id, module);
         }
 
         this.#exports.forEach(module => set(module));
         this.#modules.forEach(module => set(module));
-
-        changed = changed || !equal(this.#warnings, warnings);
-        this.#warnings = warnings;
 
         this.clear();
         changed = changed || [...this.keys()].reduce((vspecifier, prev) => prev || !updated.has(vspecifier), false);
@@ -81,5 +67,12 @@ module.exports = class extends DynamicProcessor(Map) {
     configure(config) {
         this.#modules?.configure(config.modules);
         this.#exports.configure(config);
+    }
+
+    find(specs) {
+        if (!specs) throw new Error('Invalid parameters, specification is undefined');
+        if (!specs.vspecifier) throw  new Error('Invalid parameters');
+
+        return [...this.values()].find(({vspecifier}) => vspecifier === specs.vspecifier);
     }
 }

@@ -1,16 +1,10 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Internals = require('./internals');
 const Externals = require('./externals');
-const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'packages';
-    }
-
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
     }
 
     #internals;
@@ -38,29 +32,27 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _process() {
         const updated = new Map();
-        const warnings = [];
         let changed = false;
 
-        const set = (pkg, is) => {
-            if (is === 'internal' && !pkg.valid) {
-                warnings.push(`Package "${pkg.path}" is invalid: ${JSON.stringify(pkg.errors)}`);
-                return;
-            }
-
-            const {vspecifier} = pkg;
-            !this.has(vspecifier) && (changed = true) && updated.set(vspecifier, pkg);
+        const set = pkg => {
+            const {id} = pkg;
+            !this.has(id) && (changed = true) && updated.set(id, pkg);
         }
 
-        this.#externals.forEach(pkg => set(pkg, 'external'));
-        this.#internals.forEach(pkg => set(pkg, 'internal'));
-
-        changed = changed || !equal(this.#warnings, warnings);
-        this.#warnings = warnings;
+        this.#externals.forEach(pkg => set(pkg));
+        this.#internals.forEach(pkg => set(pkg));
 
         this.clear();
         changed = changed || [...this.keys()].reduce((vspecifier, prev) => prev || !updated.has(vspecifier), false);
         updated.forEach((value, key) => this.set(key, value));
 
         return changed;
+    }
+
+    find(specs) {
+        if (!specs) throw new Error('Invalid parameters, specification is undefined');
+        if (!specs.vspecifier) throw  new Error('Invalid parameters');
+
+        return [...this.values()].find(({vspecifier}) => vspecifier === specs.vspecifier);
     }
 }

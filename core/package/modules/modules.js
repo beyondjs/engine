@@ -1,4 +1,5 @@
 const {FinderCollection} = require('beyond/utils/finder');
+const {join} = require('path');
 
 module.exports = class extends FinderCollection {
     get dp() {
@@ -16,12 +17,14 @@ module.exports = class extends FinderCollection {
     }
 
     configure(config) {
-        if (!config) {
-            super.configure();
-            return;
+        const done = path => {
+            !path ? super.configure() : super.configure(path,
+                {filename: 'module.json', excludes: ['./builds', '.beyond', 'node_modules']});
         }
 
+        if (!config) return done();
+
         const path = typeof config === 'string' ? config : config.path;
-        super.configure(path, {filename: 'module.json', excludes: ['./builds', '.beyond', 'node_modules']});
+        super.configure(join(this.#pkg.path, path));
     }
 }
