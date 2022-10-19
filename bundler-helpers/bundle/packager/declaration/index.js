@@ -26,6 +26,10 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #hash;
+    get hash() {
+        return this.#hash;
+    }
+
     #cache;
 
     #processed = false;
