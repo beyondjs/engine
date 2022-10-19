@@ -52,24 +52,24 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.#bundle = bundle;
         this.#cspecs = cspecs;
+
+        super.setup(new Map([['bundle', {child: bundle}]]));
     }
 
     #plugin;
-    #canceled = false;
 
-    cancel() {
-        this.#canceled = true;
-        this.#plugin.cancel();
-    }
-
-    async build() {
-        this.#plugin = new Plugin(this.#packager);
+    async _process(request) {
+        this.#plugin?.cancel();
+        this.#plugin = new Plugin(this.#bundle);
         this.#processing = true;
 
         let build;
         try {
+            const incremental = this.#bundle.pkg.external.external;
+
             build = await require('esbuild').build({
                 entryPoints: ['app.js'],
+                incremental,
                 logLevel: 'silent',
                 platform: 'browser',
                 format: 'esm',
@@ -79,12 +79,12 @@ module.exports = class extends DynamicProcessor() {
                 outfile: 'out.js',
                 plugins: [this.#plugin]
             });
-            if (this.#canceled) return;
+            if (this._request !== request) return;
 
             this.#processed = true;
         }
         catch (exc) {
-            if (this.#canceled) return;
+            if (this._request !== request) return;
 
             this.#errors = [`Exception caught: ${exc.message}`];
             return;
@@ -99,5 +99,10 @@ module.exports = class extends DynamicProcessor() {
         this.#errors = errors;
         this.#warnings = warnings;
         this.#code = output?.[0]?.text;
+    }
+
+    destroy() {
+        this.#plugin.cancel();
+        super.destroy();
     }
 }

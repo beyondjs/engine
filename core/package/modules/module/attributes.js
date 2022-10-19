@@ -113,8 +113,8 @@ module.exports = class extends DynamicProcessor() {
             return subpath.replace(/\/$/, ''); // Remove trailing slash;
         })();
 
-        values.specifier = `${this.pkg.package}/${values.subpath}`;
-        values.vspecifier = `${this.pkg.package}@${this.pkg.version}/${values.subpath}`;
+        values.specifier = `${this.pkg.name}/${values.subpath}`;
+        values.vspecifier = `${this.pkg.name}@${this.pkg.version}/${values.subpath}`;
 
         /**
          * Just for the legacies 'page' and 'layout' bundles.

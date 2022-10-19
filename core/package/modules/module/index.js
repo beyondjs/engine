@@ -26,6 +26,10 @@ module.exports = class extends require('./attributes') {
         return this.#errors;
     }
 
+    get valid() {
+        return !this.#errors.length;
+    }
+
     #warnings = [];
     get warnings() {
         return this.#warnings;

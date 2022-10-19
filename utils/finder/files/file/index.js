@@ -45,6 +45,7 @@ module.exports = class {
     }
 
     constructor(root, file) {
+        root = root.startsWith('./') || root.startsWith('.\\') ? root.slice(2) : root;
         if (typeof root !== 'string' || typeof file !== 'string' || !root || !file) {
             throw new Error('Parameters root and file are both required');
         }

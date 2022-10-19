@@ -30,7 +30,7 @@ module.exports = class {
                     lower = watchers.containers.get(lower);
                     higher = watchers.containers.get(higher);
                     console.warn(`Watcher of "${higher.is}" with path "${higher.path}" ` +
-                        `could be using the wathcer of "${lower.is}" with path "${lower.path}"`);
+                        `could be using the watcher of "${lower.is}" with path "${lower.path}"`);
                 }
             };
 

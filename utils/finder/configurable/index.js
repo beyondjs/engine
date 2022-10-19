@@ -10,8 +10,12 @@ module.exports = class extends DynamicProcessor(Files) {
 
     #watcher;
 
+    /**
+     * Configurable finder constructor
+     *
+     * @param watcher= {*} The files watcher service
+     */
     constructor(watcher) {
-        if (!watcher) throw new Error('Invalid parameters');
         super();
         this.#watcher = watcher;
     }

@@ -13,6 +13,20 @@ module.exports = class extends DynamicProcessor() {
         return `${this.#pkg.id}//${this.#subpath}`;
     }
 
+    #errors = [];
+    get errors() {
+        return this.#errors;
+    }
+
+    get valid() {
+        return !this.#errors.length;
+    }
+
+    #warnings = [];
+    get warnings() {
+        return this.#warnings;
+    }
+
     #subpath;
     get subpath() {
         return this.#subpath;

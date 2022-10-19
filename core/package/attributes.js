@@ -86,14 +86,24 @@ module.exports = class extends DynamicProcessor() {
         this.#id = crc32(path);
     }
 
-    _process(config) {
+    _process(config, errors) {
+        if (errors.length) {
+            const values = {};
+            const changed = (equal(values, this.#values));
+            this.#values = values;
+            return changed;
+        }
+
         const {version, title, description, author, license, layout, params} = config;
 
         const name = (() => {
             const {scope, name} = config;
+            if (!name) return;
             if (name.startsWith('@')) return name;
             return (scope ? `@${scope}/` : '') + name;
         })();
+        !name && errors.push('Package name must be defined');
+        !version && errors.push('Package version must be defined');
 
         const engine = config.engine ? config.engine : 'v1';
 

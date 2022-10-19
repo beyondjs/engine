@@ -45,9 +45,7 @@ module.exports = class {
         this.#bundle = bundle;
         this.#cspecs = cspecs;
 
-        super.setup(new Map([['bundle', {child: bundle}]]));
-
         const builder = new Builder(bundle, cspecs);
-        this.#js = new (require('./js'))(this, builder);
+        this.#js = new (require('./js'))(builder);
     }
 }

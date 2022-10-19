@@ -24,6 +24,11 @@ module.exports = class extends ConfigurableFinder {
     }
 
     configure(path, config) {
+        if (!path || !config) {
+            super.configure();
+            return;
+        }
+
         this.#errors = [];
         config.includes = typeof config.includes === 'string' ? [config.includes] : config.includes;
 
@@ -39,7 +44,7 @@ module.exports = class extends ConfigurableFinder {
         ipc.notify('data-notification', {
             type: 'list/update',
             table: 'applications-static',
-            filter: {application: this.#pkg.id}
+            filter: {package: this.#pkg.id}
         });
     }
 }

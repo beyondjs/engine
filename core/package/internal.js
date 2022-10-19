@@ -9,25 +9,6 @@ module.exports = class extends PackageBase {
         return this.#watcher;
     }
 
-    #errors = [];
-    get errors() {
-        return this.#errors;
-    }
-
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
-    }
-
-    get valid() {
-        return !this.#errors.length;
-    }
-
-    #dependencies;
-    get dependencies() {
-        return this.#dependencies;
-    }
-
     #config;
     get config() {
         return this.#config;
@@ -67,7 +48,6 @@ module.exports = class extends PackageBase {
         await super._begin();
 
         this.#config = new (require('./config'))(this);
-        this.#dependencies = new (require('./dependencies'))(this, this.#packages);
         this.#consumers = new (require('./consumers'))(this);
         this.#transversals = new (require('./transversals'))(this);
         this.#template = new (require('./template'))(this, config.properties.get('template'));
@@ -89,11 +69,8 @@ module.exports = class extends PackageBase {
 
     _process() {
         const {warnings, errors, valid, value} = this.children.get('config').child;
-        this.#warnings = warnings;
-        this.#errors = errors;
-
         const config = !valid || !value ? {} : value;
-        return super._process(config);
+        return super._process(config, errors.slice(), warnings.slice());
     }
 
     destroy() {

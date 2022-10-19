@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Module = require('./exported');
 
 module.exports = class extends DynamicProcessor(Map) {
+    get dp() {
+        return 'package.modules.exports';
+    }
+
     #pkg;
     #config;
 
@@ -18,7 +22,7 @@ module.exports = class extends DynamicProcessor(Map) {
         const updated = new Map();
         let changed = false;
 
-        exports.forEach((conditional, subpath) => {
+        this.#config.forEach((conditional, subpath) => {
             const module = this.has(subpath) ? this.get(subpath) : (changed = true) && new Module(this.#pkg, subpath);
             updated.set(subpath, module);
 
@@ -40,7 +44,7 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     configure(config) {
-        const entries = typeof config.exports === 'object' ? Object.entries(config) : void 0;
+        const entries = typeof config.exports === 'object' ? Object.entries(config.exports) : void 0;
         const exports = new Map(entries);
 
         /**

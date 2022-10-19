@@ -15,7 +15,7 @@ module.exports = class {
         if (!bundles.get(name).transversal) throw new Error(`Bundle "${name}" is not a transversal bundle`);
         const {transversal} = bundles.get(name);
 
-        const bundle = new transversal.Transversal(this.#pkg, name, this.#config);
+        const bundle = new transversal.Transversal(this.#pkg, name);
         this.#transversals.set(name, bundle);
         return bundle;
     }

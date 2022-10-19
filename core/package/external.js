@@ -4,6 +4,11 @@ module.exports = class extends PackageBase {
     #packages;
     #json;
 
+    get vspecifier() {
+        const {name, version} = this.#json;
+        return `${name}@${version}`;
+    }
+
     /**
      * External package constructor
      *

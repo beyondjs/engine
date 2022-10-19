@@ -2,14 +2,14 @@ const {join, dirname, sep} = require('path');
 const fs = require('fs').promises;
 
 module.exports = class {
-    #packager;
+    #bundle;
 
     get name() {
         return 'uimport';
     }
 
-    constructor(packager) {
-        this.#packager = packager;
+    constructor(bundle) {
+        this.#bundle = bundle;
     }
 
     #canceled = false;

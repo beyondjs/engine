@@ -2,14 +2,16 @@ const SpecifierParser = require('beyond/utils/specifier-parser');
 
 module.exports = async function (url, packages) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
+    if (!specifier.pkg) return;
     if (!specifier.version) return {content: 'Package version must be set', contentType: 'text/plain', statusCode: 404};
 
     await packages.ready;
     await Promise.all([...packages.values()].map(pkg => pkg.ready));
 
     const vpkg = `${specifier.pkg}@${specifier.version}`;
-    const pkg = packages.find({vspecifier: vpkg});
+    if (!packages.has(vpkg)) return;
 
+    const pkg = packages.get(vpkg);
     await pkg.modules.ready;
     const vspecifier = vpkg + (specifier.subpath ? `/${specifier.subpath}` : '');
 
