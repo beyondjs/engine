@@ -1,19 +1,15 @@
+const equal = require('beyond/utils/equal');
 const crc32 = require('beyond/utils/crc32');
 
 module.exports = platforms => class {
-    #tsc;
-    get tsc() {
-        return this.#tsc;
+    #typecheck;
+    get typecheck() {
+        return this.#typecheck;
     }
 
     #platform;
     get platform() {
         return this.#platform;
-    }
-
-    #ssr;
-    get ssr() {
-        return this.#ssr;
     }
 
     #backend;
@@ -28,10 +24,10 @@ module.exports = platforms => class {
      * @return {*}
      */
     key(properties) {
-        const options = ['platform', 'tsc', 'ssr', 'backend'];
+        const options = ['platform', 'typecheck', 'backend'];
 
         properties = properties ? properties : options;
-        const compute = properties.forEach(property => {
+        const compute = [...properties.values()].map(property => {
             if (!options.includes(property)) throw new Error(`Property "${property}" is invalid`);
             return [property, this[property]];
         });
@@ -40,14 +36,12 @@ module.exports = platforms => class {
 
     constructor(specs) {
         if (typeof specs !== 'object') throw new Error('Invalid compilation specification');
-        let {platform, tsc, ssr, backend} = specs;
+        let {platform, typecheck, backend} = specs;
 
-        if (!platforms.include(platform)) throw new Error(`Platform "${platform}" is invalid`);
+        if (!platforms.includes(platform)) throw new Error(`Platform "${platform}" is invalid`);
 
-        tsc = tsc ? tsc : 'transpiler';
-        if (!['transpiler', 'compiler'].includes(tsc)) throw new Error('Property .tsc is invalid');
-
-        this.#ssr = !!ssr;
+        this.#platform = platform;
+        this.#typecheck = !!typecheck;
         this.#backend = !!backend;
     }
 }

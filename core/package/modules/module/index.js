@@ -1,4 +1,6 @@
 const {Config} = require('beyond/utils/config');
+const Bundles = require('./bundles');
+const Static = require('./static');
 const {sep} = require('path');
 
 module.exports = class extends require('./attributes') {
@@ -56,8 +58,8 @@ module.exports = class extends require('./attributes') {
         this.#pkg = pkg;
         this.#file = file;
 
-        this.#bundles = new (require('./bundles'))(this);
-        this.#_static = new (require('./static'))(this, config.properties.get('static'));
+        this.#bundles = new Bundles(this);
+        this.#_static = new Static(this, config.properties.get('static'));
 
         let path = file.relative.dirname;
         path = sep === '/' ? path : path.replace(/\\/g, '/');
@@ -86,6 +88,7 @@ module.exports = class extends require('./attributes') {
 
     destroy() {
         super.destroy();
+        this.#bundles.destroy();
         this.#_static.destroy();
     }
 }

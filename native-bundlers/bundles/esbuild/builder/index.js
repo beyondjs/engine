@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Plugin = (require('./plugin'));
 
 module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'esbuild.builder';
+    }
+
     #bundle;
     #cspecs;
 

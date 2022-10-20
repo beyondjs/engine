@@ -22,15 +22,17 @@ module.exports = class extends DynamicProcessor(Map) {
         const updated = new Map();
         let changed = false;
 
+        const modules = new Map();
         this.#config.forEach((conditional, subpath) => {
+            const bundles = new Map();
+            bundles.set('default', conditional);
+            modules.set(subpath, bundles);
+        });
+
+        modules.forEach((bundles, subpath) => {
             const module = this.has(subpath) ? this.get(subpath) : (changed = true) && new Module(this.#pkg, subpath);
             updated.set(subpath, module);
-
-            module.configure(conditional);
-
-            // Move to the bundle
-            // conditional = typeof conditional === 'string' ? {default: conditional} : conditional;
-            // exports.set(subpath, new Map(Object.entries(conditional)));
+            module.bundles.configure(bundles);
         });
 
         // Destroy unused modules

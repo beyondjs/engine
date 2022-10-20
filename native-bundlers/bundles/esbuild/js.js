@@ -29,9 +29,8 @@ module.exports = class extends DynamicProcessor() {
         return this.#builder.map;
     }
 
-    constructor(packager, builder) {
+    constructor(builder) {
         super();
-        this.#packager = packager;
         this.#builder = builder;
 
         super.setup(new Map([['builder', {child: builder}]]));

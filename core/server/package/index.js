@@ -1,4 +1,5 @@
 const SpecifierParser = require('beyond/utils/specifier-parser');
+const {CSpecs} = require('beyond/cspecs');
 
 module.exports = async function (url, packages) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
@@ -41,5 +42,8 @@ module.exports = async function (url, packages) {
     if (error) return {content: error, contentType: 'text/plain', statusCode: 404};
 
     await bundle.ready;
-    console.log('Bundle found:', !!bundle);
+
+    const cspecs = new CSpecs({platform: 'browser'});
+    const packager = bundle.packagers.get(cspecs);
+    console.log('packager:', packager);
 }
