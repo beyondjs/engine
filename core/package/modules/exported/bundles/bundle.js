@@ -11,6 +11,21 @@ module.exports = class extends DynamicProcessor() {
         return registry.get('esbuild');
     }
 
+    #module;
+    get module() {
+        return this.#module;
+    }
+
+    #name;
+    get name() {
+        return this.#name;
+    }
+
+    #subpath;
+    get subpath() {
+        return this.#subpath;
+    }
+
     #packagers;
     get packagers() {
         return this.#packagers;
@@ -24,15 +39,19 @@ module.exports = class extends DynamicProcessor() {
         return this.#platforms;
     }
 
-    constructor() {
+    constructor(module, name) {
         super();
+        this.#module = module;
+        this.#name = name;
+        this.#subpath = module.subpath + (name ? `.${name}` : '');
+
         super.setup(new Map([['registry', {child: registry}]]));
         this.#packagers = new Packagers(this);
     }
 
     conditional({platform, kind}) {
         const order = (() => {
-            if (platform === 'web') return ['browser', 'module', 'default'];
+            if (platform === 'browser') return ['browser', 'module', 'default'];
             if (platform === 'node') return ['node', 'module', 'default'];
             if (platform === 'deno') return ['deno', 'module', 'default'];
         })();
@@ -55,10 +74,10 @@ module.exports = class extends DynamicProcessor() {
         this.#platforms = (() => {
             const conditional = this.#conditional;
 
-            if (conditional.has('default')) return new Set(['web', 'node', 'deno']);
+            if (conditional.has('default')) return new Set(['browser', 'node', 'deno']);
 
             const platforms = new Set();
-            conditional.has('browser') && platforms.add('web');
+            conditional.has('browser') && platforms.add('browser');
             conditional.has('node') && platforms.add('node');
             conditional.has('deno') && platforms.add('deno');
             return platforms;

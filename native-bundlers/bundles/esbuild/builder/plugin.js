@@ -3,13 +3,15 @@ const fs = require('fs').promises;
 
 module.exports = class {
     #bundle;
+    #platform;
 
     get name() {
-        return 'uimport';
+        return 'beyond';
     }
 
-    constructor(bundle) {
+    constructor(bundle, platform) {
         this.#bundle = bundle;
+        this.#platform = platform;
     }
 
     #canceled = false;
@@ -21,9 +23,14 @@ module.exports = class {
     #resolve(args) {
         if (this.#canceled) throw new Error('Build was canceled');
 
+        const {vspecifier} = this.#bundle.module.pkg;
+        const building = {namespace: `beyond:${vspecifier}`, vspecifier, subpath: this.#bundle.subpath};
+
         const {kind, importer} = args;
         const {namespace, resource} = (() => {
-            if (kind === 'entry-point') return {namespace: building.namespace, resource: building.subpath};
+            if (kind === 'entry-point') {
+                return {namespace: building.namespace, resource: building.subpath};
+            }
 
             if (args.path.startsWith('./')) {
                 let resource = './' + join(dirname(importer), args.path);
@@ -35,13 +42,13 @@ module.exports = class {
             const pkg = split[0].startsWith('@') ? `${split.shift()}/${split.shift()}` : split.shift();
             const subpath = split.join('/');
             const version = (() => {
-                const vname = args.namespace.slice('uimport:'.length);
+                const vname = args.namespace.slice('beyond:'.length);
                 const {dependencies} = tree.list.get(vname);
                 return dependencies.get(pkg).version;
             })();
 
             const vname = `${pkg}@${version}`;
-            const namespace = `uimport:${vname}`;
+            const namespace = `beyond:${vname}`;
             const resource = subpath ? `./${subpath}` : '.';
 
             return {namespace, resource};
@@ -54,7 +61,7 @@ module.exports = class {
         //     `\t* namespace: "${namespace}"\n` +
         //     `\t* kind: "${kind}"\n`);
 
-        const vname = namespace.slice('uimport:'.length);
+        const vname = namespace.slice('beyond:'.length);
         const vpackage = tree.list.get(vname)?.vpackage;
         if (!vpackage) throw new Error(`Package "${vname}" not found`);
 
@@ -62,7 +69,7 @@ module.exports = class {
          * Check if we are resolving the resource being requested
          */
         if (namespace === building.namespace && resource === building.subpath) {
-            const resolved = vpackage.exports.solve(resource, {platform: 'web', kind});
+            const resolved = vpackage.exports.solve(resource, {platform: this.#platform, kind});
             if (!resolved) throw new Error(`Bundle "${building.vspecifier}" not found`);
             return {namespace, path: resolved};
         }
@@ -86,9 +93,9 @@ module.exports = class {
 
         const {path: resource, namespace} = args;
 
-        if (!namespace.startsWith('uimport:')) throw new Error('Namespace should start with "uimport:"');
+        if (!namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
 
-        const vname = namespace.slice('uimport:'.length);
+        const vname = namespace.slice('beyond:'.length);
         const download = downloads.get(vname);
         const vpackage = tree.list.get(vname)?.vpackage;
 
@@ -106,7 +113,7 @@ module.exports = class {
         return {contents};
     }
 
-    setup(build) {
+    setup = build => {
         build.onResolve({filter: /./}, args => this.#resolve(args));
         build.onLoad({filter: /./}, async args => await this.#load(args));
     }

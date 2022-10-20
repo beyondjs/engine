@@ -35,4 +35,8 @@ module.exports = class extends DynamicProcessor() {
 
         super.setup(new Map([['builder', {child: builder}]]));
     }
+
+    _process() {
+        console.log('process js');
+    }
 }

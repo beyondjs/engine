@@ -25,7 +25,7 @@ module.exports = class extends DynamicProcessor(Map) {
         const modules = new Map();
         this.#config.forEach((conditional, subpath) => {
             const bundles = new Map();
-            bundles.set('default', conditional);
+            bundles.set('', conditional);
             modules.set(subpath, bundles);
         });
 

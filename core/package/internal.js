@@ -2,6 +2,10 @@ const PackageBase = require('./base');
 const WatchersClient = require('beyond/utils/watchers/client');
 
 module.exports = class extends PackageBase {
+    get is() {
+        return 'internal';
+    }
+
     #packages;
 
     #watcher;

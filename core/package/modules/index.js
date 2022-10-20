@@ -15,8 +15,7 @@ module.exports = class extends DynamicProcessor(Map) {
         super();
         this.#pkg = pkg;
 
-        const {Internal: InternalPackage} = require('beyond/package');
-        const internal = pkg instanceof InternalPackage;
+        const internal = pkg.is === 'internal';
 
         this.#modules = internal ? new Modules(pkg) : void 0;
         this.#exports = new Exports(pkg);

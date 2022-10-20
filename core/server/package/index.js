@@ -45,5 +45,7 @@ module.exports = async function (url, packages) {
 
     const cspecs = new CSpecs({platform: 'browser'});
     const packager = bundle.packagers.get(cspecs);
-    console.log('packager:', packager);
+    await packager.js.ready;
+
+    packager.js.valid ? console.log('Packager code:', packager.js.code()) : console.log(packager.js.errors);
 }

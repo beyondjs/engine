@@ -23,7 +23,7 @@ module.exports = class extends DynamicProcessor(Map) {
         let changed = false;
 
         this.#config.forEach((conditional, name) => {
-            const bundle = this.has(name) ? this.get(name) : (changed = true) && new Bundle(this, name);
+            const bundle = this.has(name) ? this.get(name) : (changed = true) && new Bundle(this.#module, name);
             updated.set(name, bundle);
             bundle.configure(conditional);
         });

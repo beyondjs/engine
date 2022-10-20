@@ -25,22 +25,12 @@ module.exports = class extends DynamicProcessor() {
     }
 
     get valid() {
-        return !!this.#errors?.length;
+        return !this.#errors?.length;
     }
 
     #warnings = [];
     get warnings() {
         return this.#warnings;
-    }
-
-    #processing;
-    get processing() {
-        return this.#processing;
-    }
-
-    #processed;
-    get processed() {
-        return this.#processed;
     }
 
     #time;
@@ -64,12 +54,11 @@ module.exports = class extends DynamicProcessor() {
 
     async _process(request) {
         this.#plugin?.cancel();
-        this.#plugin = new Plugin(this.#bundle);
-        this.#processing = true;
+        this.#plugin = new Plugin(this.#bundle, this.#cspecs.platform);
 
         let build;
         try {
-            const incremental = this.#bundle.pkg.external.external;
+            const incremental = this.#bundle.module.pkg.is === 'internal';
 
             build = await require('esbuild').build({
                 entryPoints: ['app.js'],
@@ -84,20 +73,12 @@ module.exports = class extends DynamicProcessor() {
                 plugins: [this.#plugin]
             });
             if (this._request !== request) return;
-
-            this.#processed = true;
         }
         catch (exc) {
             if (this._request !== request) return;
-
             this.#errors = [`Exception caught: ${exc.message}`];
             return;
         }
-        finally {
-            this.#processing = false;
-        }
-
-        this.#processing = false;
 
         const {errors, warnings, outputFiles: output} = build;
         this.#errors = errors;
@@ -106,7 +87,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     destroy() {
-        this.#plugin.cancel();
+        this.#plugin?.cancel();
         super.destroy();
     }
 }
