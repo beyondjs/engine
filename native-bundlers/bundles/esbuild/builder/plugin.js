@@ -1,5 +1,6 @@
 const {join, dirname, sep} = require('path');
 const fs = require('fs').promises;
+const installs = require('beyond/externals/installs');
 
 module.exports = class {
     #bundle;
@@ -96,12 +97,12 @@ module.exports = class {
         if (!namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
 
         const vname = namespace.slice('beyond:'.length);
-        const download = downloads.get(vname);
+        const download = installs.get(vname);
         const vpackage = tree.list.get(vname)?.vpackage;
 
         const file = (() => {
             const file = (() => {
-                const file = join(download.target.dir, resource);
+                const file = join(download.path, resource);
                 return sep !== '/' ? file.replace(/\\/g, '/') : file;
             })();
 
