@@ -7,11 +7,8 @@ module.exports = class extends ConfigCollection {
         return 'packages.internals';
     }
 
-    #packages;
-
-    constructor(packages, config) {
+    constructor(config) {
         super(config);
-        this.#packages = packages;
     }
 
     _notify() {
@@ -22,6 +19,6 @@ module.exports = class extends ConfigCollection {
     }
 
     _createItem(config) {
-        return new InternalPackage(config, this.#packages);
+        return new InternalPackage(config);
     }
 }

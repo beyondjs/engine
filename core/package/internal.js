@@ -6,8 +6,6 @@ module.exports = class extends PackageBase {
         return 'internal';
     }
 
-    #packages;
-
     #watcher;
     get watcher() {
         return this.#watcher;
@@ -62,12 +60,9 @@ module.exports = class extends PackageBase {
      * Package constructor
      *
      * @param config {*} The package configuration manager
-     * @param packages {*} The packages collection
      */
-    constructor(config, packages) {
+    constructor(config) {
         super(config.path);
-        this.#packages = packages;
-
         super.setup(new Map([['config', {child: config}]]));
     }
 

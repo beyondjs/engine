@@ -5,7 +5,6 @@ module.exports = class extends PackageBase {
         return 'internal';
     }
 
-    #packages;
     #json;
 
     get vspecifier() {
@@ -18,12 +17,10 @@ module.exports = class extends PackageBase {
      *
      * @param path {string} The path where the external package is located
      * @param json {*} The package.json content as an object
-     * @param packages {*} The packages collection
      */
-    constructor(path, json, packages) {
+    constructor(path, json) {
         super(path);
         this.#json = json;
-        this.#packages = packages;
     }
 
     _process() {

@@ -1,6 +1,7 @@
+const packages = require('beyond/packages');
 const {join, dirname, sep} = require('path');
 const fs = require('fs').promises;
-const installs = require('beyond/externals/installs');
+const Dependency = require('./dependency');
 
 module.exports = class {
     #bundle;
@@ -24,35 +25,35 @@ module.exports = class {
     #resolve(args) {
         if (this.#canceled) throw new Error('Build was canceled');
 
-        const {vspecifier} = this.#bundle.module.pkg;
-        const building = {namespace: `beyond:${vspecifier}`, vspecifier, subpath: this.#bundle.subpath};
-
+        const building = (() => {
+            const {vspecifier} = this.#bundle.module.pkg;
+            return {namespace: `beyond:${vspecifier}`, vspecifier, subpath: this.#bundle.subpath};
+        })();
         const {kind, importer} = args;
+
         const {namespace, resource} = (() => {
+            /**
+             * The entry point
+             */
             if (kind === 'entry-point') {
                 return {namespace: building.namespace, resource: building.subpath};
             }
 
+            /**
+             * A relative internal module
+             */
             if (args.path.startsWith('./')) {
                 let resource = './' + join(dirname(importer), args.path);
                 resource = sep !== '/' ? resource.replace(/\\/g, '/') : resource;
                 return {namespace: args.namespace, resource};
             }
 
-            const split = args.path.split('/');
-            const pkg = split[0].startsWith('@') ? `${split.shift()}/${split.shift()}` : split.shift();
-            const subpath = split.join('/');
-            const version = (() => {
-                const vname = args.namespace.slice('beyond:'.length);
-                const {dependencies} = tree.list.get(vname);
-                return dependencies.get(pkg).version;
-            })();
-
-            const vname = `${pkg}@${version}`;
-            const namespace = `beyond:${vname}`;
-            const resource = subpath ? `./${subpath}` : '.';
-
-            return {namespace, resource};
+            /**
+             * It is a non-relative specifier, so find the dependency
+             */
+            const {dependencies} = this.#bundle.module.pkg;
+            const dependency = new Dependency(args.path, args.namespace.slice('beyond:'.length), dependencies);
+            return {namespace: `beyond:${dependency.vspecifier}`, resource: dependency.resource};
         })();
 
         // Log the resolution processed arguments
@@ -62,9 +63,12 @@ module.exports = class {
         //     `\t* namespace: "${namespace}"\n` +
         //     `\t* kind: "${kind}"\n`);
 
-        const vname = namespace.slice('beyond:'.length);
-        const vpackage = tree.list.get(vname)?.vpackage;
-        if (!vpackage) throw new Error(`Package "${vname}" not found`);
+        const vspecifier = namespace.slice('beyond:'.length);
+
+        const {dependencies} = this.#bundle.module.pkg;
+        const dependency = new Dependency(args.path, args.namespace.slice('beyond:'.length), dependencies);
+
+        if (!dependency.pkg) throw new Error(`Package "${pkg}" not found`);
 
         /**
          * Check if we are resolving the resource being requested
@@ -96,9 +100,9 @@ module.exports = class {
 
         if (!namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
 
-        const vname = namespace.slice('beyond:'.length);
-        const download = installs.get(vname);
-        const vpackage = tree.list.get(vname)?.vpackage;
+        const vspecifier = namespace.slice('beyond:'.length);
+        if (!packages.has(vspecifier)) throw new Error(`Package "${vspecifier}" not found`);
+        const dependency = packages.get(vspecifier);
 
         const file = (() => {
             const file = (() => {

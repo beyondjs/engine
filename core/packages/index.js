@@ -2,7 +2,7 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Internals = require('./internals');
 const Externals = require('./externals');
 
-module.exports = class extends DynamicProcessor(Map) {
+module.exports = new class extends DynamicProcessor(Map) {
     get dp() {
         return 'packages';
     }
@@ -17,10 +17,9 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#externals;
     }
 
-    constructor(config) {
-        super();
-        const internals = this.#internals = new Internals(this, config);
-        const externals = this.#externals = new Externals(this);
+    create(config) {
+        const internals = this.#internals = new Internals(config);
+        const externals = this.#externals = new Externals();
         super.setup(new Map([['internals', {child: internals}], ['externals', {child: externals}]]));
 
         this.ready; // Auto-initialise packages collection

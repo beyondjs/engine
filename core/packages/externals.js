@@ -7,21 +7,16 @@ module.exports = class extends DynamicProcessor(Map) {
         return 'packages.externals';
     }
 
-    #packages;
-
-    constructor(packages) {
+    constructor() {
         super();
-        this.#packages = packages;
         super.setup(new Map([['externals', {child: externals}]]));
     }
 
     _process() {
-        const packages = this.#packages;
-
         const updated = new Map();
         externals.forEach(vpackage => {
             const {path, vspecifier, json} = vpackage;
-            const external = this.has(vspecifier) ? this.get(vspecifier) : new ExternalPackage(path, json, packages);
+            const external = this.has(vspecifier) ? this.get(vspecifier) : new ExternalPackage(path, json);
             updated.set(vspecifier, external);
         });
 

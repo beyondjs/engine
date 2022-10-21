@@ -1,4 +1,5 @@
 const {Config} = require('beyond/utils/config');
+const packages = require('beyond/packages');
 const bundlers = require('beyond/bundlers-registry');
 const EventEmitter = require('events');
 
@@ -54,8 +55,7 @@ new class extends EventEmitter {
         this.#config.data = 'beyond.json';
 
         bundlers.initialise({bundles: config.get('bundles'), processors: config.get('processors')});
-
-        this.#packages = new (require('./packages'))(config.get('packages'));
+        packages.create(config.get('packages'));
         this.#server = new (require('./server'))(this.#packages, {port: repository}, {gzip: false});
 
         // Expose interprocess communication actions
