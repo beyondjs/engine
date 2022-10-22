@@ -22,11 +22,6 @@ new class extends EventEmitter {
         return this.#config.warnings;
     }
 
-    #packages;
-    get packages() {
-        return this.#packages;
-    }
-
     #server;
     get server() {
         return this.#server;
@@ -56,7 +51,7 @@ new class extends EventEmitter {
 
         bundlers.initialise({bundles: config.get('bundles'), processors: config.get('processors')});
         packages.create(config.get('packages'));
-        this.#server = new (require('./server'))(this.#packages, {port: repository}, {gzip: false});
+        this.#server = new (require('./server'))(repository, {gzip: false});
 
         // Expose interprocess communication actions
         require('./ipc')(this);

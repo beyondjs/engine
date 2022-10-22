@@ -1,7 +1,8 @@
+const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
 const {CSpecs} = require('beyond/cspecs');
 
-module.exports = async function (url, packages) {
+module.exports = async function (url) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
     if (!specifier.pkg) return;
     if (!specifier.version) return {content: 'Package version must be set', contentType: 'text/plain', statusCode: 404};

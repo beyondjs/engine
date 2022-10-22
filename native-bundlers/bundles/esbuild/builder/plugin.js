@@ -1,7 +1,6 @@
-const packages = require('beyond/packages');
 const {join, sep} = require('path');
 const fs = require('fs').promises;
-const Dependency = require('./dependency');
+const Resolver = require('./resolver');
 
 module.exports = class {
     #bundle;
@@ -55,25 +54,12 @@ module.exports = class {
         if (this.#canceled) throw new Error('Build was canceled');
 
         // The node of the graph being imported/required
-        const Requiring = require('./requiring');
-        const {namespace, resource} = new Requiring(this, args);
-
-        // Log the resolution processed arguments
-        console.log(
-            `"${kind === 'entry-point' ? 'entry point' : importer}"`.bold.yellow +
-            ' imports ' + `"${resource}"`.bold.yellow + '\n' +
-            `\t* node.namespace: "${node.namespace}"\n` +
-            `\t* node.kind: "${node.kind}"\n`);
-
-        const {dependencies} = this.#bundle.module.pkg;
-        const dependency = new Dependency(args.path, args.namespace.slice('beyond:'.length), dependencies);
-
-        if (!dependency.pkg) throw new Error(`Package "${pkg}" not found`);
+        const resolver = new Resolver(this, args);
 
         /**
          * Check if we are resolving the resource being requested
          */
-        if (namespace === building.namespace && resource === building.subpath) {
+        if (resolver.kind === 'entry-point') {
             const resolved = vpackage.exports.solve(resource, {platform: this.#platform, kind});
             if (!resolved) throw new Error(`Bundle "${building.vspecifier}" not found`);
             return {namespace, path: resolved};

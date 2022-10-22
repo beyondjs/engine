@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Packagers = require('./packagers');
-const {bundles: registry} = require('beyond/bundlers-registry');
+const registry = require('beyond/bundlers-registry');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -8,7 +8,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     get meta() {
-        return registry.get('esbuild');
+        return registry.bundles.get('esbuild');
     }
 
     #module;
@@ -45,7 +45,7 @@ module.exports = class extends DynamicProcessor() {
         this.#name = name;
         this.#subpath = module.subpath + (name ? `.${name}` : '');
 
-        super.setup(new Map([['registry', {child: registry}]]));
+        super.setup(new Map([['registry', {child: registry.bundles}]]));
         this.#packagers = new Packagers(this);
     }
 

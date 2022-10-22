@@ -1,5 +1,4 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const packages = require('beyond/packages');
 const DependenciesTree = require('beyond/dependencies-tree');
 const equal = require('beyond/utils/equal');
 const crc32 = require('beyond/utils/crc32');
@@ -34,6 +33,9 @@ module.exports = class extends DynamicProcessor(Map) {
     constructor(pkg) {
         super();
         this.#pkg = pkg;
+
+        // Do not require beyond/packages at the top of the file to avoid a circular dependency
+        const packages = require('beyond/packages');
         super.setup(new Map([['package', {child: pkg}], ['packages', {child: packages}]]));
     }
 
