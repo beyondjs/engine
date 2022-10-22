@@ -15,6 +15,22 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#installed;
     }
 
+    get list() {
+        return this.#tree?.list;
+    }
+
+    get filled() {
+        return this.#tree?.filled;
+    }
+
+    get errors() {
+        return this.#tree?.errors;
+    }
+
+    get valid() {
+        return !this.errors?.length;
+    }
+
     constructor(pkg) {
         super();
         this.#pkg = pkg;
@@ -35,24 +51,21 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _process() {
-        const done = (installed, updated) => {
+        const done = (installed) => {
             const changed = this.#tree.hash !== this.#hash || this.#installed !== installed;
-
             this.#installed = installed;
-            this.clear();
-            updated?.forEach((value, key) => this.set(key, value));
-
             return changed;
         }
 
+        this.clear();
         if (!this.#tree.filled) return done(false);
 
+        this.#tree.forEach((value, specifier) => this.set(specifier, value));
+
         let installed = true;
-        const updated = new Map();
         [...this.#tree.list.keys()].forEach(vspecifier => {
             const dependency = packages.find({vspecifier});
             installed = installed && !!dependency;
-            updated.set(vspecifier, dependency);
         });
 
         return done(installed, updated);

@@ -2,14 +2,14 @@ const {join, dirname, sep} = require('path');
 const Dependency = require('./dependency');
 
 /**
- * The data structure of the node of the graph being imported/required
+ * The data structure of the node of the graph being imported
  */
 module.exports = class {
     #plugin;
 
     #vspecifier;
     /**
-     * The resolved vspecifier of the specifier being imported/required according to the dependencies tree
+     * The resolved vspecifier of the specifier being imported according to the dependencies tree
      * @return {*}
      */
     get vspecifier() {
@@ -18,7 +18,7 @@ module.exports = class {
 
     #namespace;
     /**
-     * The namespace of the specifier being imported/required according to the dependencies tree
+     * The namespace of the specifier being imported according to the dependencies tree
      * @return {string}
      */
     get namespace() {
@@ -36,7 +36,7 @@ module.exports = class {
 
     #subpath;
     /**
-     * The subpath of the package of the specifier being imported/required when it is a non-relative specifier
+     * The subpath of the package of the specifier being imported when it is a non-relative specifier
      * undefined for relative specifiers
      * @return {string}
      */
@@ -95,8 +95,7 @@ module.exports = class {
         /**
          * It is a non-relative specifier, find the vspecifier according to the dependencies tree
          */
-        const {dependencies} = this.#plugin.pkg;
-        const dependency = new Dependency(args.path, importer, dependencies);
+        const dependency = new Dependency(this.#plugin, args.path, importer);
         this.#vspecifier = dependency.vspecifier;
         this.#namespace = dependency.namespace;
         this.#subpath = dependency.subpath;

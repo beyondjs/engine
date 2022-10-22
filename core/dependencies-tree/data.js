@@ -19,13 +19,12 @@ module.exports = class {
     }
 
     #list;
-
     /**
-     * The flat lists of packages required by the dependency tree
-     * @return {{specifiers: Map<string, {version, dependencies}>, vspecifiers: Map<string, {version, dependencies}>}}
+     * The flat list of packages required by the dependency tree
+     * @return {Map<vspecifier, {version, dependencies}>}
      */
-    get lists() {
-        return this.#lists;
+    get list() {
+        return this.#list;
     }
 
     /**
@@ -42,8 +41,7 @@ module.exports = class {
                 return;
             }
 
-            !list.vspecifiers.has(vspecifier) && list.vspecifiers.set(vspecifier, {version, dependencies});
-            !list.specifiers.has(name) && list.specifiers.set(name, {version, dependencies});
+            !list.has(vspecifier) && list.set(vspecifier, {version, dependencies});
             dependencies && recursive(dependencies);
         });
         recursive(tree);

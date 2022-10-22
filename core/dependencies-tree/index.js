@@ -5,7 +5,7 @@ const DependenciesProcessor = require('./processor');
 const crc32 = require('beyond/utils/crc32');
 const equal = require('beyond/utils/equal');
 
-module.exports = class extends DynamicProcessor() {
+module.exports = class extends DynamicProcessor(Map) {
     #vspecifier;
     get vspecifier() {
         return this.#vspecifier;
@@ -25,28 +25,28 @@ module.exports = class extends DynamicProcessor() {
     #cache;
     #processor;
 
-    get processing() {
-        return this.#processor.processing;
-    }
-
-    get processed() {
-        return this.#processor.processed;
-    }
-
-    get tree() {
-        return this.#data.tree;
+    get list() {
+        return this.#data.list;
     }
 
     get errors() {
         return this.#data.errors;
     }
 
-    get list() {
-        return this.#data.list;
+    get valid() {
+        return !this.errors?.length;
     }
 
     get filled() {
         return !!this.#data.tree;
+    }
+
+    get processing() {
+        return this.#processor.processing;
+    }
+
+    get processed() {
+        return this.#processor.processed;
     }
 
     constructor(vspecifier, config) {
@@ -76,12 +76,19 @@ module.exports = class extends DynamicProcessor() {
         this.#data.hydrate(value);
         this.#time = time;
         this.#cache.save();
+
+        this.clear();
+        this.#data.tree.forEach((value, specifier) => this.set(specifier, value));
     }
 
     async process() {
         await this.#processor.process();
     }
 
+    /**
+     * Load from cache, if cache is not updated, then make the process
+     * @return {Promise<void>}
+     */
     async fill() {
         await this.ready;
         !this.filled && await this.process();

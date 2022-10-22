@@ -96,22 +96,25 @@ module.exports = class {
     async #load(args) {
         if (this.#canceled) throw new Error('Build was canceled');
 
-        const {path: resource, namespace} = args;
+        const {path, namespace} = args;
 
         if (!namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
 
         const vspecifier = namespace.slice('beyond:'.length);
         if (!packages.has(vspecifier)) throw new Error(`Package "${vspecifier}" not found`);
-        const dependency = packages.get(vspecifier);
+        const pkg = packages.get(vspecifier);
 
+        /**
+         * The absolute path of the file that resolves the node being imported/required
+         * considering the overwrites that can be specified in the package.json (browser entry) when the platform
+         * is browser
+         * @type {string}
+         */
         const file = (() => {
-            const file = (() => {
-                const file = join(download.path, resource);
-                return sep !== '/' ? file.replace(/\\/g, '/') : file;
-            })();
-
             // Package files can be overwritten when the platform is "browser"
-            return vpackage.browser.has(file) ? vpackage.browser.get(file) : file;
+            let file = sep !== '/' ? path.replace(/\\/g, '/') : path;
+            file = this.#platform === 'browser' && pkg.browser.has(file) ? pkg.browser.get(file) : file;
+            return join(pkg.path, file);
         })();
 
         const contents = await fs.readFile(file, 'utf8');
