@@ -1,19 +1,48 @@
 const packages = require('beyond/packages');
-const {join, dirname, sep} = require('path');
+const {join, sep} = require('path');
 const fs = require('fs').promises;
 const Dependency = require('./dependency');
 
 module.exports = class {
     #bundle;
-    #platform;
 
+    // The plugin name
     get name() {
         return 'beyond';
+    }
+
+    #platform;
+    get platform() {
+        return this.#platform;
+    }
+
+    #pkg;
+    get pkg() {
+        return this.#pkg;
+    }
+
+    #vspecifier;
+    get vspecifier() {
+        return this.#vspecifier;
+    }
+
+    #namespace;
+    get namespace() {
+        return this.#namespace;
+    }
+
+    #subpath;
+    get subpath() {
+        return this.#subpath;
     }
 
     constructor(bundle, platform) {
         this.#bundle = bundle;
         this.#platform = platform;
+        this.#pkg = this.#bundle.module.pkg;
+        this.#vspecifier = this.#pkg.vspecifier;
+        this.#namespace = `beyond:${this.#vspecifier}`;
+        this.#subpath = this.#bundle.subpath;
     }
 
     #canceled = false;
@@ -25,45 +54,16 @@ module.exports = class {
     #resolve(args) {
         if (this.#canceled) throw new Error('Build was canceled');
 
-        const building = (() => {
-            const {vspecifier} = this.#bundle.module.pkg;
-            return {namespace: `beyond:${vspecifier}`, vspecifier, subpath: this.#bundle.subpath};
-        })();
-        const {kind, importer} = args;
-
-        const {namespace, resource} = (() => {
-            /**
-             * The entry point
-             */
-            if (kind === 'entry-point') {
-                return {namespace: building.namespace, resource: building.subpath};
-            }
-
-            /**
-             * A relative internal module
-             */
-            if (args.path.startsWith('./')) {
-                let resource = './' + join(dirname(importer), args.path);
-                resource = sep !== '/' ? resource.replace(/\\/g, '/') : resource;
-                return {namespace: args.namespace, resource};
-            }
-
-            /**
-             * It is a non-relative specifier, so find the dependency
-             */
-            const {dependencies} = this.#bundle.module.pkg;
-            const dependency = new Dependency(args.path, args.namespace.slice('beyond:'.length), dependencies);
-            return {namespace: `beyond:${dependency.vspecifier}`, resource: dependency.resource};
-        })();
+        // The node of the graph being imported/required
+        const Requiring = require('./requiring');
+        const {namespace, resource} = new Requiring(this, args);
 
         // Log the resolution processed arguments
-        // console.log(
-        //     `"${kind === 'entry-point' ? 'entry point' : importer}"`.bold.yellow +
-        //     ' imports ' + `"${resource}"`.bold.yellow + '\n' +
-        //     `\t* namespace: "${namespace}"\n` +
-        //     `\t* kind: "${kind}"\n`);
-
-        const vspecifier = namespace.slice('beyond:'.length);
+        console.log(
+            `"${kind === 'entry-point' ? 'entry point' : importer}"`.bold.yellow +
+            ' imports ' + `"${resource}"`.bold.yellow + '\n' +
+            `\t* node.namespace: "${node.namespace}"\n` +
+            `\t* node.kind: "${node.kind}"\n`);
 
         const {dependencies} = this.#bundle.module.pkg;
         const dependency = new Dependency(args.path, args.namespace.slice('beyond:'.length), dependencies);

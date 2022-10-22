@@ -1,30 +1,46 @@
 module.exports = class {
-    #subpath;
-    get subpath() {
-        return this.#subpath;
-    }
-
     #pkg;
     get pkg() {
         return this.#pkg;
     }
 
+    get vspecifier() {
+        return this.#pkg.vspecifier;
+    }
+
+    get namespace() {
+        return `beyond:${this.vspecifier}`;
+    }
+
+    #subpath;
+    get subpath() {
+        return this.#subpath;
+    }
+
     /**
      * Dependency constructor
      *
-     * @param specifier {string} The specifier being imported
-     * @param importer {string} The importer vpackage specifier
+     * @param specifier {string} The non-relative specifier being imported
+     * @param importer {{namespace: string, vspecifier: string, path: string}} The importer of the specifier
      * @param dependencies {Map<string, Package>} The package dependencies
      */
     constructor(specifier, importer, dependencies) {
-        const split = specifier.split('/');
-        const pkg = split[0].startsWith('@') ? `${split.shift()}/${split.shift()}` : split.shift();
-        const subpath = split.join('/');
+        /**
+         * The parsed specifier
+         * @type {{subpath: string, pkg: string}}
+         */
+        const requiring = (() => {
+            const split = specifier.split('/');
+            const pkg = split[0].startsWith('@') ? `${split.shift()}/${split.shift()}` : split.shift();
 
-        this.#subpath = subpath ? `./${subpath}` : '.';
+            let subpath = split.join('/');
+            subpath = subpath ? `./${subpath}` : '.';
 
-        const ip = dependencies.get(importer); // The importer package
-        this.#vspecifier = `${pkg}@${ip.version}`;
+            return {pkg, subpath};
+        })();
+
+        const ip = dependencies.get(importer.vspecifier); // The package from where the specifier is being imported
         this.#pkg = ip.dependencies.get(this.#vspecifier);
+        this.#vspecifier = `${pkg}@${ip.version}`;
     }
 }
