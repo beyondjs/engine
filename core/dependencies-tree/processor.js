@@ -8,14 +8,14 @@ module.exports = class extends DynamicProcessor() {
 
     #dependencies;
 
-    #processing = false;
-    get processing() {
-        return this.#processing;
+    #working = false;
+    get working() {
+        return this.#working;
     }
 
-    #processed = false;
-    get processed() {
-        return this.#processed;
+    #done = false;
+    get done() {
+        return this.#done;
     }
 
     #value;
@@ -44,8 +44,8 @@ module.exports = class extends DynamicProcessor() {
     }
 
     async process() {
-        if (this.#processing) return;
-        this.#processing = true;
+        if (this.#working) return;
+        this.#working = true;
         this._invalidate();
 
         const request = this.#request = Date.now();
@@ -86,15 +86,14 @@ module.exports = class extends DynamicProcessor() {
 
                 done({vpackage, dependencies});
             }
-
             return output;
         }
 
         const value = await recursive(this.#dependencies);
         if (this.#request !== request) return;
 
-        this.#processing = false;
-        this.#processed = true;
+        this.#working = false;
+        this.#done = true;
         this.#value = value;
         this.#time = Date.now();
 

@@ -45,12 +45,12 @@ module.exports = class extends DynamicProcessor(Map) {
         return !!this.#data.tree;
     }
 
-    get processing() {
-        return this.#processor.processing;
+    get working() {
+        return this.#processor.working;
     }
 
-    get processed() {
-        return this.#processor.processed;
+    get done() {
+        return this.#processor.done;
     }
 
     constructor(vspecifier, config) {

@@ -7,11 +7,11 @@ module.exports = class {
     }
 
     async load() {
-        const {id} = this.#compiler.packager.processor;
+        const {id} = this.#compiler.packager;
 
         let row;
         try {
-            const select = 'SELECT * FROM compilations WHERE processor_id=?';
+            const select = 'SELECT * FROM compilations WHERE packager_id=?';
             row = await this.#db.get(select, id);
         }
         catch (exc) {
@@ -30,12 +30,12 @@ module.exports = class {
     }
 
     async save() {
-        const {id} = this.#compiler.packager.processor;
+        const {id} = this.#compiler.packager;
 
         try {
             const data = JSON.stringify(this.#compiler);
             await this.#db.run('INSERT OR REPLACE INTO compilations(' +
-                'processor_id, data) VALUES(?, ?)',
+                'packager_id, data) VALUES(?, ?)',
                 [id, data]);
         }
         catch (exc) {
@@ -44,11 +44,11 @@ module.exports = class {
     }
 
     async delete() {
-        const {processor} = this.#compiler.packager;
+        const {id} = this.#compiler.packager;
 
         try {
             const sentence = 'DELETE FROM compilations WHERE processor_id=?';
-            await this.#db.run(sentence, processor.id);
+            await this.#db.run(sentence, id);
         }
         catch (exc) {
             console.log('Error deleting compiler compilation cache:', exc.stack);

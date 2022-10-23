@@ -2,6 +2,7 @@ const sqlite = require('sqlite3');
 const fs = require('beyond/utils/fs');
 const {promisify} = require('util');
 const PendingPromise = require('beyond/utils/pending-promise');
+const {join} = require('path');
 
 module.exports = new class {
     #db;
@@ -28,8 +29,8 @@ module.exports = new class {
         this.#ready = new PendingPromise();
 
         const name = 'compilers.db';
-        const dirname = require('path').join(process.cwd(), '.beyond/cache');
-        const store = require('path').join(dirname, name);
+        const dirname = join(process.cwd(), '.beyond/cache');
+        const store = join(dirname, name);
 
         const exists = await fs.exists(store);
         !exists && await fs.mkdir(dirname, {recursive: true});
@@ -44,10 +45,10 @@ module.exports = new class {
         }
 
         await this.#run('CREATE TABLE IF NOT EXISTS compilations (' +
-            'processor_id TEXT NOT NULL, ' +
+            'packager_id TEXT NOT NULL, ' +
             'data TEXT NOT NULL);');
 
-        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS processor_id_index on compilations (processor_id);');
+        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS packager_id_index on compilations (packager_id);');
         this.#ready.resolve();
     }
 }

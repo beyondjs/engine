@@ -2,6 +2,7 @@ const sqlite = require('sqlite3');
 const fs = require('beyond/utils/fs');
 const {promisify} = require('util');
 const PendingPromise = require('beyond/utils/pending-promise');
+const {join} = require('path');
 
 module.exports = new class {
     #db;
@@ -28,8 +29,8 @@ module.exports = new class {
         this.#ready = new PendingPromise();
 
         const name = 'transversals-code.db';
-        const dirname = require('path').join(process.cwd(), '.beyond/cache');
-        const store = require('path').join(dirname, name);
+        const dirname = join(process.cwd(), '.beyond/cache');
+        const store = join(dirname, name);
 
         const exists = await fs.exists(store);
         !exists && await fs.mkdir(dirname, {recursive: true});
