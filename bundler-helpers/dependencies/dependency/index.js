@@ -55,6 +55,24 @@ module.exports = class extends DynamicProcessor() {
         return this.#kind;
     }
 
+    #is = new Set();
+    /**
+     * What kind of dependency it is ('import' | 'type' | 'reference', 'css.import')
+     * @return {Set<any>}
+     */
+    get is() {
+        return this.#is;
+    }
+
+    #sources = new Map();
+    /**
+     * The sources that depend on this dependency
+     * @return {Map<string, Source>}
+     */
+    get sources() {
+        return this.#sources;
+    }
+
     /**
      * Dependency constructor
      *
@@ -63,6 +81,10 @@ module.exports = class extends DynamicProcessor() {
      * @param platform {string}
      */
     constructor(specifier, importer, platform) {
+        if (typeof specifier !== 'string' || typeof importer !== 'string' || typeof platform !== 'string') {
+            throw new Error('Invalid parameters');
+        }
+
         super();
         this.#specifier = new SpecifierParser(specifier);
         this.#importer = importer;

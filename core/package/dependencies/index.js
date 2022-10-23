@@ -4,6 +4,11 @@ const equal = require('beyond/utils/equal');
 const crc32 = require('beyond/utils/crc32');
 
 module.exports = class extends DynamicProcessor(Map) {
+    get dp() {
+        return 'package.dependencies';
+    }
+
+    #packages;
     #pkg;
     #tree;
     #config;
@@ -35,7 +40,7 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#pkg = pkg;
 
         // Do not require beyond/packages at the top of the file to avoid a circular dependency
-        const packages = require('beyond/packages');
+        const packages = this.#packages = require('beyond/packages');
         super.setup(new Map([['package', {child: pkg}], ['packages', {child: packages}]]));
     }
 
@@ -49,7 +54,7 @@ module.exports = class extends DynamicProcessor(Map) {
         const child = this.#tree = new DependenciesTree(this.#pkg.vspecifier, this.#config);
         this.children.register(new Map([['tree', {child}]]));
 
-        packages.forEach(pkg => require(pkg));
+        this.#packages.forEach(pkg => require(pkg));
     }
 
     _process() {
@@ -66,7 +71,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         let installed = true;
         [...this.#tree.list.keys()].forEach(vspecifier => {
-            const dependency = packages.find({vspecifier});
+            const dependency = this.#packages.find({vspecifier});
             installed = installed && !!dependency;
         });
 

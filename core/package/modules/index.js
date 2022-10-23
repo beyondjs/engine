@@ -36,7 +36,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _prepared(require) {
         this.#exports.forEach(module => require(module));
-        this.#modules.forEach(module => require(module));
+        this.#modules?.forEach(module => require(module));
     }
 
     _process() {
@@ -49,7 +49,7 @@ module.exports = class extends DynamicProcessor(Map) {
         }
 
         this.#exports.forEach(module => set(module));
-        this.#modules.forEach(module => set(module));
+        this.#modules?.forEach(module => set(module));
 
         this.clear();
         changed = changed || [...this.keys()].reduce((vspecifier, prev) => prev || !updated.has(vspecifier), false);

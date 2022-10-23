@@ -2,7 +2,7 @@ const PackageBase = require('./base');
 
 module.exports = class extends PackageBase {
     get is() {
-        return 'internal';
+        return 'external';
     }
 
     #json;

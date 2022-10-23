@@ -6,6 +6,10 @@ const crc32 = require('beyond/utils/crc32');
 const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor(Map) {
+    get dp() {
+        return 'dependencies-tree';
+    }
+
     #vspecifier;
     get vspecifier() {
         return this.#vspecifier;
@@ -58,7 +62,7 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#processor = new DependenciesProcessor(this);
         this.#hash = crc32(equal.generate(config));
 
-        super.setup([['processor', {child: this.#processor}]]);
+        super.setup(new Map([['processor', {child: this.#processor}]]));
     }
 
     async _begin() {

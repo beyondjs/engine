@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const registry = require('beyond/externals/registry');
 
 module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'dependencies-tree.processor';
+    }
+
     #dependencies;
 
     #processing = false;

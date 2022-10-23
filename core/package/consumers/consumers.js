@@ -6,7 +6,7 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
  */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'pkg.consumers';
+        return 'package.consumers';
     }
 
     #platform;

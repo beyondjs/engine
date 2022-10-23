@@ -9,9 +9,9 @@ module.exports = class extends DynamicProcessor(Map) {
     /**
      * The bundle packager
      */
-    #bp;
-    get bp() {
-        return this.#bp;
+    #packager;
+    get packager() {
+        return this.#packager;
     }
 
     #Dependency;
@@ -37,14 +37,17 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _create(specifier) {
         if (this.has(specifier)) throw new Error(`Dependency "${specifier}" already created`);
-        return new this.#Dependency(specifier, this.#bp);
+
+        const {cspecs: {platform}, bundle} = this.#packager;
+        const importer = bundle.module.pkg.vspecifier;
+        return new this.#Dependency(specifier, importer, platform);
     }
 
     _notify() {
         ipc.notify('data-notification', {
             type: 'list/update',
             table: 'bundle-dependencies',
-            filter: {bundle: this.#bp.id}
+            filter: {bundle: this.#packager.id}
         });
     }
 
@@ -57,26 +60,26 @@ module.exports = class extends DynamicProcessor(Map) {
     /**
      * Packager dependencies constructor
      *
-     * @param bp {*} The bundle packager
+     * @param packager {*} The bundle packager
      * @param Dependency= {*} The Dependency class used as the Item of the collection
      */
-    constructor(bp, Dependency) {
+    constructor(packager, Dependency) {
         super();
-        this.#bp = bp;
+        this.#packager = packager;
         this.#Dependency = Dependency ? Dependency : require('../../../dependencies/dependency');
         this.#hash = new (require('./hash'))(this);
-        this.#code = new (require('../../../dependencies/code'))(this, bp);
+        this.#code = new (require('../../../dependencies/code'))(this, packager);
         this.#added = new (require('./added'))(this);
 
         super.setup(new Map([
-            ['hash', {child: bp.processors.hashes.dependencies}],
-            ['deprecated-imports', {child: bp.bundle.imports}]
+            ['hash', {child: packager.processors.hashes.dependencies}],
+            ['deprecated-imports', {child: packager.bundle.imports}]
         ]));
     }
 
     _prepared() {
         // All bundles depends on @beyond-js/kernel/bundle, except itself
-        this.bp.bundle.specifier !== '@beyond-js/kernel/bundle' && this.#added.add('@beyond-js/kernel/bundle');
+        this.#packager.bundle.specifier !== '@beyond-js/kernel/bundle' && this.#added.add('@beyond-js/kernel/bundle');
     }
 
     _process() {
@@ -92,7 +95,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         this.#added.forEach((is, specifier) => add(specifier, is));
 
-        this.#bp.processors.forEach(({dependencies}) => {
+        this.#packager.processors.forEach(({dependencies}) => {
             dependencies?.forEach(({valid, specifier, is}) => {
                 if (!valid) {
                     errors.push(`Dependency "${specifier}" is invalid`);
