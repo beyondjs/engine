@@ -13,16 +13,8 @@ module.exports = async function (url) {
     const vpkg = `${specifier.pkg}@${specifier.version}`;
     const pkg = packages.find({vspecifier: vpkg});
     if (!pkg) return;
-    await pkg.modules.ready;
 
-    const vspecifier = vpkg + (specifier.subpath !== '.' ? `/${specifier.subpath}` : '');
-
-    await Promise.all([...pkg.modules.values()].map(module => module.ready));
-    const module = pkg.modules.find({vspecifier});
-    if (!module) return;
-    await module.ready;
-    await module.bundles.ready;
-    if (!module.bundles.size) return;
+    await pkg.exports.ready;
 
     const {bundle, error} = await (async () => {
         const {bundles} = module;

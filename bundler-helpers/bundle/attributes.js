@@ -77,7 +77,7 @@ module.exports = class extends DynamicProcessor() {
         values.platforms = (() => {
             if (errors?.length) return [];
 
-            let {all} = cspecs.platforms;
+            const all = cspecs.platforms.slice();
             let platforms = config.platforms ? config.platforms : all;
             platforms = typeof platforms === 'string' ? [platforms] : platforms;
             platforms = platforms instanceof Array ? platforms : all;

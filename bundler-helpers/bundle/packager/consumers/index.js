@@ -11,10 +11,9 @@ module.exports = class extends DynamicProcessor(Set) {
     constructor(packager) {
         super();
         const {bundle, cspecs, language} = packager;
-        const {application} = bundle.container;
         this.#bundle = bundle;
 
-        const consumers = application.consumers.get(cspecs, language);
+        const consumers = bundle.module.pkg.consumers.get(cspecs, language);
         super.setup(new Map([['consumers', {child: consumers}]]));
     }
 

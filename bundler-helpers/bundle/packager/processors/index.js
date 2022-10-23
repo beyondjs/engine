@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {processors} = require('beyond/bundlers-registry');
+const {processors, bundles} = require('beyond/bundlers-registry');
 const ProcessorBase = require('../../../processor/base');
 
 /**
@@ -48,7 +48,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         this.#packager = packager;
         const {bundle} = packager;
-        this.#supported = bundlers.get(bundle.type).bundle.processors;
+        this.#supported = bundles.get(bundle.type).bundle.processors;
         if (!(this.#supported instanceof Array)) {
             throw new Error(`Supported processors property is not defined in "${bundle.type}" bundle`);
         }

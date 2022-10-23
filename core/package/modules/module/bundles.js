@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
-const {bundles} = require('beyond/bundlers-registry');
+const {bundles: registry} = require('beyond/bundlers-registry');
 const {Bundle: BundleBase} = require('beyond/bundler-helpers');
 
 module.exports = class extends DynamicProcessor(Map) {
@@ -32,6 +32,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     constructor(module) {
         super();
+        super.setup(new Map([['registry', {child: registry}]]));
         this.#module = module;
     }
 
@@ -50,9 +51,11 @@ module.exports = class extends DynamicProcessor(Map) {
         const updated = new Map();
         let changed = false;
         config.forEach((config, type) => {
+            if (!registry.has(type)) return;
+
             let bundle = this.has(type) && this.get(type);
             if (!bundle) {
-                const meta = bundles.get(type);
+                const meta = registry.get(type);
                 const Bundle = meta.bundle?.Bundle ? meta.bundle.Bundle : BundleBase;
                 bundle = new Bundle(this.#module, type);
                 changed = true;

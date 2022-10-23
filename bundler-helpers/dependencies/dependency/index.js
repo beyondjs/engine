@@ -1,136 +1,123 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {bundles} = require('beyond/bundlers-registry');
+const packages = require('beyond/packages');
+const SpecifierParser = require('beyond/utils/specifier-parser');
 
-/**
- * The Dependency object required by:
- *   . The processors (actually it is being used by the "ts" and "sass" processors)
- *   . The dependencies collection of the Bundle and Transversal objects
- */
 module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'bundler.dependency';
     }
 
     #specifier;
+    /**
+     * The parsed specifier
+     * @return {SpecifierParser}
+     */
     get specifier() {
         return this.#specifier;
     }
 
-    #container;
-
-    get id() {
-        return `${this.#container.id}//dependency//${this.specifier}`;
+    #importer;
+    get importer() {
+        return this.#importer;
     }
 
-    get cspecs() {
-        return this.#container.cspecs;
+    #platform;
+    get platform() {
+        return this.#platform;
     }
 
-    get language() {
-        return this.#container.language;
+    #vspecifier;
+    /**
+     * The vspecifier resolved according to the dependencies tree
+     * @return {string}
+     */
+    get vspecifier() {
+        return this.#vspecifier;
     }
 
-    get seeker() {
-        return this.children.get('seeker').child;
-    }
-
-    get errors() {
-        return this.seeker.errors;
-    }
-
-    get valid() {
-        return !this.errors.length;
-    }
-
-    // A special kind of bundle that is dynamically created by the engine
-    // Actually only `${pkg}/config' is a reserved bundle
-    get reserved() {
-        return this.seeker.reserved;
-    }
-
-    // true if dependency is a beyond internal bundle. Actually 'beyond_context'
-    get internal() {
-        return this.seeker.internal;
-    }
-
-    // true if dependency is a node internal module
-    get node() {
-        return this.seeker.node;
-    }
-
-    get external() {
-        return this.seeker.external;
-    }
-
+    #bundle;
+    /**
+     * If found, the bundle that meets the specifier
+     * @return {*}
+     */
     get bundle() {
-        return this.seeker.bundle;
+        return this.#bundle;
     }
 
-    get version() {
-        return this.seeker.version;
-    }
-
+    #kind;
+    /**
+     * Can be 'beyond.reserved', 'beyond.internal', 'node.internal'
+     * 'beyond.reserved' is actually only used by the package configuration bundle `${pkg}/config'
+     * 'beyond.internal' is actually only used by 'beyond_context'
+     * @return {string}
+     */
     get kind() {
-        if (!this.processed) {
-            Error.stackTraceLimit = 40;
-            throw new Error('Processor is not ready');
-        }
-
-        if (!this.seeker.valid) return;
-        if (this.reserved) return 'beyond.reserved';
-        if (this.internal) return 'beyond.internal';
-        if (this.node) return 'node.internal';
-        if (this.external) return 'external';
-
-        const {bundle} = this.seeker;
-        const transversal = !!bundles.get(bundle.type).transversal;
-        return transversal ? 'transversal' : 'bundle';
-    }
-
-    // What kind of dependency it is ('import' | 'type' | 'reference', 'css.import')
-    #is = new Set();
-    get is() {
-        return this.#is;
-    }
-
-    // The sources that depend on this dependency
-    #sources = new Map();
-    get sources() {
-        return this.#sources;
+        return this.#kind;
     }
 
     /**
-     * Processor dependency constructor
+     * Dependency constructor
      *
-     * @param specifier {string} The dependency specifier
-     * @param container {{application: object, cspecs: object, language: string}}
+     * @param specifier {string} The specifier being imported
+     * @param importer {string} The vspecifier of the package from where the specifier is being imported
+     * @param platform {string}
      */
-    constructor(specifier, container,) {
+    constructor(specifier, importer, platform) {
         super();
-        this.#specifier = specifier;
-        this.#container = container;
+        this.#specifier = new SpecifierParser(specifier);
+        this.#importer = importer;
+        this.#platform = platform;
 
-        const {application, cspecs} = container;
-        const seeker = application.modules.seekers.create(specifier, cspecs);
-        super.setup(new Map([['seeker', {child: seeker}]]));
+        super.setup(new Map([['packages', {child: packages}]]));
     }
 
-    clear() {
-        this.#is.clear();
-        this.#sources.clear();
+    /**
+     * The vspecifier is resolved in the prepare phase
+     *
+     * @param require
+     * @private
+     */
+    _prepared(require) {
+        this.#vspecifier = (() => {
+            if (this.#specifier.pkg === this.#importer.split('@')[0]) return this.#importer;
+
+            /**
+             * Get the list of dependencies of the package from where the specifier is being imported
+             */
+            const pkg = packages.find({vspecifier: this.#importer});
+            if (!pkg) return;
+            const {dependencies} = pkg;
+            if (!require(dependencies) || !dependencies.filled) return;
+
+            /**
+             * Get the package of the specifier from the dependencies of the importer
+             */
+            if (!dependencies.has(this.#specifier.pkg)) return;
+            const {version} = dependencies.get(this.#specifier.pkg);
+            this.#vspecifier = `${this.#specifier.pkg}@${version}`;
+        })();
+        if (!this.#vspecifier) return;
+
+        const pkg = packages.find({vspecifier: this.#vspecifier});
+        require(pkg.exports);
     }
 
-    hydrate(cached) {
-        this.#is = new Set(cached.is);
-        this.#sources = new Map(cached.sources);
-    }
+    _process() {
+        this.#bundle = this.#kind = void 0;
 
-    toJSON() {
-        return {is: [...this.#is], sources: [...this.#sources]};
-    }
+        /**
+         * Property this.#vspecifier is resolved in the _prepared phase
+         * If it is undefined, it means that the dependency cannot be solved
+         */
+        if (!this.#vspecifier) return;
+        const pkg = packages.find({vspecifier: this.#vspecifier});
+        if (!pkg) return;
 
-    destroy() {
-        this.children.get('seeker').child.destroy();
-        super.destroy();
+        this.#bundle = (() => {
+            // The vspecifier of the bundle being required
+            const {subpath} = this.#specifier;
+            const vspecifier = this.#vspecifier + (subpath !== '.' ? `/${subpath}` : '');
+            return pkg.exports.get(vspecifier);
+        })();
     }
 }

@@ -26,24 +26,36 @@ module.exports = class extends DynamicProcessor() {
         return this.#subpath;
     }
 
+    #specifier;
+    get specifier() {
+        return this.#specifier;
+    }
+
+    #vspecifier;
+    get vspecifier() {
+        return this.#vspecifier;
+    }
+
     #packagers;
     get packagers() {
         return this.#packagers;
     }
-
-    #conditional;
-    #configured;
 
     #platforms;
     get platforms() {
         return this.#platforms;
     }
 
+    #conditional;
+    #configured;
+
     constructor(module, name) {
         super();
         this.#module = module;
         this.#name = name;
         this.#subpath = module.subpath + (name ? `.${name}` : '');
+        this.#specifier = this.#module.specifier + (name ? `.${name}` : '');
+        this.#vspecifier = this.#module.vspecifier + (name ? `.${name}` : '');
 
         super.setup(new Map([['registry', {child: registry.bundles}]]));
         this.#packagers = new Packagers(this);

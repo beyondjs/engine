@@ -1,24 +1,24 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
- * Map with all the consumers of the bundles of the modules of the application
+ * Map with all the consumers of the bundles of the modules of the package
  * Where the key of the map is the bundle.id, and the value is a set of bundle objects
  */
-module.exports = class extends DynamicProcessor {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'application.consumers';
+        return 'pkg.consumers';
     }
 
-    #distribution;
+    #platform;
     #language;
 
-    constructor(application, distribution, language) {
+    constructor(pkg, platform, language) {
         super();
-        this.#distribution = distribution;
+        this.#platform = platform;
         this.#language = language;
         this.setMaxListeners(500); // how many bundles can have the same dependency
 
-        super.setup(new Map([['modules', {child: application.modules}]]));
+        super.setup(new Map([['modules', {child: pkg.modules}]]));
     }
 
     _prepared(require) {
@@ -27,7 +27,7 @@ module.exports = class extends DynamicProcessor {
             if (!require(module) || !require(module.bundles)) return;
             module.bundles.forEach(bundle => {
                 if (!require(bundle)) return;
-                const packager = bundle.packagers.get(this.#distribution, this.#language);
+                const packager = bundle.packagers.get(this.#platform, this.#language);
                 if (!require(packager) || !require(packager.dependencies)) return;
                 packager.dependencies.forEach(dependency => require(dependency));
             });
@@ -38,7 +38,7 @@ module.exports = class extends DynamicProcessor {
         const updated = new Map();
         const modules = this.children.get('modules').child;
         modules.forEach(module => module.bundles.forEach(bundle => {
-            const packager = bundle.packagers.get(this.#distribution, this.#language);
+            const packager = bundle.packagers.get(this.#platform, this.#language);
             packager.dependencies.forEach(dependency => {
                 if (dependency.external || dependency.internal || dependency.node || !dependency.valid) return;
                 if (dependency.bundle.specifier.startsWith('@beyond-js/')) return;

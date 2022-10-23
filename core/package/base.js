@@ -1,6 +1,7 @@
 const Attributes = require('./attributes');
 const Dependencies = require('./dependencies');
 const Modules = require('./modules');
+const Exports = require('./exports');
 const Static = require('./static');
 const equal = require('beyond/utils/equal');
 
@@ -13,6 +14,11 @@ module.exports = class extends Attributes {
     #modules;
     get modules() {
         return this.#modules;
+    }
+
+    #exports;
+    get exports() {
+        return this.#exports;
     }
 
     #_static;
@@ -39,6 +45,7 @@ module.exports = class extends Attributes {
 
         this.#dependencies = new Dependencies(this);
         this.#modules = new Modules(this);
+        this.#exports = new Exports(this.#modules);
         this.#_static = new Static(this);
     }
 
@@ -61,6 +68,7 @@ module.exports = class extends Attributes {
     destroy() {
         super.destroy();
         this.#modules?.destroy();
+        this.#exports?.destroy();
         this.#_static?.destroy();
         this.#dependencies?.destroy();
     }
