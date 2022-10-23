@@ -15,23 +15,12 @@ module.exports = async function (url) {
     if (!pkg) return;
 
     await pkg.exports.ready;
+    const {bundle, error} = ((specifier) => {
+        if (!pkg.exports.has(specifier)) return {error: `Bundle "${specifier}" not found`};
 
-    const {bundle, error} = await (async () => {
-        const {bundles} = module;
-        const {type, error} = await (async () => {
-            if (specifier.bundle) return {type: specifier.bundle};
-            if (bundles.size > 1) return {error: 'Bundle type must be specified in a multibundle module'};
-
-            return {type: [...bundles.keys()][0]};
-        })();
-        if (error) return {error};
-
-        if (!bundles.has(type)) {
-            const types = JSON.stringify([...bundles.keys()]);
-            return {error: `Bundle type "${type}" is invalid. Bundles currently specified in the module are: ${types}`};
-        }
-        return {bundle: bundles.get(type)};
-    })();
+        const bundle = pkg.exports.get(specifier);
+        return {bundle};
+    })(specifier.specifier);
     if (error) return {content: error, contentType: 'text/plain', statusCode: 404};
 
     await bundle.ready;
