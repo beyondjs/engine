@@ -49,23 +49,45 @@ module.exports = class extends (require('./attributes')) {
     }
 
     #config;
+    /**
+     * The configuration as it is required by the packagers of the bundle
+     * @return {*}
+     */
+    get config() {
+        return this.#config?.value;
+    }
 
     /**
      * This method can be overridden
-     * @param config
+     *
+     * @param config {*} The configuration of the bundle as it is set in the module.json
+     * @param errors string[]
+     * @param warnings string[]
      */
-    configure(config) {
-        const {value, errors} = typeof config === 'object' ? {value: config} :
-            {errors: [`Bundle's configuration must be an object`]}
+    configure(config, errors, warnings) {
+        if ((warnings && !(warnings instanceof Array)) || (errors && !(errors instanceof Array))) {
+            throw new Error('Invalid parameters');
+        }
 
-        if (equal(this.#config, {value, errors})) return;
+        const done = ({config, errors, warnings}) => {
+            errors = errors ? errors : [];
+            warnings = warnings ? warnings : [];
+            const value = {value: config, errors, warnings};
 
-        /**
-         * The configuration can be pre-processed to the following structure
-         * @type {{value: any, errors: string[], warnings: string[]}}
-         */
-        this.#config = {value, errors};
-        this._invalidate();
+            if (equal(this.#config, value)) return;
+            this.#config = value;
+            this._invalidate();
+        }
+
+        if (errors?.length) {
+            return done({errors, warnings});
+        }
+        if (typeof config !== 'object') {
+            return done({errors: [`Bundle's configuration must be an object`]});
+        }
+        else {
+            return done({config, warnings});
+        }
     }
 
     /**

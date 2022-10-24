@@ -1,6 +1,5 @@
 const {header} = require('beyond/utils/code');
-const SourceMap = require('../../../../../sourcemap');
-const mformat = require('beyond/utils/mformat');
+const SourceMap = require('../../../../sourcemap');
 
 /**
  * Process the bundle code
@@ -14,13 +13,9 @@ module.exports = function (jscode, hmr, transversal) {
     'use strict';
 
     const {packager} = jscode;
-    const {application, bundle, specs, language, processors, dependencies} = packager;
-    const {format, minify} = specs;
+    const {application, bundle, language, processors, dependencies} = packager;
 
     const sourcemap = new SourceMap();
-
-    // Import module in AMD mode
-    format === 'amd' && !transversal && sourcemap.concat(`import * as _amd_module from 'module';\n`);
 
     // Add the code of the dependencies
     dependencies.size && (!transversal || hmr) && sourcemap.concat(dependencies.code.code);
@@ -37,13 +32,11 @@ module.exports = function (jscode, hmr, transversal) {
 
     if (!processors.size) {
         sourcemap.concat('// No processors found');
-        return sourcemap;
+        return {sourcemap};
     }
 
     // The beyond kernel bundle
     const bkb = bundle.specifier === '@beyond-js/kernel/bundle';
-
-    bkb && format === 'amd' && sourcemap.concat('const amd_require = require;');
 
     // Create the bundle object
     if (!bkb) {
@@ -69,14 +62,7 @@ module.exports = function (jscode, hmr, transversal) {
                 !specs.module.multibundle && delete (specs.module.multibundle);
                 specs.type === specs.name && delete specs.name;
 
-                const uri = (() => {
-                    if (mformat === 'amd') return ', _amd_module.uri';
-                    if (['esm', 'sjs'].includes(mformat)) return ', import.meta.url';
-                    return ', __dirname';
-                })();
-
-                const params = JSON.stringify(specs) + uri;
-
+                const params = JSON.stringify(specs) + ', import.meta.url';
                 sourcemap.concat(`const __pkg = new __Bundle(${params})${pkgProperty};`);
             }
             else {
@@ -135,12 +121,8 @@ module.exports = function (jscode, hmr, transversal) {
     const initialisation = require('./initialisation')(packager, hmr);
     initialisation && sourcemap.concat(initialisation);
 
-    if (format === 'esm' && !minify) return sourcemap;
+    console.log('@TODO: set the sourcemap sourceRoot');
+    // map.sourceRoot = specs.platform === 'web' ? '/' : `${process.cwd()}/`;
 
-    // Transform to the required module format and minify if requested
-    const {code, map, errors} = mformat({code: sourcemap.code, map: sourcemap.map, format, minify});
-    if (errors) return {errors};
-
-    map.sourceRoot = specs.platform === 'web' ? '/' : `${process.cwd()}/`;
-    return {code, map};
+    return {sourcemap};
 }

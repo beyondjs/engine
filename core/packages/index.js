@@ -50,8 +50,15 @@ module.exports = new class extends DynamicProcessor(Map) {
 
     find(specs) {
         if (!specs) throw new Error('Invalid parameters, specification is undefined');
-        if (!specs.vspecifier) throw  new Error('Invalid parameters');
+        if (!specs.vspecifier && !specs.name) throw  new Error('Invalid parameters');
 
-        return [...this.values()].find(({vspecifier}) => vspecifier === specs.vspecifier);
+        if (specs.vspecifier) {
+            return [...this.values()].find(({vspecifier}) => vspecifier === specs.vspecifier);
+        }
+        else if (specs.name) {
+            const packages = [...this.values()].filter(({name}) => name === specs.name);
+            const versions = packages.map(({version}) => version);
+            return new Set(versions);
+        }
     }
 }

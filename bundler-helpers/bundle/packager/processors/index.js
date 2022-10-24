@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {processors, bundles} = require('beyond/bundlers-registry');
+const registry = require('beyond/bundlers-registry');
 const ProcessorBase = require('../../../processor/base');
 
 /**
@@ -48,7 +48,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         this.#packager = packager;
         const {bundle} = packager;
-        this.#supported = bundles.get(bundle.type).bundle.processors;
+        this.#supported = registry.bundles.get(bundle.type).bundle.processors;
         if (!(this.#supported instanceof Array)) {
             throw new Error(`Supported processors property is not defined in "${bundle.type}" bundle`);
         }
@@ -57,7 +57,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
         super.setup(new Map([
             ['bundle', {child: bundle}],
-            ['processors', {child: processors}]
+            ['processors', {child: registry.processors}]
         ]));
     }
 
@@ -75,7 +75,7 @@ module.exports = class extends DynamicProcessor(Map) {
         for (const [name, config] of processors) {
             if (reserved.includes(name)) continue;
 
-            if (this.#supported.includes(name) && !processors.has(name)) {
+            if (this.#supported.includes(name) && !registry.processors.has(name)) {
                 this.#errors.push(`Processor "${name}" is not registered`);
                 continue;
             }
@@ -85,11 +85,11 @@ module.exports = class extends DynamicProcessor(Map) {
             }
 
             const {bundle, cspecs, language} = this.#packager;
-            const {container: {application}, watcher} = bundle;
+            const {module: {pkg}, watcher} = bundle;
             const packager = this.#packager;
-            const specs = {application, watcher, bundle, packager, cspecs, language};
+            const specs = {pkg, watcher, bundle, packager, cspecs, language};
 
-            const meta = processors.get(name);
+            const meta = registry.processors.get(name);
             const Processor = meta.Processor ? meta.Processor : ProcessorBase;
             const processor = this.has(name) ? this.get(name) : (changed = true) && new Processor(name, specs);
 

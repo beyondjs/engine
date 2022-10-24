@@ -1,22 +1,21 @@
 const {Bundle} = require('beyond/bundler-helpers');
 
 module.exports = class extends Bundle {
-    processConfig(config) {
-        if (!['object', 'string'].includes(typeof config)) {
-            return {errors: ['Invalid configuration']};
-        }
-        config = Object.assign({}, config);
+    configure(config) {
+        if (typeof config === 'string') return super.configure({files: config});
+        if (config instanceof Array) return super.configure({files: config});
+        if (typeof config !== 'object') return super.configure(config);
 
-        const reserved = ['name', 'platforms', 'path', 'imports', 'standalone', 'scoped'];
+        const reserved = ['name', 'platforms', 'path', 'imports'];
 
-        const value = {};
+        const preprocessed = {};
         for (const prop of reserved) {
             if (config[prop] === void 0) continue;
-            value[prop] = config[prop];
+            preprocessed[prop] = config[prop];
             delete config[prop];
         }
+        preprocessed.ts = config;
 
-        value.ts = config;
-        return {value};
+        return super.configure(preprocessed);
     }
 }
