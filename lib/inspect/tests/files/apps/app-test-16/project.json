@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "scope": "@jida",
+  "name": "app-test-16",
+  "title": "example app 2",
+  "description": "example app description",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "modules"
+  },
+  "deployment": {
+    "distributions": []
+  }
+}

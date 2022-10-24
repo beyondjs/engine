@@ -1,0 +1,14 @@
+{
+  "name": "@@jida/app-test-16",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^16.11.7",
+    "@beyond-js/kernel": "^0.0.20"
+  },
+  "devDependencies": {
+    "@beyond-js/backend": "^0.0.9"
+  }
+}

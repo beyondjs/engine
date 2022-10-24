@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+
+:root {
+
+  --beyond-font-family: 'Roboto', sans-serif;
+  --beyond-secondary-font-family: 'Roboto', sans-serif;
+  --beyond-title-font: 'Roboto', sans-serif;
+
+  --beyond-gray-base-color: #000000;
+  --beyond-gray-darker-color: #333333;
+  --beyond-gray-dark-color: #5E5F5C;
+  --beyond-gray-color: #82837F;
+  --beyond-gray-light-color: #E4E5DC;
+  --beyond-gray-lighter-color: #F0F0F0;
+
+  --beyond-primary-color: #FF8056;
+  --beyond-primary-dark-color: #E36152;
+  --beyond-primary-light-color: #FFA789;
+  --beyond-primary-accent-color: #E36152;
+  --beyond-text-on-primary: #fff;
+
+  --beyond-secondary-color: #121F36;
+  --beyond-secondary-dark-color: #121F36;
+  --beyond-secondary-light-color: #313C50;
+  --beyond-secondary-accent-color: #F7C700;
+  --beyond-text-on-secondary: #FFFFFF;
+
+  --beyond-background-color: var(--beyond-secondary-color);
+  --beyond-background-variant-color: #fff;
+  --beyond-border-color: #DDDDDD;
+  --beyond-border-variant-color: #eeeeee;
+  --beyond-text-color: #fff;
+
+  --beyond-facebook-color: #4267B2;
+  --beyond-facebook-dark: darken(#4267B2, 100%);
+  --beyond-facebook-light: lighten(#4267B2, 5%);
+  --beyond-facebook-accent-color: #4267B2;
+  --beyond-facebook-contrast-color: #ffffff;
+
+  --beyond-element-primary-background-color: rgb(18 31 54 / 20%);
+  --beyond-element-dark-background-color: rgb(18 31 54 / 60%);
+  --beyond-element-secondary-background-color: #FFFFFF1A;
+  --beyond-element-primary-text: var(--beyond-text-on-primary);
+  --beyond-element-secondary-text: var(--beyond-gray-color);
+  --beyond-element-tertiary-text: var(--beyond-gray-light-color);;
+
+  --beyond-success-color: #6AAC7D;
+  --beyond-warning-color: #F7C700;
+  --beyond-error-color: #f04141;
+  --beyond-chat-online-color: #43fc22;
+  --beyond-preload-color: var(--beyond-secondary-color);
+}

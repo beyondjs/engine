@@ -1,0 +1,19 @@
+{
+  "name": "test-14",
+  "title": "Test",
+  "widget": {
+    "hmr": true,
+    "ts": {
+      "path": "ts",
+      "files": [
+        "*"
+      ]
+    }
+  },
+  "start": {
+    "ts": {
+      "path": "start",
+      "files": "start.ts"
+    }
+  }
+}

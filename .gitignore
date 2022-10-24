@@ -3,3 +3,5 @@ node_modules
 .beyond
 .vscode
 package-lock.json
+lib/inspect/tests/files/apps
+lib/inspect/tests/files/modules/app

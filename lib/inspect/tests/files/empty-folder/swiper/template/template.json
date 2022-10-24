@@ -1,0 +1,10 @@
+{
+  "application": {
+    "processor": "scss",
+    "path": ".",
+    "files": [
+      "custom-properties.scss",
+      "styles.scss"
+    ]
+  }
+}
