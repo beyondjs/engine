@@ -31,7 +31,8 @@ module.exports = class extends ProcessorAnalyzerDependencies {
             updated.set(bkb, bundle);
         }
         else {
-            const dependency = this._create(bkb);
+            const {pkg, cspecs: {platform}} = this.processor.specs;
+            const dependency = this._create(bkb, pkg.name, platform);
             dependency.is.add('import');
             updated.set(bkb, dependency);
         }

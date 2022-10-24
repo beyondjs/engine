@@ -1,5 +1,6 @@
 const {bundles: registry} = require('beyond/bundlers-registry');
 const equal = require('beyond/utils/equal');
+const {join} = require('path');
 
 module.exports = class extends (require('./attributes')) {
     #module;
@@ -9,6 +10,11 @@ module.exports = class extends (require('./attributes')) {
 
     get pkg() {
         return this.#module.pkg;
+    }
+
+    #path;
+    get path() {
+        return this.#path;
     }
 
     // The PLM id
@@ -126,12 +132,14 @@ module.exports = class extends (require('./attributes')) {
         const {value, errors, warnings} = this.#config;
         const changed = super._process({config: value, errors, warnings});
 
+        this.#path = join(this.#module.path, typeof value.path === 'string' ? value.path : '');
+
         /**
          * Configure the legacy imports
          */
         (() => {
-            const {path, config} = errors?.length || !value.imports ? {} : {path: this.path, config: value.imports};
-            this.#imports.configure(path, config);
+            errors?.length || !value.imports ? this.#imports.configure() :
+                this.#imports.configure(this.#path, value.imports);
         })();
 
         return changed;

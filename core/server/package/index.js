@@ -24,17 +24,17 @@ module.exports = async function (url) {
     }
 
     await pkg.exports.ready;
-    const {bundle, error} = ((specifier) => {
+    const {bundle, error} = (({specifier, pkg: name, version, subpath}) => {
         if (!pkg.exports.has(specifier)) {
             const exports = JSON.stringify([...pkg.exports.keys()]);
-            const error = `Package "${specifier.pkg}" does not exports the subpath "${specifier.subpath}"\n\n` +
+            const error = `Package "${name}@${version}" does not exports the subpath "${subpath}"\n\n` +
                 `Registered subpaths are:\n${exports}`;
             return {error};
         }
 
         const bundle = pkg.exports.get(specifier);
         return {bundle};
-    })(specifier.specifier);
+    })(specifier);
     if (error) return response(error, 404);
 
     await bundle.ready;

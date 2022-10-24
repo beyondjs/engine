@@ -44,7 +44,10 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _create(specifier) {
         if (this.has(specifier)) throw new Error(`Dependency "${specifier}" already created`);
-        return new this.#Dependency(specifier, this.#processor);
+
+        const {cspecs: {platform}, bundle} = this.#processor.specs;
+        const importer = bundle.module.pkg.vspecifier;
+        return new this.#Dependency(specifier, importer, platform);
     }
 
     _notify() {

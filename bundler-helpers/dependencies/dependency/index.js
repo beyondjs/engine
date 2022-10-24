@@ -46,8 +46,7 @@ module.exports = class extends DynamicProcessor() {
 
     #kind;
     /**
-     * Can be 'beyond.reserved', 'beyond.internal', 'node.internal'
-     * 'beyond.reserved' is actually only used by the package configuration bundle `${pkg}/config'
+     * Can be 'bundle', 'beyond.internal', 'node.internal', undefined if specifier does not satisfy a valid import
      * 'beyond.internal' is actually only used by 'beyond_context'
      * @return {string}
      */
@@ -141,5 +140,6 @@ module.exports = class extends DynamicProcessor() {
             const vspecifier = this.#vspecifier + (subpath !== '.' ? `/${subpath}` : '');
             return pkg.exports.get(vspecifier);
         })();
+        this.#bundle && (this.#kind = 'bundle');
     }
 }

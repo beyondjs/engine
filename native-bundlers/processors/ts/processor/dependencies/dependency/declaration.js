@@ -68,8 +68,9 @@ module.exports = class extends DynamicProcessor() {
         this.#errors = [];
 
         const {dependency} = this;
-        if (!dependency.valid) {
-            this.#errors = dependency.errors;
+        if (!dependency.kind) {
+            console.log(dependency.dp, dependency.kind);
+            this.#errors = [`Dependency not found`];
             return;
         }
 

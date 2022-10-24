@@ -10,8 +10,8 @@ module.exports = class extends Dependency {
         return this.#declaration;
     }
 
-    constructor(specifier, processor) {
-        super(specifier, processor);
+    constructor(...params) {
+        super(...params);
         this.#declaration = new (require('./declaration'))(this);
     }
 }

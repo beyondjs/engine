@@ -39,6 +39,8 @@ module.exports = class extends DynamicProcessor() {
     #listen() {
         const {specs} = this.#processor;
         const {watcher} = specs;
+        if (!watcher) return;
+
         const {path} = specs.bundle;
 
         this.#listener?.destroy();

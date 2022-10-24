@@ -1,6 +1,7 @@
 const ipc = require('beyond/utils/ipc');
 const {FinderCollection} = require('beyond/utils/finder');
 const Source = require('./source');
+const Hash = require('./hash');
 
 module.exports = class extends FinderCollection {
     #processor;
@@ -21,7 +22,7 @@ module.exports = class extends FinderCollection {
 
         this.#processor = processor;
         this.#extname = extname;
-        this.#hash = new (require('../hash'))(this);
+        this.#hash = new Hash(this);
     }
 
     configure(path, config) {

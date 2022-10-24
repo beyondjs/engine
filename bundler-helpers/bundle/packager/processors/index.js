@@ -85,7 +85,8 @@ module.exports = class extends DynamicProcessor(Map) {
             }
 
             const {bundle, cspecs, language} = this.#packager;
-            const {module: {pkg}, watcher} = bundle;
+            const {module: {pkg}} = bundle;
+            const {watcher} = bundle.module.pkg;
             const packager = this.#packager;
             const specs = {pkg, watcher, bundle, packager, cspecs, language};
 

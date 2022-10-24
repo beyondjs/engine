@@ -15,8 +15,8 @@ module.exports = class {
         return this.#processor.id;
     }
 
-    get application() {
-        return this.#processor.application;
+    get pkg() {
+        return this.#processor.pkg;
     }
 
     get cspecs() {

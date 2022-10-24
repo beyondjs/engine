@@ -36,8 +36,8 @@ module.exports = class {
         return this.#meta;
     }
 
-    get application() {
-        return this.#specs.application;
+    get pkg() {
+        return this.#specs.pkg;
     }
 
     get cspecs() {
@@ -114,14 +114,12 @@ module.exports = class {
      * Processor constructor
      *
      * @param name {string} The processor's name
-     * @param specs {{bundle, cspecs, application, watcher}}
+     * @param specs {{pkg, bundle, cspecs, watcher=}}
      */
     constructor(name, specs) {
-        if (!specs || !specs.bundle?.type || !specs.bundle.container || !specs.bundle.path ||
-            !specs.application || !specs.watcher) {
-
-            const id = specs && specs.bundle && specs.bundle.id ? `of bundle "${specs.bundle.id}" ` : '';
-            console.log(`Parameter specs ${id}is invalid:`, specs);
+        if (!specs?.pkg || !specs.bundle?.type || !specs.bundle.path) {
+            const id = specs && specs.bundle?.id ? `of bundle "${specs.bundle.id}" ` : '';
+            console.log(`Parameter specs ${id}is invalid:`, specs, specs.bundle.type, specs.bundle.path);
             throw new Error('Invalid "specs" parameter');
         }
 
