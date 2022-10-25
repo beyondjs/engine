@@ -4,7 +4,7 @@ const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'bundler.bundle.dependencies.deprecated-imports.hash';
+        return 'bundle.deprecated-imports.hash';
     }
 
     #value;

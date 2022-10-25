@@ -2,6 +2,9 @@ const PSets = require('./psets');
 const {bundles: registry} = require('beyond/bundlers-registry');
 const equal = require('beyond/utils/equal');
 const {join} = require('path');
+const Types = require('./types');
+const JS = require('./js');
+const CSS = require('./css');
 
 module.exports = class extends (require('./attributes')) {
     #module;
@@ -57,11 +60,26 @@ module.exports = class extends (require('./attributes')) {
 
     #config;
     /**
-     * The configuration as it is required by the packagers of the bundle
+     * The configuration as it is required by the processors sets (psets)
      * @return {*}
      */
     get config() {
         return this.#config?.value;
+    }
+
+    #types;
+    get types() {
+        return this.#types;
+    }
+
+    #js;
+    get js() {
+        return this.#js;
+    }
+
+    #css;
+    get css() {
+        return this.#css;
     }
 
     /**
@@ -114,10 +132,20 @@ module.exports = class extends (require('./attributes')) {
         this.#psets = new PSets(this);
         this.#imports = new (require('./deprecated-imports'))(this);
 
-        super.setup(new Map([
-            ['bundles-registry', {child: registry}],
-            ['module', {child: module}]
-        ]));
+        const {extname} = this.#meta;
+        if (!(extname instanceof Array)) {
+            throw new Error(`Property extname in bundle "${type}" specification must be an array`);
+        }
+        if (!extname.includes('.js') && !extname.includes('.css')) {
+            throw new Error(`Property extname in bundle "${type}" ` +
+                `specification must include the entries '.js' and/or '.css'`);
+        }
+
+        this.#types = this.#meta.types ? new Types(this) : void 0;
+        this.#js = extname.includes('.js') ? new JS(this) : void 0;
+        this.#css = extname.includes('.css') ? new CSS(this) : void 0;
+
+        this.super.setup(new Map([['bundles-registry', {child: registry}]]));
     }
 
     /**
@@ -148,6 +176,6 @@ module.exports = class extends (require('./attributes')) {
 
     destroy() {
         super.destroy();
-        this.#packagers.destroy();
+        this.#psets.destroy();
     }
 }

@@ -1,5 +1,5 @@
 const {header} = require('beyond/utils/code');
-const SourceMap = require('../../../../sourcemap');
+const SourceMap = require('../../sourcemap');
 
 /**
  * Process the bundle code

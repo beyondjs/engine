@@ -1,4 +1,4 @@
-const SourceMap = require('../../../../sourcemap');
+const SourceMap = require('../../sourcemap');
 
 module.exports = class extends require('../base') {
     get dp() {

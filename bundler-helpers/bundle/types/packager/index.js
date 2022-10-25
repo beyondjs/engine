@@ -6,7 +6,7 @@ const {SourceMap} = require('beyond/bundlers-helpers');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'bundler.bundle.declaration';
+        return 'bundle.declaration';
     }
 
     #bundle;
@@ -30,20 +30,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #pset;
-
-    _notify() {
-        ipc.notify('data-notification', {
-            type: 'record/update',
-            table: 'declarations',
-            id: this.id
-        });
-    }
-
     #hash;
-    get hash() {
-        return this.#hash;
-    }
-
     #cache;
 
     #processed = false;
@@ -69,15 +56,23 @@ module.exports = class extends DynamicProcessor() {
         return this.#map;
     }
 
+    _notify() {
+        ipc.notify('data-notification', {
+            type: 'record/update',
+            table: 'declarations',
+            id: this.id
+        });
+    }
+
     constructor(bundle, platform, language) {
         super();
         this.#bundle = bundle;
         this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
         this.#platform = platform;
         this.#language = language;
-        this.#pset = bundle.psets.create(platform, true, language);
-
+        this.#pset = bundle.psets.get(platform, true, language);
         this.#cache = new PackagerDeclarationCache(this);
+
         super.setup(new Map([['hash', {child: this.#pset.hash}]]));
     }
 

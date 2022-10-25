@@ -1,25 +1,41 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
-const SourceMap = require('../../../../sourcemap');
-const {PackagerCodeCache} = require('beyond/cache');
+const SourceMap = require('../../sourcemap');
+const {BundleCodeCache} = require('beyond/cache');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'bundler.bundle.packager.code';
+        return 'bundle.code';
     }
 
-    #packager;
-    get packager() {
-        return this.#packager;
+    #bundle;
+    get bundle() {
+        return this.#bundle;
     }
 
+    #platform;
+    get platform() {
+        return this.#platform;
+    }
+
+    #language;
+    get language() {
+        return this.#language;
+    }
+
+    #id;
     get id() {
-        return this.#packager.id;
+        return this.#id;
     }
 
     #extname;
     get extname() {
         return this.#extname;
+    }
+
+    #pset;
+    get pset() {
+        return this.#pset;
     }
 
     #hash;
@@ -37,24 +53,24 @@ module.exports = class extends DynamicProcessor() {
 
     #processorsCount;
     get processorsCount() {
-        this.__update();
+        this.#process();
         return this.#processorsCount;
     }
 
     #sourcemaps = {};
 
     code(hmr) {
-        this.__update(hmr);
+        this.#process(hmr);
         return this.#sourcemaps[hmr ? 'hmr' : 'code']?.code;
     }
 
     map(hmr) {
-        this.__update(hmr);
+        this.#process(hmr);
         return this.#sourcemaps[hmr ? 'hmr' : 'code']?.map;
     }
 
     _notify() {
-        const {bundle, cspecs, language} = this.#packager;
+        const {bundle, cspecs, language} = this.#bundle;
         const message = {
             type: 'change',
             specifier: bundle.specifier,
@@ -66,22 +82,26 @@ module.exports = class extends DynamicProcessor() {
         ipc.notify('bundles', message);
     }
 
-    constructor(extname, packager) {
+    constructor(extname, bundle, platform, language) {
         if (!['.js', '.css'].includes(extname)) throw new Error('Invalid parameters');
 
         super();
         this.#extname = extname;
-        this.#packager = packager;
-        this.#cache = new PackagerCodeCache(this);
+        this.#bundle = bundle;
+        this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
+        this.#platform = platform;
+        this.#language = language;
+        this.#pset = bundle.psets.get(platform, true, language);
+        this.#cache = new BundleCodeCache(this);
 
-        super.setup(new Map([['hash', {child: packager.hash}]]));
+        super.setup(new Map([['hash', {child: this.#pset.hash}]]));
     }
 
     async _begin() {
         const cached = await this.#cache.load();
         cached && this.hydrate(cached);
 
-        await this.#packager.ready;
+        await this.#bundle.ready;
     }
 
     get updated() {
@@ -94,21 +114,13 @@ module.exports = class extends DynamicProcessor() {
 
         const ext = this.#extname === '.js' ? 'js' : 'css';
 
-        if (!this.children.has('processors')) {
-            const packager = this.#packager;
-            const children = new Map();
+        !this.children.has('pset') && this.children.register(new Map([['pset', {child: this.#pset}]]));
+        if (!require(this.#pset)) return;
 
-            children.set('processors', {child: packager.processors});
-            this.children.register(children);
-        }
-
-        const processors = this.children.get('processors').child;
-        if (!require(processors)) return;
-
-        // Check that all processors packagers are prepared and synchronized
+        // Check that all processors are prepared and synchronized
         const synchronized = (() => {
             let synchronized = true;
-            processors.forEach(processor => {
+            this.#pset.forEach(processor => {
                 const packager = processor.packager?.[ext];
                 if (!packager) return;
 
@@ -136,7 +148,7 @@ module.exports = class extends DynamicProcessor() {
         throw new Error('This method must be overridden');
     }
 
-    __update(hmr) {
+    #process(hmr) {
         let sourcemap = hmr ? this.#sourcemaps.hmr : this.#sourcemaps.code;
         if (sourcemap || this.#errors?.length) return; // Already processed
         if (!this.processed) {
@@ -152,7 +164,7 @@ module.exports = class extends DynamicProcessor() {
             !hmr && this.#cache.save();
         }
 
-        if (hmr && !this.children.has('processors')) {
+        if (hmr && !this.children.has('pset')) {
             const message = 'HMR code or map cannot be requested if the processor is up-to-date ' +
                 'and it has been previously obtained from cache';
             const sourcemap = new SourceMap();
@@ -160,19 +172,20 @@ module.exports = class extends DynamicProcessor() {
             return done({sourcemap});
         }
 
-        let processors = this.children.get('processors').child;
-
         // Filter the processors that implement the corresponding code extension (.js or .css)
         const ext = this.#extname === '.js' ? 'js' : 'css';
 
         // Check if any of the processors is not in a valid state
         let errors = [];
         let count = this.#processorsCount = 0;
-        for (const [name, {packager}] of processors) {
+        for (const [name, {packager}] of this.#pset) {
             if (!packager) continue;
-            if (!packager[ext]) continue; // Packager does not support the extname of the bundle being processed
+            if (!packager[ext]) continue; // Packager does not support the extname being processed
 
-            // Legacy processors "scss" and "less" injects the css code in the .js bundle, not .css bundle is supported
+            /**
+             * Legacy processors "scss" and "less" injects the css code in the .js bundle,
+             * not .css bundle is supported
+             */
             if (['scss', 'less'].includes(name) && this.#extname === '.css') continue;
 
             count++;

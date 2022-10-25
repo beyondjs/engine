@@ -2,7 +2,7 @@ const {bundles} = require('beyond/bundlers-registry');
 
 module.exports = class extends require('../base') {
     get dp() {
-        return 'bundler.bundle.packager.code.js';
+        return 'bundle.js';
     }
 
     constructor(packager) {

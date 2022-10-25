@@ -9,7 +9,7 @@ const babel = require('@babel/core');
  */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'bundler.bundle.dependencies.deprecated-imports';
+        return 'bundle.deprecated-imports';
     }
 
     #bundle;

@@ -12,14 +12,20 @@ module.exports = class {
     }
 
     /**
-     * Creates a set of processors for the required platform
+     * Get a set of processors for the required platform
      *
      * @param platform {string}
      * @param typecheck {boolean}
      * @param language {string}
      */
-    create(platform, typecheck, language) {
-        return new PSet(this.#bundle, platform, typecheck, language);
+    get(platform, typecheck, language) {
+        typecheck = !!typecheck;
+        const key = `${platform}/${typecheck}` + (language ? `/${language}` : '');
+        if (this.#psets.has(key)) return this.#psets.get(key);
+
+        const pset = new PSet(this.#bundle, platform, typecheck, language);
+        this.#psets.set(key, pset);
+        return pset;
     }
 
     #destroyed = false;
