@@ -1,19 +1,32 @@
 {
-  "name": "test-14",
-  "title": "Test",
-  "widget": {
-    "hmr": true,
+  "name": "test-15",
+  "platforms": [
+    "android"
+  ],
+  "ts": {
+    "path": "ts",
+    "files": [
+      "*"
+    ]
+  },
+  "start": {
     "ts": {
-      "path": "ts",
+      "path": "/start/ts",
       "files": [
         "*"
       ]
     }
   },
-  "start": {
+  "page": {
+    "is": "page",
     "ts": {
-      "path": "start",
-      "files": "start.ts"
+      "path": "/widget/ts",
+      "files": [
+        "*"
+      ]
+    },
+    "element": {
+      "name": "app-page"
     }
   }
 }
