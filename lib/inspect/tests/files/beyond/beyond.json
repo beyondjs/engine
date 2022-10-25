@@ -1,0 +1,9 @@
+{
+  "applications": "applications.json",
+  "libraries": [],
+  "bundles": {
+    "register": [
+      "./bundles"
+    ]
+  }
+}

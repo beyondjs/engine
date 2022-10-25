@@ -1,0 +1,27 @@
+{
+  "version": "0.0.1",
+  "title": "Testing app",
+  "name": "testing",
+  "description": "Testing app",
+  "template": "template/template.json",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en"
+    ]
+  },
+  "modules": {
+    "path": "./modules"
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "web",
+        "platform": "web",
+        "environment": "development",
+        "port": 5050,
+        "default": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "testing",
+  "title": "Titulo cualquiera",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en"
+    ]
+  },
+  "modules": {
+    "path": "",
+    "externals": {}
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "node",
+        "environment": "development",
+        "platform": "node",
+        "ports": {
+          "http": 3500
+        }
+      },
+      {
+        "name": "web",
+        "environment": "development",
+        "ssr": "node",
+        "platform": "web",
+        "ports": {
+          "http": 3700,
+          "inspect": 3800
+        }
+      },
+      {
+        "name": "9500",
+        "environment": "development",
+        "ssr": "",
+        "platform": "android",
+        "ports": {
+          "bundles": 7500,
+          "http": 3000
+        },
+        "minify": {
+          "html": false,
+          "css": false,
+          "js": false
+        },
+        "bundles": {
+          "mode": "sjs"
+        }
+      }
+    ]
+  }
+}

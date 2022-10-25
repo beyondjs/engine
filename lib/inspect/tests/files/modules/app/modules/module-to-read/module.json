@@ -1,0 +1,24 @@
+{
+  "name": "test-14",
+  "title": "Test",
+  "backend": {
+    "path": "backend",
+    "files": [
+      "*"
+    ]
+  },
+  "widget": {
+    "ts": {
+      "path": "ts",
+      "files": [
+        "*"
+      ]
+    }
+  },
+  "start": {
+    "ts": {
+      "path": "start",
+      "files": "start.ts"
+    }
+  }
+}

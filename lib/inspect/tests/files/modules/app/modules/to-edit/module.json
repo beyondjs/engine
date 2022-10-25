@@ -1,0 +1,30 @@
+{
+  "name": "home",
+  "widget": {
+    "element": {
+      "name": "home-page"
+    },
+    "ts": {
+      "path": "ts",
+      "files": [
+        "*"
+      ]
+    },
+    "is": "page",
+    "route": "/",
+    "sass": {
+      "path": "sass",
+      "files": [
+        "*"
+      ]
+    }
+  },
+  "start": {
+    "ts": {
+      "path": "/start/ts",
+      "files": [
+        "*"
+      ]
+    }
+  }
+}

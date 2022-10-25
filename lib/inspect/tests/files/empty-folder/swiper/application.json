@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "title": "Swiper example app",
+  "name": "swiper",
+  "description": "Swiper example app",
+  "template": "template/template.json",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en"
+    ]
+  },
+  "modules": {
+    "path": "./modules",
+    "externals": {
+      "socket.io": {
+        "development": "client-dist/socket.io.js",
+        "production": "client-dist/socket.io.msgpack.min.js"
+      }
+    }
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "web-development",
+        "platform": "web",
+        "environment": "development",
+        "port": 5050,
+        "default": true
+      }
+    ]
+  }
+}

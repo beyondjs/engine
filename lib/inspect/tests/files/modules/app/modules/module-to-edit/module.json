@@ -1,0 +1,32 @@
+{
+  "name": "test-15",
+  "platforms": [
+    "android"
+  ],
+  "ts": {
+    "path": "ts",
+    "files": [
+      "*"
+    ]
+  },
+  "start": {
+    "ts": {
+      "path": "/start/ts",
+      "files": [
+        "*"
+      ]
+    }
+  },
+  "page": {
+    "is": "page",
+    "ts": {
+      "path": "/widget/ts",
+      "files": [
+        "*"
+      ]
+    },
+    "element": {
+      "name": "app-page"
+    }
+  }
+}

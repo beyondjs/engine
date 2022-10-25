@@ -1,0 +1,22 @@
+{
+  "name": "home",
+  "widget": {
+    "is": "page",
+    "route": "/",
+    "element": {
+      "name": "home-page"
+    },
+    "sass": {
+      "path": "widget/sass",
+      "files": [
+        "*"
+      ]
+    },
+    "ts": {
+      "path": "widget/ts",
+      "files": [
+        "*"
+      ]
+    }
+  }
+}
