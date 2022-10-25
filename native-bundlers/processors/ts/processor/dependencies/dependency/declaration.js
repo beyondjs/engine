@@ -37,7 +37,7 @@ module.exports = class extends DynamicProcessor() {
 
     _prepared() {
         const {dependency} = this;
-        const {valid, external, bundle, cspecs, language} = dependency;
+        const {kind, bundle, language} = dependency;
         const {declaration} = bundle ? bundle.packagers.get(cspecs, language) : {};
 
         const {children} = this;
@@ -69,7 +69,6 @@ module.exports = class extends DynamicProcessor() {
 
         const {dependency} = this;
         if (!dependency.kind) {
-            console.log(dependency.dp, dependency.kind);
             this.#errors = [`Dependency not found`];
             return;
         }

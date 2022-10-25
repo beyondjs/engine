@@ -1,3 +1,4 @@
+const PSets = require('./psets');
 const {bundles: registry} = require('beyond/bundlers-registry');
 const equal = require('beyond/utils/equal');
 const {join} = require('path');
@@ -36,9 +37,9 @@ module.exports = class extends (require('./attributes')) {
         return this.#meta;
     }
 
-    #packagers;
-    get packagers() {
-        return this.#packagers;
+    #psets;
+    get psets() {
+        return this.#psets;
     }
 
     /**
@@ -110,7 +111,7 @@ module.exports = class extends (require('./attributes')) {
         this.#meta = registry.get(type);
         this.#module = module;
         this.#type = type;
-        this.#packagers = new (require('./packagers'))(this);
+        this.#psets = new PSets(this);
         this.#imports = new (require('./deprecated-imports'))(this);
 
         super.setup(new Map([

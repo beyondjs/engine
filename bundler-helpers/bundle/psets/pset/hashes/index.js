@@ -9,8 +9,8 @@ module.exports = class {
         return this.#dependencies;
     }
 
-    constructor(processors) {
-        this.#inputs = new (require('./inputs'))(processors);
-        this.#dependencies = new (require('./dependencies'))(processors);
+    constructor(pset) {
+        this.#inputs = new (require('./inputs'))(pset);
+        this.#dependencies = new (require('./dependencies'))(pset);
     }
 }

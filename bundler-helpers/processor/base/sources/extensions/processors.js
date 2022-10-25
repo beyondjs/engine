@@ -1,8 +1,9 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 /**
- * The extensions hashes of the processors that are extending the current processor.
- * Example: if the processor is "ts", an extension of it could be the "ts" extension of the "svelte" processor
+ * The extensions of the processors that are extending the current processor.
+ * Example: if the current processor is the "ts" processor, then an extension of it could be the "ts" extension
+ * of the "svelte" processor
  */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {

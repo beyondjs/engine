@@ -4,7 +4,7 @@ const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'bundler.processors.hashes.inputs';
+        return 'bundler.pset.hashes.inputs';
     }
 
     /**
@@ -19,29 +19,29 @@ module.exports = class extends DynamicProcessor() {
      * The value of the inputs hashes of each processor
      * @type {Map<string, number>}
      */
-    #processors = new Map();
-    get processors() {
-        return this.#processors;
+    #pset = new Map();
+    get pset() {
+        return this.#pset;
     }
 
-    constructor(processors) {
+    constructor(pset) {
         super();
-        super.setup(new Map([['processors', {child: processors}]]));
+        super.setup(new Map([['pset', {child: pset}]]));
     }
 
     _prepared(require) {
-        const processors = this.children.get('processors').child;
-        processors.forEach(({hashes}) => require(hashes));
+        const pset = this.children.get('pset').child;
+        pset.forEach(({hashes}) => require(hashes));
     }
 
     _process() {
-        const processors = this.children.get('processors').child;
+        const pset = this.children.get('pset').child;
 
         const compute = {};
-        this.#processors.clear();
-        processors.forEach(({hashes}, name) => {
+        this.#pset.clear();
+        pset.forEach(({hashes}, name) => {
             compute[name] = hashes.inputs;
-            this.#processors.set(name, hashes.input);
+            this.#pset.set(name, hashes.input);
         });
         const value = crc32(equal.generate(compute));
 

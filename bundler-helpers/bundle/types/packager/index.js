@@ -2,15 +2,34 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const {header} = require('beyond/utils/code');
 const {PackagerDeclarationCache} = require('beyond/cache');
+const {SourceMap} = require('beyond/bundlers-helpers');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'bundler.bundle.declaration';
     }
 
-    get id() {
-        return this.#packager.bundle.id;
+    #bundle;
+    get bundle() {
+        return this.#bundle;
     }
+
+    #platform;
+    get platform() {
+        return this.#platform;
+    }
+
+    #language;
+    get language() {
+        return this.#language;
+    }
+
+    #id;
+    get id() {
+        return this.#id;
+    }
+
+    #pset;
 
     _notify() {
         ipc.notify('data-notification', {
@@ -18,11 +37,6 @@ module.exports = class extends DynamicProcessor() {
             table: 'declarations',
             id: this.id
         });
-    }
-
-    #packager;
-    get packager() {
-        return this.#packager;
     }
 
     #hash;
@@ -49,29 +63,32 @@ module.exports = class extends DynamicProcessor() {
         return this.#code;
     }
 
-    constructor(packager) {
+    #map;
+    get map() {
+        this.#process();
+        return this.#map;
+    }
+
+    constructor(bundle, platform, language) {
         super();
-        this.setMaxListeners(500);
-        this.#packager = packager;
-        this.#cache = new PackagerDeclarationCache(packager);
-        super.setup(new Map([['hash', {child: packager.hash}]]));
+        this.#bundle = bundle;
+        this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
+        this.#platform = platform;
+        this.#language = language;
+        this.#pset = bundle.psets.create(platform, true, language);
+
+        this.#cache = new PackagerDeclarationCache(this);
+        super.setup(new Map([['hash', {child: this.#pset.hash}]]));
     }
 
     async save() {
         await this.ready;
-        const {bundle} = this.#packager;
-        this.valid && await require('./save')(bundle, this.#code);
+        this.valid && await require('./save')(this.#bundle, this.#code);
     }
 
     async _begin() {
         const cached = await this.#cache.load();
-        if (cached) {
-            this.#code = cached.code;
-            this.#errors = cached.errors;
-            this.#hash = cached.hash;
-            this.#processed = true;
-        }
-        await this.#packager.ready;
+        cached && this.hydrate(cached);
     }
 
     _prepared(require) {
@@ -79,18 +96,17 @@ module.exports = class extends DynamicProcessor() {
         if (!require(hash)) return; // Wait to know the packager hash
         if (hash.value === this.#hash) return; // No further processing required
 
-        // When the code was returned from cache, and the processors were not registered as a child
-        const packager = this.#packager;
-        if (!this.children.has('processors')) {
+        // When the code was returned from cache, and the pset were not registered as a child
+        if (!this.children.has('pset')) {
             const children = new Map();
             const subscriptions = ['declaration.initialised', 'declaration.change'];
-            children.set('processors', {child: packager.processors, events: subscriptions})
+            children.set('pset', {child: this.#pset, events: subscriptions})
             this.children.register(children, false);
         }
 
-        const processors = this.children.get('processors').child;
-        if (!require(processors)) return;
-        processors.forEach(({packager}) => packager?.declaration && require(packager.declaration));
+        const pset = this.children.get('pset').child;
+        if (!require(pset)) return;
+        pset.forEach(({packager}) => packager?.declaration && require(packager.declaration));
     }
 
     #process() {
@@ -98,42 +114,41 @@ module.exports = class extends DynamicProcessor() {
         if (this.#processed) return; // Already processed
 
         const hash = this.children.get('hash').child.value;
-        const tsc = this.#packager.cspecs.tsc === 'tsc';
 
-        const done = ({code, errors}) => {
-            this.#code = code;
+        const done = ({sourcemap, errors}) => {
+            this.#code = sourcemap?.code;
+            this.#map = sourcemap?.map;
             this.#errors = errors ? errors : [];
             this.#hash = hash;
             this.#processed = true;
 
-            tsc && this.#cache.save(this.#code, this.#errors, hash);
-            tsc && this.save().catch(exc => console.log(exc.stack));
+            this.#cache.save();
+            this.save().catch(exc => console.log(exc.stack));
         };
 
-        if (!tsc) return done({code: ''});
+        const sourcemap = new SourceMap();
+        const pset = this.children.get('pset').child;
+        if (!pset.size) return done({});
 
-        let code = '';
-        const processors = this.children.get('processors').child;
-        if (!processors.size) return done({code: ''});
-
-        // Check if any of the processors have errors
+        // Check if any of the pset have errors
         const errors = [];
-        for (const [name, {packager}] of processors) {
+        for (const [name, {packager}] of pset) {
             if (!packager?.declaration || packager.declaration.valid) continue;
             errors.push(`Processor ${name} has been compiled with errors.`);
         }
         if (errors.length) return done({errors});
 
         // Process the declaration
-        for (const [name, {packager}] of processors) {
+        for (const [type, {packager}] of pset) {
             if (!packager?.declaration || !packager.declaration.code) continue;
-            code += header(`Processor: ${name}`) + '\n';
-            code += packager.declaration.code + '\n\n';
+
+            sourcemap.concat(header(`Processor: ${type}`));
+            const {code, map} = packager.declaration;
+            sourcemap.concat(code, map);
         }
 
-        code += require('./hmr-activation')(this.#packager.bundle);
-
-        done({code});
+        require('./hmr-activation')(this.#packager.bundle, sourcemap);
+        done({sourcemap});
     }
 
     _process() {
@@ -142,5 +157,19 @@ module.exports = class extends DynamicProcessor() {
 
         this.#errors = this.#code = this.#hash = void 0;
         this.#processed = false;
+    }
+
+    toJSON() {
+        this.#process();
+        const {code, map, errors, hash} = this;
+        return {code, map, errors, hash};
+    }
+
+    hydrate(cached) {
+        this.#errors = cached.errors;
+        this.#code = cached.code;
+        this.#map = cached.map;
+        this.#hash = cached.hash;
+        this.#processed = true;
     }
 }
