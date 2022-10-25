@@ -9,22 +9,22 @@ module.exports = new class {
         return this.#Bundle;
     }
 
-    #BundleCodeBase = (require('./code/base'));
+    #BundleCodeBase = (require('./bundle-code/base'));
     get BundleCodeBase() {
         return this.#BundleCodeBase;
     }
 
-    #BundleJsCode = (require('./code/js'));
+    #BundleJsCode = (require('./bundle-code/js'));
     get BundleJsCode() {
         return this.#BundleJsCode;
     }
 
-    #BundleCssCode = (require('./code/css'));
+    #BundleCssCode = (require('./bundle-code/css'));
     get BundleCssCode() {
         return this.#BundleCssCode;
     }
 
-    #BundleDependencies = (require('./bundle/packager/dependencies'));
+    #BundleDependencies = (require('./bundle-dependencies'));
     get BundleDependencies() {
         return this.#BundleDependencies;
     }

@@ -74,7 +74,7 @@
     "./native-bundlers/bundles": "./native-bundlers/bundles/index.js",
     "./native-bundlers/processors": "./native-bundlers/processors/index.js",
     "./mformat": "./utils/mformat/index.js",
-    "./cache": "./core/cache/index.js",
+    "./stores": "./stores/index.js",
     "./utils/ports": "./utils/ports/index.js",
     "./utils/finder": "./utils/finder/index.js",
     "./utils/fs": "./utils/fs/index.js",
