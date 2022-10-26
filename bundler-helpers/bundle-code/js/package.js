@@ -13,7 +13,7 @@ module.exports = function (jscode, hmr, transversal) {
     'use strict';
 
     const {packager} = jscode;
-    const {application, bundle, language, processors, dependencies} = packager;
+    const {application, bundle, processors, dependencies} = packager;
 
     const sourcemap = new SourceMap();
 
@@ -41,8 +41,6 @@ module.exports = function (jscode, hmr, transversal) {
     // Create the bundle object
     if (!bkb) {
         if (!transversal || hmr) {
-            const pkgProperty = `.package(${bundle.multilanguage ? `'${language}'` : ''});`;
-
             const bbm = dependencies.code.get('@beyond-js/kernel/bundle');
 
             if (!hmr) {
@@ -51,24 +49,16 @@ module.exports = function (jscode, hmr, transversal) {
                 // legacy projects (js processor) are not scoped
                 sourcemap.concat(`const {Bundle: __Bundle} = ${bbm};`);
 
-                const specs = {
-                    module: {
-                        vspecifier: bundle.container.vspecifier,
-                        multibundle: bundle.container.bundles.size > 1
-                    },
-                    type: bundle.type,
-                    name: bundle.name
-                };
-                !specs.module.multibundle && delete (specs.module.multibundle);
-                specs.type === specs.name && delete specs.name;
+                const {vspecifier, type, name} = bundle;
+                const specs = {vspecifier, type, name};
 
                 const params = JSON.stringify(specs) + ', import.meta.url';
-                sourcemap.concat(`const __pkg = new __Bundle(${params})${pkgProperty};`);
+                sourcemap.concat(`const __bundle = new __Bundle(${params});`);
             }
             else {
                 // Get the bundle instance
                 sourcemap.concat(`const {instances} = ${bbm};`);
-                sourcemap.concat(`const __pkg = instances.get('${bundle.vspecifier}')${pkgProperty};`);
+                sourcemap.concat(`const __bundle = instances.get('${bundle.vspecifier}');`);
             }
 
             // Register the dependencies of the package
@@ -78,15 +68,15 @@ module.exports = function (jscode, hmr, transversal) {
                     .filter(([specifier]) => specifier !== '@beyond-js/kernel/bundle')
                     .forEach(([specifier, name]) => imports.push(`['${specifier}', ${name}]`));
                 const code = `[${imports.join(',')}]`;
-                sourcemap.concat(`\n__pkg.dependencies.update(${code});\n`);
+                sourcemap.concat(`\n__bundle.dependencies.update(${code});\n`);
             })();
 
             // Just for legacy projects
-            application.engine === 'legacy' && sourcemap.concat(`const {module} = __pkg.bundle;`);
+            application.engine === 'legacy' && sourcemap.concat(`const {module} = __bundle;`);
         }
     }
     else {
-        sourcemap.concat('let __pkg = {exports: {}};');
+        sourcemap.concat('let __bundle = {exports: {}};');
     }
 
     // Only required for .jsx legacy processor support
@@ -114,7 +104,7 @@ module.exports = function (jscode, hmr, transversal) {
     if (bkb) {
         sourcemap.concat('const __bp = {};');
         sourcemap.concat(`ims.get('./base/index').creator(() => 0, __bp);`);
-        sourcemap.concat('__pkg = new __bp.BeyondPackage(__pkg.exports);');
+        sourcemap.concat('__bundle = new __bp.BeyondPackage(__pkg.exports);');
     }
 
     // Initialise package

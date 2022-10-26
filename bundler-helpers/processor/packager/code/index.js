@@ -57,14 +57,13 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _notify() {
-        const {name, specs, cspecs, language} = this.#packager.processor;
+        const {name, specs, cspecs} = this.#packager.processor;
         const message = {
             type: 'change',
             bundle: specs.bundle.specifier,
             extname: this.#extname,
             processor: name,
-            cspecs: cspecs.key,
-            language
+            cspecs: cspecs.key
         };
         ipc.notify('processors', message);
     }
@@ -77,10 +76,6 @@ module.exports = class extends DynamicProcessor() {
     #config;
     get config() {
         return this.#config;
-    }
-
-    get multilanguage() {
-        return this.#config?.multilanguage;
     }
 
     #diagnostics;

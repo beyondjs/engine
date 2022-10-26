@@ -53,10 +53,6 @@ module.exports = class extends DynamicProcessor() {
         return new Set(this.#values?.platforms);
     }
 
-    get multilanguage() {
-        return this.#values?.multilanguage;
-    }
-
     _process({errors, warnings, config}) {
         const done = ({errors, warnings, values}) => {
             this.#errors = errors ? errors : [];

@@ -5,8 +5,8 @@ module.exports = class extends require('../base') {
         return 'bundle.js';
     }
 
-    constructor(packager) {
-        super('.js', packager);
+    constructor(bundle) {
+        super('.js', bundle);
     }
 
     _prepared(require) {

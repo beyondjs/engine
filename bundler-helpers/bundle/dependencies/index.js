@@ -8,12 +8,11 @@ module.exports = class {
         this.#bundle = bundle;
     }
 
-    get(platform, language) {
-        const key = `${platform}` + (language ? `/${language}` : '');
-        if (this.#processors.has(key)) return this.#processors.get(key);
+    get(platform) {
+        if (this.#processors.has(platform)) return this.#processors.get(platform);
 
-        const processor = new Processor(this.#bundle, platform, language);
-        this.#processors.set(key, processor);
+        const processor = new Processor(this.#bundle, platform);
+        this.#processors.set(platform, processor);
         return processor;
     }
 

@@ -18,11 +18,6 @@ module.exports = class extends DynamicProcessor() {
         return this.#platform;
     }
 
-    #language;
-    get language() {
-        return this.#language;
-    }
-
     #id;
     get id() {
         return this.#id;
@@ -70,28 +65,20 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _notify() {
-        const {bundle, cspecs, language} = this.#bundle;
-        const message = {
-            type: 'change',
-            specifier: bundle.specifier,
-            vspecifier: bundle.vspecifier,
-            extname: this.#extname,
-            cspecs: cspecs.key(),
-            language
-        };
+        const {specifier, vspecifier} = this.#bundle;
+        const message = {type: 'change', specifier, vspecifier, extname: this.#extname};
         ipc.notify('bundles', message);
     }
 
-    constructor(extname, bundle, platform, language) {
+    constructor(extname, bundle, platform) {
         if (!['.js', '.css'].includes(extname)) throw new Error('Invalid parameters');
 
         super();
         this.#extname = extname;
         this.#bundle = bundle;
-        this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
+        this.#id = `${bundle.id}//${platform}`;
         this.#platform = platform;
-        this.#language = language;
-        this.#pset = bundle.psets.get(platform, true, language);
+        this.#pset = bundle.psets.get(platform, true);
         this.#cache = new BundleCodeCache(this);
 
         super.setup(new Map([['hash', {child: this.#pset.hash}]]));

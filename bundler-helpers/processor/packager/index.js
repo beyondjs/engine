@@ -23,10 +23,6 @@ module.exports = class {
         return this.#processor.cspecs;
     }
 
-    get language() {
-        return this.#processor.language;
-    }
-
     #compiler;
     get compiler() {
         return this.#compiler;
@@ -96,8 +92,7 @@ module.exports = class {
     }
 
     configure(config) {
-        const {code, multilanguage} = config;
-        this.#js?.configure?.(Object.assign({}, code, {multilanguage}));
-        this.#css?.configure?.(Object.assign({}, code, {multilanguage}));
+        this.#js?.configure?.(Object.assign({}, config));
+        this.#css?.configure?.(Object.assign({}, config));
     }
 }

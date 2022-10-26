@@ -19,11 +19,6 @@ module.exports = class extends DynamicProcessor() {
         return this.#platform;
     }
 
-    #language;
-    get language() {
-        return this.#language;
-    }
-
     #id;
     get id() {
         return this.#id;
@@ -64,14 +59,13 @@ module.exports = class extends DynamicProcessor() {
         });
     }
 
-    constructor(bundle, platform, language) {
+    constructor(bundle, platform) {
         super();
         this.#bundle = bundle;
-        this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
+        this.#id = `${bundle.id}//${platform}`;
         this.#platform = platform;
-        this.#language = language;
 
-        this.#pset = bundle.psets.get(platform, true, language);
+        this.#pset = bundle.psets.get(platform, true);
         this.#cache = new PackagerDeclarationCache(this);
 
         super.setup(new Map([['hash', {child: this.#pset.hash}]]));

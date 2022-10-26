@@ -23,13 +23,19 @@ module.exports = class extends (require('./attributes')) {
 
     // The PLM id
     get id() {
-        return `${this.#module.id}//${this.#type}`;
+        const language = this.#language ? `//${this.#language}` : '';
+        return `${this.#module.id}${language}//${this.#type}`;
     }
 
     // The name of the bundle type (ex: 'ts', 'sass', etc.)
     #type;
     get type() {
         return this.#type;
+    }
+
+    #language;
+    get language() {
+        return this.#language;
     }
 
     /**
@@ -120,15 +126,17 @@ module.exports = class extends (require('./attributes')) {
      *
      * @param module {object} The bundle's module container
      * @param type {string} The bundle's type ('ts', 'sass', etc)
+     * @param language? {string}
      */
-    constructor(module, type) {
+    constructor(module, type, language) {
         if (!module || !type) throw new Error('Invalid parameters');
         if (!registry.has(type)) throw new Error(`Bundle "${type}" is not registered`);
 
         super();
-        this.#meta = registry.get(type);
         this.#module = module;
         this.#type = type;
+        this.#language = language;
+        this.#meta = registry.get(type);
         this.#psets = new PSets(this);
         this.#imports = new (require('./deprecated-imports'))(this);
 

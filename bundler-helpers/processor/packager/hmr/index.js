@@ -43,7 +43,7 @@ module.exports = class extends DynamicProcessor() {
     _process() {
         const packager = this.#packager;
 
-        const {dependencies, cspecs, language} = packager;
+        const {dependencies, cspecs} = packager;
         const {bundle} = packager.processor.specs;
         const {format} = cspecs;
 
@@ -56,14 +56,10 @@ module.exports = class extends DynamicProcessor() {
         code = typeof code === 'string' ? {code: code} : code;
         if (!code || !code.code) return;
 
-        const multilanguage = language !== '.';
-        const params = `'${bundle.specifier}', ${multilanguage}, {}` +
-            (dependencies?.size ? ', dependencies' : '');
+        const params = `'${bundle.specifier}', {}` + (dependencies?.size ? ', dependencies' : '');
 
         sourcemap.concat(`const {beyond} = globalThis;`);
         sourcemap.concat(`const bundle = beyond.bundles.obtain(${params});`);
-        sourcemap.concat(`const __pkg = bundle.package(${multilanguage ? `'${language}'` : ''});`);
-
         sourcemap.concat(code.code, code.map);
 
         let map, errors;

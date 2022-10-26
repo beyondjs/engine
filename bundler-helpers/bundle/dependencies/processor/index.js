@@ -56,14 +56,13 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#added.add(specifier, is);
     }
 
-    constructor(bundle, platform, language) {
+    constructor(bundle, platform) {
         super();
         this.#bundle = bundle;
-        this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
+        this.#id = `${bundle.id}//${platform}`;
         this.#platform = platform;
-        this.#language = language;
 
-        this.#pset = bundle.psets.get(platform, false, language);
+        this.#pset = bundle.psets.get(platform, false);
         this.#added = new DependenciesAdded(this);
         this.#hash = new Hash(this);
         this.#code = new DependenciesCode(this, this.#pset);

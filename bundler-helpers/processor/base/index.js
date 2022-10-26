@@ -28,7 +28,7 @@ module.exports = class {
     }
 
     get id() {
-        return `${this.#specs.bundle.id}//${this.#name}//${this.cspecs.key()}//${this.language}`;
+        return `${this.#specs.bundle.id}//${this.#name}//${this.cspecs.key()}`;
     }
 
     #meta;
@@ -42,10 +42,6 @@ module.exports = class {
 
     get cspecs() {
         return this.#specs.cspecs;
-    }
-
-    get language() {
-        return this.#specs.language;
     }
 
     #sources;
@@ -74,16 +70,6 @@ module.exports = class {
     #analyzer;
     get analyzer() {
         return this.#analyzer;
-    }
-
-    #multilanguage;
-    get multilanguage() {
-        return this.#multilanguage;
-    }
-
-    set multilanguage(value) {
-        if (this.#multilanguage === value) return;
-        this.#multilanguage = value;
     }
 
     #errors = [];
@@ -160,7 +146,7 @@ module.exports = class {
         this.#packager?.setup();
     }
 
-    configure(config, multilanguage) {
+    configure(config) {
         const {path, errors, warnings, sources, code} = require('./config')(config, this.#meta);
         this.#path = require('path').join(this.#specs.bundle.path, path ? path : '');
         this.#errors = errors;
@@ -172,9 +158,7 @@ module.exports = class {
         }
 
         this.#sources.configure(this.#path, sources);
-
-        multilanguage = !!multilanguage;
-        this.#packager?.configure({multilanguage, code});
+        this.#packager?.configure(code);
     }
 
     destroy() {

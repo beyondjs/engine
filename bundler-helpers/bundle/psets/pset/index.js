@@ -25,11 +25,6 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#typecheck;
     }
 
-    #language;
-    get language() {
-        return this.#language;
-    }
-
     /**
      * The names of the processors supported by the bundler
      */
@@ -56,15 +51,13 @@ module.exports = class extends DynamicProcessor(Map) {
      * @param bundle {*}
      * @param platform {string}
      * @param typecheck {boolean}
-     * @param language {string}
      */
-    constructor(bundle, platform, typecheck, language) {
+    constructor(bundle, platform, typecheck) {
         super();
 
         this.#bundle = bundle;
         this.#platform = platform;
         this.#typecheck = typecheck;
-        this.#language = language;
 
         this.#supported = registry.bundles.get(bundle.type).bundle.processors;
         if (!(this.#supported instanceof Array)) {
@@ -83,8 +76,7 @@ module.exports = class extends DynamicProcessor(Map) {
         let {valid, config} = this.#bundle;
         config = valid && config ? config : {};
 
-        const {multilanguage} = config;
-        const reserved = ['imports', 'multilanguage'];
+        const reserved = ['imports'];
 
         const updated = new Map();
         const processors = Object.entries(valid && config ? config : {});
@@ -117,7 +109,7 @@ module.exports = class extends DynamicProcessor(Map) {
                 if (config instanceof Array) return config.slice();
                 return Object.assign({}, config);
             })();
-            processor.configure(cloned, multilanguage);
+            processor.configure(cloned);
             updated.set(type, processor);
         }
 

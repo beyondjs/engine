@@ -1,3 +1,5 @@
+const PackagerBase = require('../../bundle-code/css');
+
 module.exports = class {
     #bundle;
     #packagers = new Map();
@@ -6,15 +8,14 @@ module.exports = class {
         this.#bundle = bundle;
     }
 
-    get(platform, language) {
-        const key = platform + (language ? `/${language}` : '');
-        if (this.#packagers.has(key)) return this.#packagers.get(key);
+    get(platform) {
+        if (this.#packagers.has(platform)) return this.#packagers.get(platform);
 
         const {meta} = this.#bundle;
-        const Packager = meta.bundle?.Css ? meta.bundle.Css : require('../../code/css');
+        const Packager = meta.bundle?.Css ? meta.bundle.Css : PackagerBase;
         const packager = meta.extname.includes('.css') ? new Packager(this) : void 0;
 
-        this.#packagers.set(key, packager);
+        this.#packagers.set(platform, packager);
         return packager;
     }
 

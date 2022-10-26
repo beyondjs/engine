@@ -16,14 +16,13 @@ module.exports = class {
      *
      * @param platform {string}
      * @param typecheck {boolean}
-     * @param language {string}
      */
-    get(platform, typecheck, language) {
+    get(platform, typecheck) {
         typecheck = !!typecheck;
-        const key = `${platform}/${typecheck}` + (language ? `/${language}` : '');
+        const key = `${platform}/${typecheck}`;
         if (this.#psets.has(key)) return this.#psets.get(key);
 
-        const pset = new PSet(this.#bundle, platform, typecheck, language);
+        const pset = new PSet(this.#bundle, platform, typecheck);
         this.#psets.set(key, pset);
         return pset;
     }

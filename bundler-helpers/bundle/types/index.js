@@ -8,12 +8,11 @@ module.exports = class {
         this.#bundle = bundle;
     }
 
-    get(platform, language) {
-        const key = `${platform}` + (language ? `/${language}` : '');
-        if (this.#packagers.has(key)) return this.#packagers.get(key);
+    get(platform) {
+        if (this.#packagers.has(platform)) return this.#packagers.get(platform);
 
-        const packager = new Packager(this.#bundle, platform, language);
-        this.#packagers.set(key, packager);
+        const packager = new Packager(this.#bundle, platform);
+        this.#packagers.set(platform, packager);
         return packager;
     }
 
