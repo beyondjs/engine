@@ -70,6 +70,7 @@ module.exports = class extends DynamicProcessor() {
         this.#id = `${bundle.id}//${platform}` + (language ? `//${language}` : '');
         this.#platform = platform;
         this.#language = language;
+
         this.#pset = bundle.psets.get(platform, true, language);
         this.#cache = new PackagerDeclarationCache(this);
 

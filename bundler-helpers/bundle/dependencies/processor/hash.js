@@ -18,9 +18,9 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _process() {
-        const dependencies = this.#dependencies;
-
         const value = (() => {
+            const dependencies = this.#dependencies;
+
             const compute = [`imports:${dependencies.imports.hash}`];
             dependencies.forEach(dependency => compute.push(dependency.specifier));
             return crc32(equal.generate(compute));

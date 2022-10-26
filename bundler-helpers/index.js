@@ -24,7 +24,7 @@ module.exports = new class {
         return this.#BundleCssCode;
     }
 
-    #BundleDependencies = (require('./bundle-dependencies'));
+    #BundleDependencies = (require('./bundle/dependencies'));
     get BundleDependencies() {
         return this.#BundleDependencies;
     }
