@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {TransversalPackager} = require('beyond/bundler-helpers');
+const TransversalPackager = require('../../transversal/packager');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {

@@ -1,6 +1,6 @@
 const satisfies = require('semver/functions/satisfies.js');
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {ExternalsRegistryCache} = require('beyond/cache');
+const {ExternalsRegistryCache} = require('beyond/stores');
 const PackageFetcher = require('./fetcher');
 
 module.exports = class Package extends DynamicProcessor() {

@@ -34,7 +34,6 @@ module.exports = class {
 
     #clear = () => {
         this.#psets.forEach(pset => pset.destroy());
-        this.#processors.destroy();
     }
 
     destroy() {

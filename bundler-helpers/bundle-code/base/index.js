@@ -1,7 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const SourceMap = require('../../sourcemap');
-const {BundleCodeCache} = require('beyond/cache');
+const {BundleCodeCache} = require('beyond/stores');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {

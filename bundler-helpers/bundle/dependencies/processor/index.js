@@ -15,6 +15,18 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#bundle;
     }
 
+    #platform;
+    get platform() {
+        return this.#platform;
+    }
+
+    #id;
+    get id() {
+        return this.#id;
+    }
+
+    #pset;
+
     #hash;
     get hash() {
         return this.#hash;
@@ -37,16 +49,15 @@ module.exports = class extends DynamicProcessor(Map) {
     _create(specifier) {
         if (this.has(specifier)) throw new Error(`Dependency "${specifier}" already created`);
 
-        const {cspecs: {platform}, bundle} = this.#pset;
-        const importer = bundle.module.pkg.vspecifier;
-        return new DependencyBase(specifier, importer, platform);
+        const importer = this.#bundle.module.pkg.vspecifier;
+        return new DependencyBase(specifier, importer, this.#platform);
     }
 
     _notify() {
         ipc.notify('data-notification', {
             type: 'list/update',
             table: 'bundle-dependencies',
-            filter: {bundle: this.#pset.bundle.id}
+            filter: {bundle: this.#id}
         });
     }
 

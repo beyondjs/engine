@@ -2,7 +2,7 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const Diagnostics = (require('../../diagnostics'));
 const Meta = (require('./meta'));
-const {PackagerCompilerCache} = require('beyond/cache');
+const {PackagerCompilerCache} = require('beyond/stores');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {

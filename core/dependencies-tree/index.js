@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const DependenciesData = require('./data');
-const {DependenciesTreeCache} = require('beyond/cache');
+const {DependenciesTreeCache} = require('beyond/stores');
 const DependenciesProcessor = require('./processor');
 const crc32 = require('beyond/utils/crc32');
 const equal = require('beyond/utils/equal');

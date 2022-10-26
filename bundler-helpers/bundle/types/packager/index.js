@@ -1,8 +1,8 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const {header} = require('beyond/utils/code');
-const {PackagerDeclarationCache} = require('beyond/cache');
-const {SourceMap} = require('beyond/bundlers-helpers');
+const {PackagerDeclarationCache} = require('beyond/stores');
+const SourceMap = require('../../../sourcemap');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -137,7 +137,7 @@ module.exports = class extends DynamicProcessor() {
             sourcemap.concat(code, map);
         }
 
-        require('./hmr-activation')(this.#packager.bundle, sourcemap);
+        require('./hmr-activation')(this.#bundle, sourcemap);
         done({sourcemap});
     }
 

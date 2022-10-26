@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {ExtenderPreprocessorCache} = require('beyond/cache');
+const {ExtenderPreprocessorCache} = require('beyond/stores');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {

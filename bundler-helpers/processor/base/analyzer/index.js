@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Diagnostics = require('../../diagnostics');
-const {ProcessorAnalyzerCache} = require('beyond/cache');
+const {ProcessorAnalyzerCache} = require('beyond/stores');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
