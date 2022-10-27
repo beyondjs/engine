@@ -1,9 +1,9 @@
-module.exports = {
-    name: 'bridge',
-    extname: ['.js'],
-    bundle: {
-        Bundle: require('./bundle'),
-        Js: require('./code'),
-        processors: ['ts']
+const {Plugin} = require('beyond/plugins/helpers');
+
+module.exports = class extends Plugin {
+    subpaths(subpaths) {
+        const {subpath} = this;
+        subpaths.set(subpath);
+        subpaths.set(`${subpath}/client`, {layer: 'client'});
     }
-};
+}

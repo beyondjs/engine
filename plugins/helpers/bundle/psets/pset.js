@@ -1,23 +1,18 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ProcessorBase = require('../../../processor/base');
-const registry = require('beyond/plugins/registry');
+const {processors: registry} = require('beyond/plugins/registry');
 
 /**
  * The processors of a packager
  */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'bundler.pset';
+        return 'pset';
     }
 
-    #bundle;
-    get bundle() {
-        return this.#bundle;
-    }
-
-    #platform;
-    get platform() {
-        return this.#platform;
+    #conditional;
+    get conditional() {
+        return this.#conditional;
     }
 
     #typecheck;
@@ -25,19 +20,13 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#typecheck;
     }
 
-    /**
-     * The names of the processors supported by the bundler
-     */
-    #supported;
-
-    #hashes;
-    get hashes() {
-        return this.#hashes;
-    }
-
     #errors = [];
     get errors() {
         return this.#errors;
+    }
+
+    get valid() {
+        return !this.#errors.length;
     }
 
     #warnings = [];
@@ -45,46 +34,22 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#warnings;
     }
 
-    /**
-     * Processors set
-     *
-     * @param bundle {*}
-     * @param platform {string}
-     * @param typecheck {boolean}
-     */
-    constructor(bundle, platform, typecheck) {
+    constructor(conditional, typecheck) {
         super();
-
-        this.#bundle = bundle;
-        this.#platform = platform;
+        this.#conditional = conditional;
         this.#typecheck = typecheck;
-
-        this.#supported = registry.bundles.get(bundle.type).bundle.processors;
-        if (!(this.#supported instanceof Array)) {
-            throw new Error(`Supported processors property is not defined in "${bundle.type}" bundle`);
-        }
-
-        this.#hashes = new (require('./hashes'))(this);
-
-        super.setup(new Map([
-            ['bundle', {child: bundle}],
-            ['processors', {child: registry.processors}]
-        ]));
+        super.setup(new Map([['registry', {child: registry}]]));
     }
 
     _process() {
         let {valid, config} = this.#bundle;
         config = valid && config ? config : {};
 
-        const reserved = ['imports'];
-
         const updated = new Map();
         const processors = Object.entries(valid && config ? config : {});
         let changed = processors.length !== this.size;
 
         for (const [type, config] of processors) {
-            if (reserved.includes(type)) continue;
-
             if (this.#supported.includes(type) && !registry.processors.has(type)) {
                 this.#errors.push(`Processor "${type}" is not registered`);
                 continue;

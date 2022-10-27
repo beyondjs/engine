@@ -51,7 +51,9 @@ module.exports = class extends DynamicProcessor(Map) {
         for (const specifier of register) {
             try {
                 const items = require(specifier);
-                items.forEach((Item, name) => items.set(name, Item));
+                if (!(items instanceof Array)) continue;
+                if (!Item.name) continue;
+                items.forEach(Item => items.set(Item.name, Item));
             }
             catch (exc) {
                 warnings.push(`Error registering "${specifier}": ${exc.message}`);

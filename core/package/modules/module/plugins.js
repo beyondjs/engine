@@ -41,17 +41,18 @@ module.exports = class extends DynamicProcessor(Map) {
 
         const updated = new Map();
         let changed = false;
+        const multiplugin = config.size > 1;
         config.forEach((config, name) => {
             if (!registry.has(name)) return;
 
             let plugin = this.has(name) && this.get(name);
             if (!plugin) {
                 const Plugin = registry.get(name);
-                plugin = new Plugin(this.#module);
+                plugin = new Plugin(name, this.#module);
                 changed = true;
             }
             updated.set(name, plugin);
-            plugin.configure(config);
+            plugin.configure(config, {multiplugin});
         });
 
         if (!changed && this.size === updated.size) return false;

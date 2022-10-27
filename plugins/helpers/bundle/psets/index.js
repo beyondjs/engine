@@ -4,26 +4,19 @@ const PSet = require('./pset');
  * Sets of processors
  */
 module.exports = class {
-    #bundle;
+    #conditional;
     #psets = new Map();
 
-    constructor(bundle) {
-        this.#bundle = bundle;
+    constructor(conditional) {
+        this.#conditional = conditional;
     }
 
-    /**
-     * Get a set of processors for the required platform
-     *
-     * @param platform {string}
-     * @param typecheck {boolean}
-     */
-    get(platform, typecheck) {
+    get(typecheck) {
         typecheck = !!typecheck;
-        const key = `${platform}/${typecheck}`;
-        if (this.#psets.has(key)) return this.#psets.get(key);
+        if (this.#psets.has(typecheck)) return this.#psets.get(typecheck);
 
-        const pset = new PSet(this.#bundle, platform, typecheck);
-        this.#psets.set(key, pset);
+        const pset = new PSet(this.#conditional, typecheck);
+        this.#psets.set(typecheck, pset);
         return pset;
     }
 

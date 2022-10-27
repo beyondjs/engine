@@ -1,17 +1,8 @@
 const {Plugin} = require('beyond/plugins/helpers');
-const {BundleTypes, JS} = require('');
+const Bundle = require('./bundle');
 
 module.exports = class extends Plugin {
-    get name() {
-        return 'code';
-    }
-
-    outputs() {
-        const {name} = this.config;
-
-        return new Map([
-            [`${name}.d.ts`, BundleTypes],
-            [`${name}.js`, JS]
-        ]);
+    conditional(pexport, platform) {
+        return new Bundle(pexport, platform);
     }
 }
