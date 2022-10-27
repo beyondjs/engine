@@ -1,4 +1,7 @@
 {
+  "plugins": [
+    "beyond/plugins/native"
+  ],
   "packages": [
     "./package.json"
   ]

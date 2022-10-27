@@ -1,6 +1,6 @@
 module.exports = class extends require('../registry') {
     get dp() {
-        return 'bundles-registry';
+        return 'plugins-registry';
     }
 
     get transversals() {
@@ -8,6 +8,6 @@ module.exports = class extends require('../registry') {
     }
 
     constructor(config) {
-        super('bundles', config);
+        super('plugins', config);
     }
 }

@@ -1,7 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const equal = require('beyond/utils/equal');
-const cspecs = require('beyond/cspecs');
 const {sep} = require('path');
 
 module.exports = class extends DynamicProcessor() {

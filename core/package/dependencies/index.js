@@ -75,7 +75,7 @@ module.exports = class extends DynamicProcessor(Map) {
             installed = installed && !!dependency;
         });
 
-        return done(installed, updated);
+        return done(installed);
     }
 
     configure(config) {

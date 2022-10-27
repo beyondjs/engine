@@ -11,30 +11,30 @@ module.exports = class extends PackageBase {
         return this.#watcher;
     }
 
-    #config;
-    get config() {
-        return this.#config;
-    }
+    // #config;
+    // get config() {
+    //     return this.#config;
+    // }
 
-    #transversals;
-    get transversals() {
-        return this.#transversals;
-    }
+    // #transversals;
+    // get transversals() {
+    //     return this.#transversals;
+    // }
 
-    #template;
-    get template() {
-        return this.#template;
-    }
+    // #template;
+    // get template() {
+    //     return this.#template;
+    // }
 
-    #styles;
-    get styles() {
-        return this.#styles;
-    }
+    // #styles;
+    // get styles() {
+    //     return this.#styles;
+    // }
 
-    #consumers;
-    get consumers() {
-        return this.#consumers;
-    }
+    // #consumers;
+    // get consumers() {
+    //     return this.#consumers;
+    // }
 
     async _begin() {
         // Create the files watcher for the package
@@ -49,11 +49,11 @@ module.exports = class extends PackageBase {
 
         await super._begin();
 
-        this.#config = new (require('./config'))(this);
-        this.#consumers = new (require('./consumers'))(this);
-        this.#transversals = new (require('./transversals'))(this);
-        this.#template = new (require('./template'))(this, config.properties.get('template'));
-        this.#styles = new (require('./styles'))(this);
+        // this.#config = new (require('./config'))(this);
+        // this.#consumers = new (require('./consumers'))(this);
+        // this.#transversals = new (require('./transversals'))(this);
+        // this.#template = new (require('./template'))(this, config.properties.get('template'));
+        // this.#styles = new (require('./styles'))(this);
     }
 
     /**
@@ -75,7 +75,7 @@ module.exports = class extends PackageBase {
     destroy() {
         super.destroy();
         this.#watcher?.destroy();
-        this.#template?.destroy();
-        this.#styles?.destroy();
+        // this.#template?.destroy();
+        // this.#styles?.destroy();
     }
 }

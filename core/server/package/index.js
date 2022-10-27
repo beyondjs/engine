@@ -1,6 +1,5 @@
 const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
-const {CSpecs} = require('beyond/cspecs');
 
 module.exports = async function (url) {
     const response = (content, statusCode) => ({content, statusCode, contentType: 'text/plain'});
@@ -29,8 +28,8 @@ module.exports = async function (url) {
      */
     await pkg.modules.ready;
     const module = pkg.modules.find(({vspecifier: 'contoso@0.0.1/home'}));
-    await module.bundles.ready;
-    console.log(module.bundles);
+    await module.plugins.ready;
+    console.log(module.plugins);
     return;
 
 
@@ -50,9 +49,6 @@ module.exports = async function (url) {
 
     await bundle.ready;
 
-    const cspecs = new CSpecs({platform: 'browser'});
-    const packager = bundle.packagers.get(cspecs);
-    await packager.js.ready;
-
-    packager.js.valid ? console.log('Packager code:', packager.js.code()) : console.log(packager.js.errors);
+    console.log('bundle is ready');
+    // packager.js.valid ? console.log('Packager code:', packager.js.code()) : console.log(packager.js.errors);
 }

@@ -1,6 +1,6 @@
 const {Config} = require('beyond/utils/config');
 const packages = require('beyond/packages');
-const bundlers = require('beyond/plugins/registry');
+const plugins = require('beyond/plugins/registry');
 const EventEmitter = require('events');
 
 const config = JSON.parse(process.argv[2]);
@@ -47,7 +47,7 @@ new class extends EventEmitter {
         this.#config = config;
         this.#config.data = 'beyond.json';
 
-        bundlers.initialise({bundles: config.get('bundles'), processors: config.get('processors')});
+        plugins.initialise(config.get('plugins'));
         packages.create(config.get('packages'));
         this.#server = new (require('./server'))(repository, {gzip: false});
 

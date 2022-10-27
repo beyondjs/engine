@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {plugins: registry} = require('beyond/plugins/registry');
 
 module.exports = class extends DynamicProcessor(Map) {
+    get dp() {
+        return 'module.plugins';
+    }
+
     #module;
 
     #id;

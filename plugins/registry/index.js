@@ -15,7 +15,7 @@ module.exports = new class {
         if (this.#initialised) throw new Error('Plugins registries already initialised');
         this.#initialised = true;
 
-        this.#bundles = new (require('./plugins'))(config.plugins);
-        this.#processors = new (require('./processors'))(config.processors);
+        this.#plugins = new (require('./plugins'))(config);
+        this.#processors = new (require('./processors'))(config);
     }
 }

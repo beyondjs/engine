@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const ProcessorBase = require('../../../processor/base');
+const ProcessorBase = require('../../processor/base');
 const {processors: registry} = require('beyond/plugins/registry');
 
 /**
@@ -42,7 +42,7 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _process() {
-        let {valid, config} = this.#bundle;
+        let {valid, config} = this.#conditional;
         config = valid && config ? config : {};
 
         const updated = new Map();
@@ -50,14 +50,14 @@ module.exports = class extends DynamicProcessor(Map) {
         let changed = processors.length !== this.size;
 
         for (const [type, config] of processors) {
-            if (this.#supported.includes(type) && !registry.processors.has(type)) {
-                this.#errors.push(`Processor "${type}" is not registered`);
-                continue;
-            }
-            if (!this.#supported.includes(type)) {
-                this.#warnings.push(`Configuration property "${type}" is not supported by the bundle`);
-                continue;
-            }
+            // if (this.#supported.includes(type) && !registry.processors.has(type)) {
+            //     this.#errors.push(`Processor "${type}" is not registered`);
+            //     continue;
+            // }
+            // if (!this.#supported.includes(type)) {
+            //     this.#warnings.push(`Configuration property "${type}" is not supported`);
+            //     continue;
+            // }
 
             const processor = (() => {
                 if (this.has(type)) return this.get(type);

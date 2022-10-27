@@ -1,5 +1,5 @@
 {
-  "bundle": "ts",
-  "name": "home",
+  "plugin": "test",
+  "subpath": "home",
   "files": "*"
 }

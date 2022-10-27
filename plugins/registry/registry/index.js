@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor(Map) {
     #is;
@@ -20,46 +21,64 @@ module.exports = class extends DynamicProcessor(Map) {
 
     constructor(is, config) {
         super();
-        this.setMaxListeners(1000);
-        if (!['bundles', 'processors'].includes(is)) throw new Error('Invalid parameters');
+        if (!['plugins', 'processors'].includes(is)) throw new Error('Invalid parameters');
 
         this.#is = is;
         super.setup(new Map([['config', {child: config}]]));
     }
 
     _process() {
-        let {valid, value, errors, warnings} = this.children.get('config').child;
+        const done = ({errors, warnings, updated}) => {
+            errors = errors ? errors : [];
+            warnings = warnings ? warnings : [];
+            let changed = !equal(this.#errors, errors) || !equal(this.#warnings, warnings);
 
-        const done = ({errors, warnings, items}) => {
-            this.#errors = errors ? errors : [];
-            this.#warnings = warnings ? warnings : [];
+            this.#errors = errors;
+            this.#warnings = warnings;
 
             this.clear();
-            items && items.forEach((value, key) => this.set(key, value));
+            changed = changed || this.size !== updated?.size;
+            updated?.forEach((Item, name) => {
+                changed = changed || !this.has(name);
+                this.set(name, Item);
+            });
+
+            return changed;
         }
 
+        let {valid, value: config, errors, warnings} = this.children.get('config').child;
         if (!valid) return done({errors, warnings});
 
-        value = value ? value : {};
-        let {register} = value;
-        register = typeof register === 'string' ? [register] : register;
-        register && !(register instanceof Array) && warnings.push(`Property "register" should be an array`);
-        register = register instanceof Array ? register : [];
-        register = register.filter(item => typeof item === 'string');
+        const updated = new Map();
+        warnings = warnings.slice();
 
-        const items = new Map();
-        for (const specifier of register) {
+        for (const specifier of config) {
             try {
-                const items = require(specifier);
-                if (!(items instanceof Array)) continue;
-                if (!Item.name) continue;
-                items.forEach(Item => items.set(Item.name, Item));
+                const required = require(specifier);
+                if (typeof required !== 'object') {
+                    warnings.push(`Error registering "${specifier}": invalid exported values`);
+                    continue;
+                }
+
+                const {warning, items} = (() => {
+                    let items = required[this.#is];
+                    const is = this.#is === 'plugins' ? 'Plugins' : 'Processors';
+
+                    if (!(items instanceof Array)) return {warning: `${is} configuration of "${specifier}" is invalid`};
+                    items = items ? items.filter(item => typeof item === 'string') : [];
+                    return {items};
+                })();
+                warning && warnings.push(warning);
+
+                if (!(items instanceof Map)) continue;
+                items.forEach((Item, name) => updated.set(name, Item));
             }
             catch (exc) {
+                console.log(exc.stack);
                 warnings.push(`Error registering "${specifier}": ${exc.message}`);
             }
         }
 
-        return done({items});
+        return done({updated});
     }
 }

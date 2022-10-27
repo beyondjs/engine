@@ -69,7 +69,7 @@
     "./stores": "./stores/index.js",
     "./externals/installs": "./core/externals/installs/index.js",
     "./externals/registry": "./core/externals/registry/index.js",
-    "./plugins/helpers": "./plugins/helpers/index.js",
+    "./plugins/sdk": "./plugins/sdk/index.js",
     "./plugins/registry": "./plugins/registry/index.js",
     "./plugins/native": "./plugins/native/index.js",
     "./utils/ports": "./utils/ports/index.js",
