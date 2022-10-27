@@ -16,6 +16,16 @@ module.exports = class extends DynamicProcessor() {
         return this.#map;
     }
 
+    process() {
+        throw new Error('This method must be overridden');
+    }
+
+    _process() {
+        const {code, map} = this.process();
+        this.#code = code;
+        this.#map = map;
+    }
+
     constructor(conditional) {
         super();
         this.#conditional = conditional;
