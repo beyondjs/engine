@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Entry = require('./entry');
-const {bundles} = require('beyond/bundlers-registry');
+const {bundles} = require('beyond/plugins/registry');
 
 /**
  * The overwrites of the bundles and statics files of the modules and libraries

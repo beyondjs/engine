@@ -1,4 +1,4 @@
-const {Bundles} = require('beyond/bundler-helpers');
+const {Bundles} = require('beyond/plugins/helpers');
 
 module.exports = class extends require('./attributes') {
     #pkg;

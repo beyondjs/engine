@@ -1,6 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {ProcessorBase} = require('beyond/bundler-helpers');
-const {processors} = require('beyond/bundlers-registry');
+const {ProcessorBase} = require('beyond/plugins/helpers');
+const {processors} = require('beyond/plugins/registry');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {

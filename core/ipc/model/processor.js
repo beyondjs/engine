@@ -1,6 +1,6 @@
 let model;
 module.exports = m => (model = m) && Processor;
-const {processors} = require('beyond/bundlers-registry');
+const {processors} = require('beyond/plugins/registry');
 
 class Processor extends (require('./base')) {
     #processor;

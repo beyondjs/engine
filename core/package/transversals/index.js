@@ -1,4 +1,4 @@
-const {bundles} = require('beyond/bundlers-registry');
+const {bundles} = require('beyond/plugins/registry');
 
 module.exports = class {
     #pkg;

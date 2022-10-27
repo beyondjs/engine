@@ -1,5 +1,5 @@
 const {Config} = require('beyond/utils/config');
-const Bundles = require('./bundles');
+const Plugins = require('./plugins');
 const Static = require('./static');
 const {sep} = require('path');
 
@@ -37,9 +37,9 @@ module.exports = class extends require('./attributes') {
         return this.#warnings;
     }
 
-    #bundles;
-    get bundles() {
-        return this.#bundles;
+    #plugins;
+    get plugins() {
+        return this.#plugins;
     }
 
     #_static;
@@ -58,7 +58,7 @@ module.exports = class extends require('./attributes') {
         this.#pkg = pkg;
         this.#file = file;
 
-        this.#bundles = new Bundles(this);
+        this.#plugins = new Plugins(this);
         this.#_static = new Static(this, config.properties.get('static'));
 
         let path = file.relative.dirname;
@@ -71,7 +71,7 @@ module.exports = class extends require('./attributes') {
         const {config, errors, warnings} = (() => {
             const config = this.children.get('config').child;
             const {errors, warnings, valid} = config;
-            const value = valid && config.value ? require('./process-config')(config.value) : {bundles: {}};
+            const value = valid && config.value ? require('./config')(config.value) : {plugins: {}};
 
             return {config: value, errors, warnings};
         })();
@@ -80,15 +80,15 @@ module.exports = class extends require('./attributes') {
 
         const changed = super._process(config, errors);
 
-        // Configure the bundles
-        this.#bundles.configure(config.bundles);
+        // Configure the plugins
+        this.#plugins.configure(config.plugins);
 
         return changed;
     }
 
     destroy() {
         super.destroy();
-        this.#bundles.destroy();
+        this.#plugins.destroy();
         this.#_static.destroy();
     }
 }

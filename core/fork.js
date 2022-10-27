@@ -1,6 +1,6 @@
 const {Config} = require('beyond/utils/config');
 const packages = require('beyond/packages');
-const bundlers = require('beyond/bundlers-registry');
+const bundlers = require('beyond/plugins/registry');
 const EventEmitter = require('events');
 
 const config = JSON.parse(process.argv[2]);
@@ -36,10 +36,8 @@ new class extends EventEmitter {
         super();
 
         const config = new Config(process.cwd(), {
-            '/bundles': 'object',
-            '/processors': 'object',
+            '/plugins': 'object',
             '/packages': 'array',
-            '/packages/children/deployment': 'object',
             '/packages/children/template': 'object',
             '/packages/children/template/application': 'object',
             '/packages/children/template/global': 'object',

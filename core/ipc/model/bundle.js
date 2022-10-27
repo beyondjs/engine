@@ -1,6 +1,6 @@
 let model;
 module.exports = m => (model = m) && Bundle;
-const {bundles} = require('beyond/bundlers-registry');
+const {bundles} = require('beyond/plugins/registry');
 
 class Bundle extends require('./base') {
     #bundle;

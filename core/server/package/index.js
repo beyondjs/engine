@@ -23,6 +23,17 @@ module.exports = async function (url) {
         return response(content, 404);
     }
 
+
+    /**
+     * FROM HERE TO BE REMOVED
+     */
+    await pkg.modules.ready;
+    const module = pkg.modules.find(({vspecifier: 'contoso@0.0.1/home'}));
+    await module.bundles.ready;
+    console.log(module.bundles);
+    return;
+
+
     await pkg.exports.ready;
     const {bundle, error} = (({specifier, pkg: name, version, subpath}) => {
         if (!pkg.exports.has(specifier)) {
