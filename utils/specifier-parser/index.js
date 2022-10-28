@@ -45,6 +45,6 @@ module.exports = class {
 
         this.#pkg = scope ? `${scope}/${name}` : name;
         this.#version = version;
-        this.#subpath = split.length ? split.join('/') : '.';
+        this.#subpath = split.length ? `./${split.join('/')}` : '.';
     }
 }

@@ -48,12 +48,14 @@ module.exports = class extends require('./attributes') {
     }
 
     constructor(finder, file) {
+        super();
+
         const {pkg} = finder;
         if (!pkg || !file) throw new Error('Invalid parameters');
 
         const config = new Config(file.dirname, {'/static': 'object'});
         config.data = 'module.json';
-        super(config);
+        super.setup(new Map([['config', {child: config}]]));
 
         this.#pkg = pkg;
         this.#file = file;

@@ -2,13 +2,9 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const ipc = require('beyond/utils/ipc');
 const Export = require('./export');
 
-module.exports = class extends DynamicProcessor(Map) {
+module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'plugin';
-    }
-
-    static name() {
-        throw new Error('This property must be overridden by the plugin implementation');
     }
 
     #module;
@@ -33,7 +29,12 @@ module.exports = class extends DynamicProcessor(Map) {
 
     get subpath() {
         const {attributes, multiplugin, module} = this;
-        return module.name + (multiplugin ? `.${attributes.name}` : '');
+        return module.subpath + (multiplugin ? `.${attributes.name}` : '');
+    }
+
+    #exports = new Map();
+    get exports() {
+        return this.#exports;
     }
 
     _notify() {
@@ -69,17 +70,12 @@ module.exports = class extends DynamicProcessor(Map) {
         this._invalidate();
     }
 
-    clear() {
-        this.forEach(bundle => bundle.destroy());
-        super.clear();
-    }
-
     /**
      * Set the subpaths exported by the plugin
      * @param subpaths {Map<string, *>}
      */
-    exports(subpaths) {
-        subpaths.set(this.subpath, {platforms: ['default']});
+    subpaths(subpaths) {
+        subpaths.set(this.subpath, {});
     }
 
     conditional(pexport) {
@@ -88,27 +84,28 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _process() {
-        this.clear();
         const subpaths = new Map();
-        this.exports(subpaths);
+        this.subpaths(subpaths);
 
         const updated = new Map();
         subpaths.forEach((data, subpath) => {
+            subpath = subpath.startsWith('./') ? subpath : `./${subpath}`;
+
             const pexport = (() => {
-                if (this.has(subpath)) return this.get(subpath);
+                if (this.#exports.has(subpath)) return this.#exports.get(subpath);
                 data = data ? data : {};
                 return new Export(this, subpath, data);
             })();
             updated.set(subpath, pexport);
         });
 
-        this.forEach((pexport, subpath) => !updated.has(subpath) && pexport.destroy());
-        this.clear();
-        updated.forEach((value, key) => this.set(key, value));
+        this.#exports.forEach((pexport, subpath) => !updated.has(subpath) && pexport.destroy());
+        this.#exports.clear();
+        updated.forEach((value, key) => this.#exports.set(key, value));
     }
 
     destroy() {
-        this.clear();
+        this.#exports.forEach(subpath => subpath.destroy());
         super.destroy();
     }
 }

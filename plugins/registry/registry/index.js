@@ -65,13 +65,13 @@ module.exports = class extends DynamicProcessor(Map) {
                     const is = this.#is === 'plugins' ? 'Plugins' : 'Processors';
 
                     if (!(items instanceof Array)) return {warning: `${is} configuration of "${specifier}" is invalid`};
-                    items = items ? items.filter(item => typeof item === 'string') : [];
+                    items = items ? items : [];
+                    items = items.filter(Item => typeof Item === 'function' && typeof Item.name === 'string');
                     return {items};
                 })();
                 warning && warnings.push(warning);
 
-                if (!(items instanceof Map)) continue;
-                items.forEach((Item, name) => updated.set(name, Item));
+                items.forEach(Item => updated.set(Item.name, Item));
             }
             catch (exc) {
                 console.log(exc.stack);

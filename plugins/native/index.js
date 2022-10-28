@@ -1,4 +1,4 @@
 module.exports = {
-    plugins: [require('./plugins/test')]
+    plugins: [require('./module/test')]
     // processors: [require('./processors/ts')]
 }

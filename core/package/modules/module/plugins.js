@@ -26,6 +26,10 @@ module.exports = class extends DynamicProcessor(Map) {
         super.setup(new Map([['registry', {child: registry}]]));
     }
 
+    async _begin() {
+        await this.#module.ready;
+    }
+
     /**
      * Plugins processor is not ready to process until its configuration is set
      * @return {boolean}

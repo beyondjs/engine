@@ -1,5 +1,6 @@
 const PackageBase = require('./base');
 const WatchersClient = require('beyond/utils/watchers/client');
+const Modules = require('./modules');
 
 module.exports = class extends PackageBase {
     get is() {
@@ -9,6 +10,11 @@ module.exports = class extends PackageBase {
     #watcher;
     get watcher() {
         return this.#watcher;
+    }
+
+    #modules;
+    get modules() {
+        return this.#modules;
     }
 
     // #config;
@@ -47,13 +53,14 @@ module.exports = class extends PackageBase {
         this.#watcher = new WatchersClient({is: 'package', path: config.path});
         this.#watcher.start().catch(exc => console.error(exc.stack));
 
-        await super._begin();
-
+        this.#modules = new Modules(this);
         // this.#config = new (require('./config'))(this);
         // this.#consumers = new (require('./consumers'))(this);
         // this.#transversals = new (require('./transversals'))(this);
         // this.#template = new (require('./template'))(this, config.properties.get('template'));
         // this.#styles = new (require('./styles'))(this);
+
+        await super._begin();
     }
 
     /**
@@ -69,11 +76,16 @@ module.exports = class extends PackageBase {
     _process() {
         const {warnings, errors, valid, value} = this.children.get('config').child;
         const config = !valid || !value ? {} : value;
-        return super._process(config, errors.slice(), warnings.slice());
+        const changed = super._process(config, errors.slice(), warnings.slice());
+
+        this.#modules.configure(config.modules);
+
+        return changed;
     }
 
     destroy() {
         super.destroy();
+        this.#modules?.destroy();
         this.#watcher?.destroy();
         // this.#template?.destroy();
         // this.#styles?.destroy();

@@ -5,24 +5,27 @@ module.exports = class extends DynamicProcessor(Map) {
         return 'package.exports';
     }
 
+    #pkg;
     #modules;
 
-    constructor(modules) {
+    constructor(pkg) {
         super();
-        this.#modules = modules;
-        super.setup(new Map([['modules', {child: modules}]]));
+        this.#pkg = pkg;
+
+        const modules = this.#modules = pkg.modules;
+        modules && super.setup(new Map([['modules', {child: modules}]]));
     }
 
     _prepared(require) {
-        this.#modules.forEach(module => {
-            require(module.bundles) && module.bundles.forEach(bundle => require(bundle));
+        this.#modules?.forEach(module => {
+            require(module.plugins) && module.plugins.forEach(plugin => require(plugin));
         });
     }
 
     _process() {
         this.clear();
-        this.#modules.forEach(({bundles}) => {
-            bundles.forEach(bundle => this.set(bundle.vspecifier, bundle));
+        this.#modules?.forEach(({plugins}) => {
+            plugins.forEach(plugin => plugin.exports.forEach((plugin, subpath) => this.set(subpath, plugin)));
         });
     }
 }

@@ -79,11 +79,6 @@ module.exports = class extends DynamicProcessor() {
         });
     }
 
-    constructor(config) {
-        super();
-        super.setup(new Map([['config', {child: config}]]));
-    }
-
     _process(config, errors) {
         const values = {
             subpath: config.subpath ? config.subpath : config.name,

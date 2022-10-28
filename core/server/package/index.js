@@ -2,11 +2,11 @@ const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
 
 module.exports = async function (url) {
-    const response = (content, statusCode) => ({content, statusCode, contentType: 'text/plain'});
-
     const specifier = new SpecifierParser(url.pathname.slice(1));
     if (!specifier.pkg) return;
-    if (!specifier.version) return response('Package version must be set', 404);
+    if (!specifier.version) {
+        return {content: 'Package version must be set', statusCode: 404, contentType: 'text/plain'};
+    }
 
     await packages.ready;
     await Promise.all([...packages.values()].map(pkg => pkg.ready));
@@ -19,36 +19,28 @@ module.exports = async function (url) {
 
         const values = JSON.stringify([...versions]);
         const content = `Package version is not registered.\nRegistered versions are: ${values}`;
-        return response(content, 404);
+        return {content, statusCode: 404, contentType: 'text/plain'};
     }
 
-
-    /**
-     * FROM HERE TO BE REMOVED
-     */
-    await pkg.modules.ready;
-    const module = pkg.modules.find(({vspecifier: 'contoso@0.0.1/home'}));
-    await module.plugins.ready;
-    console.log(module.plugins);
-    return;
-
-
     await pkg.exports.ready;
-    const {bundle, error} = (({specifier, pkg: name, version, subpath}) => {
-        if (!pkg.exports.has(specifier)) {
+    const {pexport, error} = (({pkg: name, version, subpath}) => {
+        if (!pkg.exports.has(subpath)) {
             const exports = JSON.stringify([...pkg.exports.keys()]);
-            const error = `Package "${name}@${version}" does not exports the subpath "${subpath}"\n\n` +
+            const error = `Package "${name}@${version}" does not export subpath "${subpath}"\n\n` +
                 `Registered subpaths are:\n${exports}`;
             return {error};
         }
 
-        const bundle = pkg.exports.get(specifier);
-        return {bundle};
+        const pexport = pkg.exports.get(subpath);
+        return {pexport};
     })(specifier);
-    if (error) return response(error, 404);
+    if (error) return {content: error, statusCode: 404, contentType: 'text/plain'};
 
-    await bundle.ready;
+    const conditional = pexport.conditional('browser');
+    const {js} = conditional;
+    await js.ready;
 
-    console.log('bundle is ready');
-    // packager.js.valid ? console.log('Packager code:', packager.js.code()) : console.log(packager.js.errors);
+    return js.valid ?
+        {content: js.code, statusCode: 200, contentType: 'application/javascript'} :
+        {content: 'Errors found processing resource', statusCode: 500, contentType: 'text/plain'};
 }

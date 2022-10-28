@@ -12,7 +12,8 @@ module.exports = function (input) {
     // All the configuration properties that are not reserved keys, are plugins
     const reserved = ['platforms', 'engines', 'server', 'static', 'developer', 'name', 'title', 'description'];
 
-    // When the plugin is specified, convert it to {plugin: ...}
+    // When the plugin is specified (or the legacy input.bundle), convert it to {plugin: ...}
+    input.bundle && (input.plugin = input.bundle);
     if (input.plugin) {
         output = {};
         output[input.plugin] = input;
