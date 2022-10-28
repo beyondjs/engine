@@ -3,6 +3,9 @@ const PSets = require('./psets');
 
 module.exports = class extends Conditional {
     #psets;
+    get psets() {
+        return this.#psets;
+    }
 
     constructor(...params) {
         super(...params);

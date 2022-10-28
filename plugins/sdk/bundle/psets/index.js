@@ -25,13 +25,9 @@ module.exports = class {
         return this.#destroyed;
     }
 
-    #clear = () => {
-        this.#psets.forEach(pset => pset.destroy());
-    }
-
     destroy() {
         if (this.#destroyed) throw new Error('Object already destroyed');
         this.#destroyed = true;
-        this.#clear();
+        this.#psets.forEach(pset => pset.destroy());
     }
 }
