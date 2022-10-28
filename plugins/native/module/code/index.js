@@ -1,8 +1,12 @@
 const {Plugin} = require('beyond/plugins/helpers');
-const Bundle = require('./bundle');
+const Conditional = require('./conditional');
 
 module.exports = class extends Plugin {
+    static get name() {
+        return 'code';
+    }
+
     conditional(pexport, platform) {
-        return new Bundle(pexport, platform);
+        return new Conditional(pexport, platform);
     }
 }
