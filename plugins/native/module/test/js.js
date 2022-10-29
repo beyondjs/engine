@@ -1,7 +1,11 @@
 const {Code} = require('beyond/plugins/sdk');
 
 module.exports = class extends Code {
-    process() {
+    constructor(conditional) {
+        super(conditional, {cache: true});
+    }
+
+    _outputs() {
         return {code: 'console.log("hello world");'};
     }
 }

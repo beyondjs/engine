@@ -1,36 +1,32 @@
-const Reprocessor = require('beyond/utils/reprocessor');
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
-module.exports = class extends Reprocessor {
-    #code;
-    get code() {
-        return this.#code;
+module.exports = class extends DynamicProcessor() {
+    #update;
+    #processed;
+
+    constructor(updated, processed) {
+        super();
+
+        this.#update = update;
+        this.#processed = processed;
     }
 
-    #map;
-    get map() {
-        return this.#map;
-    }
+    async _process(request) {
+        this.#code = this.#map = void 0;
 
-    #errors = [];
-    get errors() {
-        return this.#errors;
-    }
+        const done = response => {
+            if (this._request !== request) return;
 
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
-    }
+            response = response ? response : {};
+            this.#processed(response);
+        }
 
-    get valid() {
-        return !this.#errors.length;
-    }
-
-    processed(response) {
-        const {errors, warnings, code, map} = response;
-
-        this.#errors = errors ? errors : [];
-        this.#warnings = warnings ? warnings : [];
-        this.#code = code;
-        this.#map = map;
+        const process = () => this.#update(request)
+            .then(done)
+            .catch(exc => {
+                console.log(exc.stack);
+                done({errors: [`Exception caught: ${exc.message}`]})
+            });
+        process();
     }
 }

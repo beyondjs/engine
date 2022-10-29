@@ -14,6 +14,8 @@ module.exports = class extends DynamicProcessor() {
 
     #code;
     #map;
+    #errors = [];
+    #warnings = [];
 
     _outputs(hmr) {
         void hmr;
@@ -24,26 +26,42 @@ module.exports = class extends DynamicProcessor() {
         const outputs = this._outputs(hmr);
         if (typeof outputs !== 'object') throw new Error('Invalid outputs');
 
-        const {code, map} = outputs;
-        if (hmr) return {code, map};
+        let {code, map, errors, warnings} = outputs;
+        code = code ? code : '';
+        map = map ? map : null;
+        errors = errors ? errors : [];
+        warnings = warnings ? warnings : [];
 
-        this.#code = code ? code : '';
-        this.#map = map ? map : '';
-        return {code, map};
+        if (hmr) return {code, map, errors, warnings};
+
+        this.#code = code;
+        this.#map = map;
+        this.#errors = errors;
+        this.#warnings = warnings;
+
+        return {code, map, errors, warnings};
     }
 
-    async code(hmr) {
+    code(hmr) {
         if (!hmr && this.#code !== void 0) return this.#code;
-
-        await this.#processor.process();
         return this.#outputs(hmr).code;
     }
 
-    async map(hmr) {
+    map(hmr) {
         if (!hmr && this.#map !== void 0) return this.#map;
-
-        await this.#processor.process();
         return this.#outputs(hmr).map;
+    }
+
+    get errors() {
+        return this.#errors;
+    }
+
+    get warnings() {
+        return this.#warnings;
+    }
+
+    get valid() {
+        return !this.#errors.length;
     }
 
     #cache;
@@ -53,28 +71,36 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #processor;
+    get processor() {
+        return this.#processor;
+    }
 
     /**
-     * It allows to the _update method if its execution has been cancelled or not
+     * It allows to the _update method to know if its execution has been cancelled or not
      * @param request
      * @return {boolean}
      */
     cancelled(request) {
-        return this.#processor.request !== request;
+        return this.#processor.cancelled(request);
     }
 
     /**
      * Code constructor
      *
      * @param conditional {*}
-     * @param cache {boolean} Cache enabled or not
+     * @param specs {{cache: boolean}} Cache enabled or not
      */
-    constructor(conditional, cache) {
+    constructor(conditional, specs) {
         super();
         this.#conditional = conditional;
+
+        const {cache} = specs;
         cache && (this.#cache = new CodeCache(this));
 
-        this.#processor = new Processor(async request => await this._update(request));
+        this.#processor = new Processor(
+            async request => await this._update(request),
+            response => this._processed(response)
+        );
     }
 
     async _begin() {
@@ -101,6 +127,18 @@ module.exports = class extends DynamicProcessor() {
      */
     async _update(request) {
         void request;
+    }
+
+    /**
+     * This method can be overridden if implementation requires asynchronous processing previous to the
+     * construction of the code or map properties
+     *
+     * @param response
+     * @return {Promise<void>}
+     * @private
+     */
+    _processed(response) {
+        void response;
     }
 
     _process() {

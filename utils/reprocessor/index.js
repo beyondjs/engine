@@ -2,75 +2,72 @@ const PendingPromise = require('../pending-promise');
 
 module.exports = class {
     #update;
+    #processed;
 
     /**
      * Reprocessor constructor
      * @param update {function} The _update method that is overridden in the consumer of the actual processor
+     * @param processed {function} Called after the _updated method is processed to process its response
      */
-    constructor(update) {
+    constructor(update, processed) {
         this.#update = update;
+        this.#processed = processed;
     }
 
-    #working = false;
-    get working() {
-        return this.#working;
+    #processing = false;
+    get processing() {
+        return this.#processing;
     }
 
-    #done = false;
-    get done() {
-        return this.#done;
+    #processed = false;
+    get processed() {
+        return this.#processed;
     }
 
     #request;
-    get request() {
-        return this.#request;
+
+    cancelled(request) {
+        return this.#request !== request;
+    }
+
+    invalidate() {
+        this.#request = void 0;
+        !this.#processing && (this.#promise = void 0);
     }
 
     #promise;
 
-    invalidate() {
-        this.#request = void 0;
-        !this.#working && (this.#promise = void 0);
-    }
-
-    /**
-     * This method should be overridden to process the data received from the update method
-     * @param response
-     */
-    processed(response) {
-        void response;
-    }
-
-    async process() {
-        if (this.#promise) return await this.#promise;
+    get ready() {
+        if (!this.#promise) return this.#promise;
         this.#promise = new PendingPromise();
-        const request = this.#request = Date.now();
+        this.#processing = true;
+        this.#processed = false;
 
-        this.#working = true;
-        this.#done = false;
-        this.#code = this.#map = void 0;
-        this.#errors = [];
-        this.#warnings = [];
+        let request;
 
         const done = response => {
             if (this.#request !== request) return process();
 
-            this.#working = false;
-            this.#done = true;
+            this.#processing = false;
+            this.#processed = true;
             response = response ? response : {};
-            this.processed(response);
+            this.#processed(response);
 
             this.#promise.resolve();
         }
 
-        const process = () => this.#update(request)
-            .then(done)
-            .catch(exc => {
-                console.log(exc.stack);
-                done({errors: [`Exception caught: ${exc.message}`]})
-            });
+        const process = () => {
+            request = this.#request = Date.now();
+
+            this.#update(request)
+                .then(done)
+                .catch(exc => {
+                    console.log(exc.stack);
+                    done({errors: [`Exception caught: ${exc.message}`]})
+                });
+        }
         process();
 
-        return await this.#promise;
+        return this.#promise;
     }
 }
