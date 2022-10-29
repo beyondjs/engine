@@ -76,6 +76,7 @@
     "./utils/finder": "./utils/finder/index.js",
     "./utils/fs": "./utils/fs/index.js",
     "./utils/dynamic-processor": "./utils/dynamic-processor/index.js",
+    "./utils/reprocessor": "./utils/reprocessor/index.js",
     "./utils/config": "./utils/config/index.js",
     "./utils/code": "./utils/code/index.js",
     "./utils/ipc": "./utils/ipc/index.js",

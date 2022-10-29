@@ -1,14 +1,6 @@
-module.exports = class {
-    #working = false;
-    get working() {
-        return this.#working;
-    }
+const Reprocessor = require('beyond/utils/reprocessor');
 
-    #done = false;
-    get done() {
-        return this.#done;
-    }
-
+module.exports = class extends Reprocessor {
     #code;
     get code() {
         return this.#code;
@@ -24,30 +16,21 @@ module.exports = class {
         return this.#errors;
     }
 
+    #warnings = [];
+    get warnings() {
+        return this.#warnings;
+    }
+
     get valid() {
         return !this.#errors.length;
     }
 
-    #time;
-    /**
-     * Timestamp when the last process was made
-     * @return {number}
-     */
-    get time() {
-        return this.#time;
-    }
+    processed(response) {
+        const {errors, warnings, code, map} = response;
 
-    #request;
-
-    cancel() {
-        this.#request = void 0;
-    }
-
-    async process() {
-
-    }
-
-    _process() {
-
+        this.#errors = errors ? errors : [];
+        this.#warnings = warnings ? warnings : [];
+        this.#code = code;
+        this.#map = map;
     }
 }
