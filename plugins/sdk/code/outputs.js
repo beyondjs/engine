@@ -1,25 +1,21 @@
-module.exports = class {
-    #code;
-    get code() {
-        return this.#code;
+module.exports = class extends Map {
+    #generate;
+
+    constructor(generate) {
+        super();
+        this.#generate = generate;
     }
 
-    #map;
-    get map() {
-        return this.#map;
-    }
+    obtain(resource, hmr) {
+        if (!['code', 'map', 'errors', 'warnings'].includes(resource)) throw new Error('Invalid parameters');
 
-    #errors = [];
-    get errors() {
-        return this.#errors;
-    }
+        if (this.has(hmr)) return this.get(hmr)[resource];
 
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
-    }
+        const values = this.#generate(hmr);
+        if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
 
-    get valid() {
-        return !this.#errors.length;
+        const {code, map, errors, warnings} = values;
+        this.set(hmr, {code, map, errors, warnings});
+        return values[resource];
     }
 }
