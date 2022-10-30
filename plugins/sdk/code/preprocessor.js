@@ -17,40 +17,22 @@ module.exports = class extends Reprocessor {
 
     #code;
     #process;
-    #hashes;
 
     get id() {
         return this.#code.id;
     }
 
     get updated() {
-        return this.#hashes.preprocessor === this.#hash;
+        return this.#code.hash === this.#hash;
     }
 
-    async process() {
-        const processed = await this.#process();
-        if (typeof processed !== 'object') throw new Error('Invalid update returned data');
-
-        const {data, hash} = processed;
-        this.#data = data;
-        this.#hash = hash;
-        this.#cache?.save();
-    }
-
-    constructor(code, process, hashes, specs) {
+    constructor(code, process, specs) {
         super();
         this.#code = code;
         this.#process = process;
-        this.#hashes = hashes;
 
         const {cache} = specs;
         cache && (this.#cache = new PreprocessedCodeCache(this));
-    }
-
-    async load() {
-        const cached = await this.#cache?.load();
-        cached && this.hydrate(cached);
-        this.#loaded = !!cached;
     }
 
     get ready() {
@@ -65,24 +47,20 @@ module.exports = class extends Reprocessor {
         });
     }
 
-    get(resource, hmr) {
-        const outputs = this._outputs(hmr);
-        if (typeof outputs !== 'object') throw new Error('Invalid outputs');
+    async process() {
+        const processed = await this.#process();
+        if (typeof processed !== 'object') throw new Error('Invalid update returned data');
 
-        let {code, map, errors, warnings} = outputs;
-        code = code ? code : '';
-        map = map ? map : null;
-        errors = errors ? errors : [];
-        warnings = warnings ? warnings : [];
+        const {data, hash} = processed;
+        this.#data = data;
+        this.#hash = hash;
+        this.#cache?.save();
+    }
 
-        if (hmr) return {code, map, errors, warnings};
-
-        this.#code = code;
-        this.#map = map;
-        this.#errors = errors;
-        this.#warnings = warnings;
-
-        return {code, map, errors, warnings};
+    async load() {
+        const cached = await this.#cache?.load();
+        cached && this.hydrate(cached);
+        this.#loaded = !!cached;
     }
 
     hydrate(cached) {

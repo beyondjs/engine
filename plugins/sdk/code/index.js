@@ -53,23 +53,26 @@ module.exports = class extends DynamicProcessor() {
         const {cache} = specs;
 
         const update = async request => await this._update(request);
-        const hashes = () => this.hashes;
-        this.#preprocessor = specs.preprocessor && new Preprocessor(this, update, hashes, {cache});
+        this.#preprocessor = specs.preprocessor && new Preprocessor(this, update, {cache});
 
         const generate = () => this._generate();
-        this.#outputs = new Outputs(this, generate, hashes);
+        this.#outputs = new Outputs(this, generate);
     }
 
     async _begin() {
-        await Promise.all([this.#conditional.ready, this.#preprocessor?.load()]);
+        await this.#conditional.ready;
+        await this.#outputs.load();
+
+        if (this.#outputs.updated) return;
+        await this.#preprocessor?.load();
     }
 
     /**
      * Expected to be overridden
-     * @return {{preprocessor: number, generation: number}}
+     * @return {number}
      */
-    get hashes() {
-        return {preprocessor: 0, generation: 0};
+    get hash() {
+        return 0;
     }
 
     /**
@@ -95,13 +98,9 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _process() {
-        if (this.updated) return;
-        this.#code = void 0;
-        this.#map = void 0;
-        this.#errors = [];
-        this.#warnings = [];
+        !this.#preprocessor?.updated && this.#preprocessor?.invalidate();
+        !this.#outputs.updated && this.#outputs.clear();
 
-        this.#preprocessor.invalidate();
-        this.#outputs.clear();
+        return !this.#outputs.updated;
     }
 }
