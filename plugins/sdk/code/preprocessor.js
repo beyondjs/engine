@@ -1,5 +1,5 @@
 const Reprocessor = require('beyond/utils/reprocessor');
-const {CodeCache} = require('beyond/stores');
+const {PreprocessedCodeCache} = require('beyond/stores');
 
 module.exports = class extends Reprocessor {
     #cache;
@@ -40,7 +40,7 @@ module.exports = class extends Reprocessor {
         this.#updated = updated;
 
         const {cache} = specs;
-        cache && (this.#cache = new CodeCache(this));
+        cache && (this.#cache = new PreprocessedCodeCache(this));
     }
 
     async load() {

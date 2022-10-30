@@ -44,11 +44,16 @@ module.exports = new class {
             return;
         }
 
-        await this.#run('CREATE TABLE IF NOT EXISTS code (' +
+        await this.#run('CREATE TABLE IF NOT EXISTS preprocessed_code (' +
             'id TEXT NOT NULL, ' +
             'data TEXT NOT NULL);');
 
-        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS id_index on code (id);');
+        await this.#run('CREATE TABLE IF NOT EXISTS generated_code (' +
+            'id TEXT NOT NULL, ' +
+            'data TEXT NOT NULL);');
+
+        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS id_index on preprocessed_code (id);');
+        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS id_index on generated_code (id);');
         this.#ready.resolve();
     }
 }

@@ -1,22 +1,22 @@
 module.exports = class {
     #db = require('./db');
-    #code;
+    #outputs;
 
-    constructor(code) {
-        this.#code = code;
+    constructor(outputs) {
+        this.#outputs = outputs;
     }
 
     async load() {
-        let row;
+        const {id} = this.#outputs;
 
         const failed = async exc => {
-            console.log(`Error loading code from cache "${this.#code.id}": ${exc.message}`);
+            console.log(`Error loading generated code from cache "${id}": ${exc.message}`);
             await this.delete();
         }
 
-        const {id} = this.#code;
+        let row;
         try {
-            const select = 'SELECT data FROM code WHERE id=?';
+            const select = 'SELECT data FROM generated_code WHERE id=?';
             row = await this.#db.get(select, id);
         }
         catch (exc) {
@@ -35,24 +35,24 @@ module.exports = class {
     }
 
     /**
-     * Save the bundle packager code
+     * Save the generated code
      */
     save() {
-        const data = JSON.stringify(this.#code);
-        const {id} = this.#code;
+        const data = JSON.stringify(this.#outputs);
+        const {id} = this.#outputs;
 
-        const sentence = 'INSERT OR REPLACE INTO code(id, data) VALUES(?, ?)';
+        const sentence = 'INSERT OR REPLACE INTO generated_code(id, data) VALUES(?, ?)';
         const params = [id, data];
 
-        const exc = exc => console.log(`Error saving code into cache "${id}": ${exc.stack}`);
+        const exc = exc => console.log(`Error saving generated code into cache "${id}": ${exc.stack}`);
         this.#db.run(sentence, params).catch(exc);
     }
 
     delete() {
-        const {id} = this.#code;
+        const {id} = this.#outputs;
         const sentence = 'DELETE FROM code WHERE id=?';
 
-        const exc = exc => console.log(`Error deleting code from cache "${id}": ${exc.stack}`);
+        const exc = exc => console.log(`Error deleting generated code from cache "${id}": ${exc.stack}`);
         this.#db.run(sentence, id).catch(exc);
     }
 }

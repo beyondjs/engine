@@ -1,9 +1,26 @@
+const {GeneratedCodeCache} = require('beyond/stores');
+
 module.exports = class extends Map {
     #generate;
+    #cache;
 
-    constructor(generate) {
+    /**
+     * Not HMR values for code, map, errors, warnings
+     */
+    #values;
+
+    constructor(generate, specs) {
         super();
         this.#generate = generate;
+
+        const {cache} = specs;
+        cache && (this.#cache = new GeneratedCodeCache(this));
+    }
+
+    async load() {
+        const cached = await this.#cache?.load();
+        cached && this.hydrate(cached);
+        this.#loaded = !!cached;
     }
 
     obtain(resource, hmr) {
@@ -15,7 +32,15 @@ module.exports = class extends Map {
         if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
 
         const {code, map, errors, warnings} = values;
-        this.set(hmr, {code, map, errors, warnings});
+
+        if (hmr) {
+            this.set(hmr, {code, map, errors, warnings});
+        }
+        else {
+            this.#values = values;
+            this.#cache.save();
+        }
+
         return values[resource];
     }
 }
