@@ -1,5 +1,5 @@
 const Conditional = require('../plugin/conditional');
-const PSets = require('./psets');
+const Processors = require('./processors');
 
 module.exports = class extends Conditional {
     #psets;
@@ -7,8 +7,27 @@ module.exports = class extends Conditional {
         return this.#psets;
     }
 
+    #diagnostics;
+    get diagnostics() {
+        return this.#diagnostics;
+    }
+
+    #js;
+    get js() {
+        return this.#js;
+    }
+
+    #types;
+    get types() {
+        return this.#types;
+    }
+
+    #css;
+    get css() {
+        return this.#css;
+    }
+
     constructor(...params) {
         super(...params);
-        this.#psets = new PSets(this);
     }
 }
