@@ -28,7 +28,7 @@ module.exports = new class {
         if (this.#ready) return this.#ready;
         this.#ready = new PendingPromise();
 
-        const name = 'packagers-code.db';
+        const name = 'code.db';
         const dirname = join(process.cwd(), '.beyond/cache');
         const store = join(dirname, name);
 
@@ -44,13 +44,11 @@ module.exports = new class {
             return;
         }
 
-        await this.#run('CREATE TABLE IF NOT EXISTS packagers (' +
-            'packager_id TEXT NOT NULL, ' +
-            'extname TEXT NOT NULL, ' +
+        await this.#run('CREATE TABLE IF NOT EXISTS code (' +
+            'id TEXT NOT NULL, ' +
             'data TEXT NOT NULL);');
 
-        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS packager_id_index on packagers (packager_id, extname);');
-
+        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS id_index on code (id);');
         this.#ready.resolve();
     }
 }

@@ -1,10 +1,14 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {CodeCache} = require('beyond/stores');
-const Processor = require('./processor');
+const Preprocessor = require('./preprocessor');
+const Outputs = require('./outputs');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
         return 'code';
+    }
+
+    get resource() {
+        throw new Error('This property must be overridden, ex: "js", "css", "types"');
     }
 
     #conditional;
@@ -12,67 +16,18 @@ module.exports = class extends DynamicProcessor() {
         return this.#conditional;
     }
 
-    #code;
-    #map;
-    #errors = [];
-    #warnings = [];
-
-    _outputs(hmr) {
-        void hmr;
-        throw new Error('This method must be overridden');
+    get id() {
+        return `${this.#conditional.id}//${this.resource}`;
     }
 
-    #outputs(hmr) {
-        const outputs = this._outputs(hmr);
-        if (typeof outputs !== 'object') throw new Error('Invalid outputs');
-
-        let {code, map, errors, warnings} = outputs;
-        code = code ? code : '';
-        map = map ? map : null;
-        errors = errors ? errors : [];
-        warnings = warnings ? warnings : [];
-
-        if (hmr) return {code, map, errors, warnings};
-
-        this.#code = code;
-        this.#map = map;
-        this.#errors = errors;
-        this.#warnings = warnings;
-
-        return {code, map, errors, warnings};
+    #preprocessor;
+    get preprocessor() {
+        return this.#preprocessor;
     }
 
-    code(hmr) {
-        if (!hmr && this.#code !== void 0) return this.#code;
-        return this.#outputs(hmr).code;
-    }
-
-    map(hmr) {
-        if (!hmr && this.#map !== void 0) return this.#map;
-        return this.#outputs(hmr).map;
-    }
-
-    get errors() {
-        return this.#errors;
-    }
-
-    get warnings() {
-        return this.#warnings;
-    }
-
-    get valid() {
-        return !this.#errors.length;
-    }
-
-    #cache;
-    #hash;
-    get hash() {
-        return this.#hash;
-    }
-
-    #processor;
-    get processor() {
-        return this.#processor;
+    #outputs;
+    get outputs() {
+        return this.#outputs;
     }
 
     /**
@@ -81,7 +36,7 @@ module.exports = class extends DynamicProcessor() {
      * @return {boolean}
      */
     cancelled(request) {
-        return this.#processor.cancelled(request);
+        return this.#preprocessor.cancelled(request);
     }
 
     /**
@@ -94,19 +49,18 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.#conditional = conditional;
 
+        specs = specs ? specs : {};
         const {cache} = specs;
-        cache && (this.#cache = new CodeCache(this));
 
-        this.#processor = new Processor(
-            async request => await this._update(request),
-            response => this._processed(response)
-        );
+        const update = async request => await this._update(request);
+        const updated = () => this.updated;
+        this.#preprocessor = new Preprocessor(this, update, updated, {cache});
+
+        this.#outputs = new Outputs();
     }
 
     async _begin() {
-        const cached = await this.#cache?.load();
-        cached && this.hydrate(cached);
-        await this.#conditional.ready;
+        await Promise.all([this.#conditional.ready, this.#preprocessor.load()]);
     }
 
     /**
@@ -114,12 +68,12 @@ module.exports = class extends DynamicProcessor() {
      * @return {boolean}
      */
     get updated() {
-        return true;
+        return this.#preprocessor.loaded;
     }
 
     /**
-     * This method can be overridden if implementation requires asynchronous processing previous to the
-     * construction of the code or map properties
+     * This method can be overridden (optional) if implementation requires asynchronous processing
+     * previous to the construction of the code or map properties
      *
      * @param request
      * @return {Promise<void>}
@@ -130,15 +84,13 @@ module.exports = class extends DynamicProcessor() {
     }
 
     /**
-     * This method can be overridden if implementation requires asynchronous processing previous to the
-     * construction of the code or map properties
+     * This method should be overridden to generate the outputs
      *
-     * @param response
-     * @return {Promise<void>}
+     * @param hmr
      * @private
      */
-    _processed(response) {
-        void response;
+    _generate(hmr) {
+        throw new Error('This method should be overridden');
     }
 
     _process() {
@@ -148,22 +100,6 @@ module.exports = class extends DynamicProcessor() {
         this.#errors = [];
         this.#warnings = [];
 
-        this.#processor.invalidate();
-    }
-
-    hydrate(cached) {
-        const {hash, code, map, errors} = cached;
-        this.#hash = hash;
-        this.#code = code;
-        this.#map = map;
-        this.#errors = errors;
-    }
-
-    toJSON() {
-        const hash = this.#hash;
-        const code = this.#code;
-        const map = this.#map;
-        const errors = this.#errors;
-        return {hash, code, map, errors}
+        this.#preprocessor.invalidate();
     }
 }

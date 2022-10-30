@@ -41,6 +41,6 @@ module.exports = async function (url) {
     await js.ready;
 
     return js.valid ?
-        {content: js.code, statusCode: 200, contentType: 'application/javascript'} :
+        {content: js.code(), statusCode: 200, contentType: 'application/javascript'} :
         {content: 'Errors found processing resource', statusCode: 500, contentType: 'text/plain'};
 }

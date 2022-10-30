@@ -1,17 +1,17 @@
 const PendingPromise = require('../pending-promise');
 
 module.exports = class {
-    #update;
-    #processed;
+    #process;
+    #done;
 
     /**
      * Reprocessor constructor
-     * @param update {function} The _update method that is overridden in the consumer of the actual processor
-     * @param processed {function} Called after the _updated method is processed to process its response
+     * @param process {function: Promise<void>} The async process function to be re-executed on invalidation
+     * @param done {function} Called after process is completed
      */
-    constructor(update, processed) {
-        this.#update = update;
-        this.#processed = processed;
+    constructor(process, done) {
+        this.#process = process;
+        this.#done = done;
     }
 
     #processing = false;
@@ -51,7 +51,7 @@ module.exports = class {
             this.#processing = false;
             this.#processed = true;
             response = response ? response : {};
-            this.#processed(response);
+            this.#done(response);
 
             this.#promise.resolve();
         }
@@ -59,7 +59,7 @@ module.exports = class {
         const process = () => {
             request = this.#request = Date.now();
 
-            this.#update(request)
+            this.#process(request)
                 .then(done)
                 .catch(exc => {
                     console.log(exc.stack);
