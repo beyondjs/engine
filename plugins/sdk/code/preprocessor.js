@@ -17,10 +17,14 @@ module.exports = class extends Reprocessor {
 
     #code;
     #process;
-    #updated;
+    #hashes;
 
     get id() {
         return this.#code.id;
+    }
+
+    get updated() {
+        return this.#hashes.preprocessor === this.#hash;
     }
 
     async process() {
@@ -33,11 +37,11 @@ module.exports = class extends Reprocessor {
         this.#cache?.save();
     }
 
-    constructor(code, process, updated, specs) {
+    constructor(code, process, hashes, specs) {
         super();
         this.#code = code;
         this.#process = process;
-        this.#updated = updated;
+        this.#hashes = hashes;
 
         const {cache} = specs;
         cache && (this.#cache = new PreprocessedCodeCache(this));
@@ -53,7 +57,7 @@ module.exports = class extends Reprocessor {
         return new Promise((resolve, reject) => {
             this.#code.ready
                 .then(() => {
-                    if (this.#updated()) return;
+                    if (this.updated) return;
                     return super.ready;
                 })
                 .then(resolve)
