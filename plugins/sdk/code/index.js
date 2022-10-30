@@ -56,7 +56,7 @@ module.exports = class extends DynamicProcessor() {
         this.#preprocessor = specs.preprocessor && new Preprocessor(this, update, {cache});
 
         const generate = () => this._generate();
-        this.#outputs = new Outputs(this, generate);
+        this.#outputs = new Outputs(this, generate, {cache});
     }
 
     async _begin() {

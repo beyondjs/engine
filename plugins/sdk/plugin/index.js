@@ -52,7 +52,7 @@ module.exports = class extends DynamicProcessor() {
     constructor(name, module) {
         super();
         this.#module = module;
-        this.#id = `${name}/${module.id}`;
+        this.#id = `${module.id}//${name}`;
     }
 
     /**

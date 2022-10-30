@@ -9,7 +9,7 @@ module.exports = class extends Code {
         return 'js';
     }
 
-    _outputs() {
+    _generate() {
         return {code: 'console.log("hello world");'};
     }
 }

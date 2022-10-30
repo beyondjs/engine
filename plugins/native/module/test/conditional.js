@@ -7,8 +7,8 @@ module.exports = class extends Conditional {
         return this.#js;
     }
 
-    constructor() {
-        super();
+    constructor(...params) {
+        super(...params);
         this.#js = new JS(this);
     }
 }

@@ -38,9 +38,10 @@ module.exports = async function (url) {
 
     const conditional = pexport.conditional('browser');
     const {js} = conditional;
-    await js.ready;
+    await js.outputs.ready;
 
-    return js.valid ?
-        {content: js.code(), statusCode: 200, contentType: 'application/javascript'} :
+    const resource = js.outputs.get();
+    return resource.valid ?
+        {content: resource.code, statusCode: 200, contentType: 'application/javascript'} :
         {content: 'Errors found processing resource', statusCode: 500, contentType: 'text/plain'};
 }

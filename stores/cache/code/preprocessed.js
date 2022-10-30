@@ -50,7 +50,7 @@ module.exports = class {
 
     delete() {
         const {id} = this.#preprocessor;
-        const sentence = 'DELETE FROM code WHERE id=?';
+        const sentence = 'DELETE FROM preprocessed_code WHERE id=?';
 
         const exc = exc => console.log(`Error deleting preprocessed code from cache "${id}": ${exc.stack}`);
         this.#db.run(sentence, id).catch(exc);

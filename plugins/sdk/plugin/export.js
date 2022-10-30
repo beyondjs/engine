@@ -17,12 +17,18 @@ module.exports = class {
         return this.#data;
     }
 
+    #id;
+    get id() {
+        return this.#id;
+    }
+
     #conditionals = new Map();
 
     constructor(plugin, subpath, data) {
         this.#plugin = plugin;
         this.#subpath = subpath;
         this.#data = data;
+        this.#id = `${this.#plugin.id}//${subpath}`;
     }
 
     conditional(platform) {
