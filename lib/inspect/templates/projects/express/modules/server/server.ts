@@ -14,7 +14,7 @@ export class Server {
     }
 
     #start() {
-        try {
+        try {e
             this.#app = express();
             this.#app.use(express.json());
             this.#setHeader();
