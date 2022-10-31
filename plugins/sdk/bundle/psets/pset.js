@@ -14,6 +14,8 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#bundle;
     }
 
+    #config;
+
     #typecheck;
     get typecheck() {
         return this.#typecheck;
@@ -36,11 +38,21 @@ module.exports = class extends DynamicProcessor(Map) {
     constructor(bundle, typecheck) {
         super();
         this.#bundle = bundle;
+        this.#config = bundle.pexport.config;
         this.#typecheck = typecheck;
-        super.setup(new Map([['registry', {child: registry}]]));
+
+        super.setup(new Map([
+            ['registry', {child: registry}],
+            ['config', {child: this.#config}]
+        ]));
     }
 
     _process() {
+        // The config
+        // Check how to validate configuration
+        const config = this.#config;
+
+        return;
         let {valid, config} = this.#bundle;
         config = valid && config ? config : {};
 
