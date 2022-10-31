@@ -1,3 +1,5 @@
+const Config = require('./config');
+
 /**
  * Package export
  */
@@ -7,14 +9,11 @@ module.exports = class {
         return this.#plugin;
     }
 
+    #creator;
+
     #subpath;
     get subpath() {
         return this.#subpath();
-    }
-
-    #data;
-    get data() {
-        return this.#data;
     }
 
     #id;
@@ -24,18 +23,33 @@ module.exports = class {
 
     #conditionals = new Map();
 
-    constructor(plugin, subpath, data) {
+    #config;
+    get config() {
+        return this.#config;
+    }
+
+    constructor(plugin, subpath, creator) {
         this.#plugin = plugin;
+        this.#creator = creator;
         this.#subpath = subpath;
-        this.#data = data;
         this.#id = `${this.#plugin.id}//${subpath}`;
+
+        this.#config = new Config();
     }
 
     conditional(platform) {
         if (this.#conditionals.has(platform)) return this.#conditionals.get(platform);
 
-        const conditional = this.#plugin.conditional(this, platform);
+        const conditional = this.#creator.conditional(this, platform);
         this.#conditionals.set(platform, conditional);
         return conditional;
+    }
+
+    configure(config) {
+        this.#config.set(config);
+    }
+
+    destroy() {
+        this.#conditionals.forEach(conditional => conditional.destroy());
     }
 }

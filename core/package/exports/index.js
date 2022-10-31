@@ -18,7 +18,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _prepared(require) {
         this.#modules?.forEach(module => {
-            require(module.plugins) && module.plugins.forEach(plugin => require(plugin));
+            require(module.plugins) && module.plugins.forEach(({exports}) => require(exports));
         });
     }
 

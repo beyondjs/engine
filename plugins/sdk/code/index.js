@@ -16,6 +16,15 @@ module.exports = class extends DynamicProcessor() {
         return this.#conditional;
     }
 
+    get plugin() {
+        return this.#conditional.plugin;
+    }
+
+    #config;
+    get config() {
+        return this.#config.value;
+    }
+
     get id() {
         return `${this.#conditional.id}//${this.resource}`;
     }
@@ -48,6 +57,8 @@ module.exports = class extends DynamicProcessor() {
     constructor(conditional, specs) {
         super();
         this.#conditional = conditional;
+        this.#config = conditional.pexport.config;
+        super.setup(new Map([['config', {child: this.#config}]]));
 
         specs = specs ? specs : {};
         const {cache} = specs;

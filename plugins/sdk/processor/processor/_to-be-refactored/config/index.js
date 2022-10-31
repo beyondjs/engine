@@ -1,5 +1,5 @@
 /**
- * Process the configuration of the processor to do it friendly
+ * Process the configuration of the processor
  *
  * @param config {*} The configuration as it is in the module.json file
  * @param meta {*} The meta configuration of the processor

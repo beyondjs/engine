@@ -1,4 +1,4 @@
-const PExport = require('./export');
+const PExport = require('../');
 
 module.exports = class {
     #pexport;
@@ -30,5 +30,12 @@ module.exports = class {
         this.#pexport = pexport;
         this.#platform = platform;
         this.#id = `${this.#pexport.id}//${this.#platform}`;
+    }
+
+    #destroyed;
+
+    destroy() {
+        if (this.#destroyed) throw new Error('Conditional is already destroyed');
+        this.#destroyed = true;
     }
 }

@@ -9,9 +9,9 @@ module.exports = class extends DynamicProcessor(Map) {
         return 'pset';
     }
 
-    #conditional;
-    get conditional() {
-        return this.#conditional;
+    #bundle;
+    get bundle() {
+        return this.#bundle;
     }
 
     #typecheck;
@@ -33,15 +33,15 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#warnings;
     }
 
-    constructor(conditional, typecheck) {
+    constructor(bundle, typecheck) {
         super();
-        this.#conditional = conditional;
+        this.#bundle = bundle;
         this.#typecheck = typecheck;
         super.setup(new Map([['registry', {child: registry}]]));
     }
 
     _process() {
-        let {valid, config} = this.#conditional;
+        let {valid, config} = this.#bundle;
         config = valid && config ? config : {};
 
         const updated = new Map();

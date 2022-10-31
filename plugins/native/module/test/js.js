@@ -10,6 +10,8 @@ module.exports = class extends Code {
     }
 
     _generate() {
+        const {plugin} = this;
+        console.log('plugin test configuration:', plugin.properties.subpath, this.config);
         return {code: 'console.log("hello world");'};
     }
 }

@@ -6,7 +6,7 @@ module.exports = class extends Plugin {
         return 'test';
     }
 
-    conditional(pexport, platform) {
+    _conditional(pexport, platform) {
         return new Conditional(pexport, platform);
     }
 }

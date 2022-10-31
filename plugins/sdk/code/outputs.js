@@ -32,7 +32,7 @@ module.exports = class {
     }
 
     get ready() {
-        return this.#code.preprocessor?.ready;
+        return this.#code.preprocessor?.ready || this.#code.ready;
     }
 
     async load() {
@@ -77,6 +77,6 @@ module.exports = class {
     }
 
     toJSON() {
-        return this.#values.has(void 0) ? this.#values.get(void 0).toJSON() : void 0;
+        return this.#resources.has(void 0) ? this.#resources.get(void 0).toJSON() : void 0;
     }
 }

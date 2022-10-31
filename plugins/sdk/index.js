@@ -1,7 +1,8 @@
 exports.Plugin = require('./plugin');
-exports.Conditional = require('./plugin/conditional');
+exports.Conditional = require('./plugin/exports/export/conditional');
 exports.Code = require('./code');
 exports.Dependency = require('./dependencies/dependency');
+exports.Processor = require('./processor/processor');
 
 // exports.BundleCodeBase = require('./bundle-code/base');
 // exports.BundleJsCode = (require('./bundle-code/js'));
