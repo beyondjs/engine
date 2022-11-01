@@ -5,10 +5,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^16.11.7",
-    "@beyond-js/kernel": "^0.0.20"
+    "@beyond-js/kernel": "^0.1.0"
   },
   "devDependencies": {
-    "@beyond-js/backend": "^0.0.9"
+    "@types/node": "^16.11.7",
+    "@beyond-js/backend": "^0.1.0"
   }
 }

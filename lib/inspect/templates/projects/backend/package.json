@@ -5,6 +5,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@beyond-js/backend": "^0.0.9"
+    "@beyond-js/backend": "^0.1.0"
   }
 }

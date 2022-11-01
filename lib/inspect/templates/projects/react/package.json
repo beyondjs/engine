@@ -8,6 +8,6 @@
     "@beyond-js/react-widgets": "^18.18.1"
   },
   "devDependencies": {
-    "@beyond-js/backend": "^0.0.9"
+    "@beyond-js/backend": "^0.1.0"
   }
 }

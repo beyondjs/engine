@@ -5,7 +5,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@beyond-js/backend": "^0.0.9",
+    "@beyond-js/backend": "^0.1.0",
     "@beyond-js/react-widgets": "^18.18.1"
   }
 }
