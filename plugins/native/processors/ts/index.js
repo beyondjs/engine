@@ -1,18 +1,19 @@
-module.exports = {
-    name: 'ts',
-    Hashes: require('./processor/hashes'),
-    options: {
-        Options: require('./processor/options'),
-        file: 'tsconfig.json'
-    },
-    sources: {
-        extname: ['.ts', '.tsx']
-    },
-    Analyzer: require('./processor/analyzer'),
-    Dependencies: require('./processor/dependencies'),
-    packager: {
-        compiler: packager => require('./packager/compilers').get(packager),
-        declaration: packager => packager.compiler.is === 'tsc' && require('./packager/declaration'),
-        Js: require('./packager/code')
+const {Processor} = require('beyond/plugins/sdk');
+const Sources = require('./sources');
+
+module.exports = class extends Processor {
+    static get name() {
+        return 'ts';
+    }
+
+    #sources;
+    get sources() {
+        return this.#sources;
+    }
+
+    constructor(bundle, processors) {
+        super(bundle, processors, {});
+
+        this.#sources = new Sources(this, {hashes: false});
     }
 }

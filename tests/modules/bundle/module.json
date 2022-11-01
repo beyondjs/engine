@@ -1,0 +1,7 @@
+{
+  "plugin": "code",
+  "subpath": "bundle",
+  "ts": {
+    "files": "*"
+  }
+}

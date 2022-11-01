@@ -2,7 +2,11 @@ exports.Plugin = require('./plugin');
 exports.Conditional = require('./plugin/exports/export/conditional');
 exports.Code = require('./code');
 exports.Dependency = require('./dependencies/dependency');
-exports.Processor = require('./processor/processor');
+exports.ProcessorsSets = require('./processors/sets');
+exports.Processor = require('./processors/processor');
+exports.SourcesFile = require('./processors/sources/file');
+exports.Sources = require('./processors/sources');
+exports.SourcesHashes = require('./processors/sources/hashes');
 
 // exports.BundleCodeBase = require('./bundle-code/base');
 // exports.BundleJsCode = (require('./bundle-code/js'));

@@ -1,0 +1,77 @@
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+
+/**
+ * The files of an extension.
+ * Example: the "svelte" processor extends the "ts" processor.
+ * This object would have the "ts" preprocessed files of the "svelte" files.
+ */
+module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'processor.extender.extension.sources';
+    }
+
+    #extending;
+    get extending() {
+        return this.#extending;
+    }
+
+    #preprocessor;
+    get preprocessor() {
+        return this.#preprocessor;
+    }
+
+    get processor() {
+        return this.#preprocessor.processor;
+    }
+
+    get valid() {
+        return this.#preprocessor.valid;
+    }
+
+    #hashes;
+    get hashes() {
+        return this.#hashes;
+    }
+
+    #files = new Map();
+    get files() {
+        return this.#files;
+    }
+
+    /**
+     * Processor extension constructor
+     *
+     * @param extending {string} The name of the processor that is being extended
+     * @param preprocessor {object} The preprocessor of the files that extends others processors
+     */
+    constructor(extending, preprocessor) {
+        super();
+        this.#extending = extending;
+        this.#preprocessor = preprocessor;
+        this.#hashes = new (require('./hashes'))(this);
+
+        super.setup(new Map([['preprocessor', {child: preprocessor}]]));
+    }
+
+    _process() {
+        const {preprocessed} = this.#preprocessor;
+        const extending = this.#extending;
+
+        /**
+         * Create the source object
+         *
+         * @param sources {object} The files map
+         * @param file {string} The file to be set
+         * @param extensions {object} The preprocessed extensions of a source
+         * @return {object}
+         */
+        const createSource = (sources, file, extensions) => {
+            const extension = extensions.get(extending);
+            const source = extension && new (require('./source'))(extensions.source, extension);
+            source && sources.set(file, source);
+        }
+
+        this.#files.clear();
+        preprocessed.files.forEach((extensions, file) => createSource(this.#files, file, extensions));
+    }
+}

@@ -15,6 +15,10 @@ module.exports = class {
         return this.#pexport.plugin;
     }
 
+    get watcher() {
+        return this.plugin.module.pkg.watcher;
+    }
+
     get subpath() {
         return this.#pexport.subpath;
     }

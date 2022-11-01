@@ -9,6 +9,10 @@ module.exports = class {
         return this.#plugin;
     }
 
+    get module() {
+        return this.#plugin.module;
+    }
+
     #creator;
 
     #subpath;

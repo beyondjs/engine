@@ -1,0 +1,168 @@
+const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const ipc = require('beyond/utils/ipc');
+const equal = require('beyond/utils/equal');
+
+module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'bundler.processor.packager.code';
+    }
+
+    #packager;
+    get packager() {
+        return this.#packager;
+    }
+
+    get id() {
+        return this.#packager.id;
+    }
+
+    #extname;
+    get extname() {
+        return this.#extname;
+    }
+
+    #code;
+    get code() {
+        return this.#code;
+    }
+
+    #ims;
+    get ims() {
+        return this.#ims;
+    }
+
+    get compiler() {
+        return this.children.get('compiler')?.child;
+    }
+
+    get analyzer() {
+        return this.children.get('analyzer')?.child;
+    }
+
+    get files() {
+        return this.children.get('files')?.child;
+    }
+
+    #hashes;
+    get hashes() {
+        return this.#hashes;
+    }
+
+    get synchronized() {
+        return this.#hashes.synchronized;
+    }
+
+    get updated() {
+        return this.#hashes.updated;
+    }
+
+    _notify() {
+        const {name, specs} = this.#packager.processor;
+        const message = {
+            type: 'change',
+            bundle: specs.bundle.specifier,
+            extname: this.#extname,
+            processor: name
+        };
+        ipc.notify('processors', message);
+    }
+
+    #configured = false;
+    get configured() {
+        return this.#configured;
+    }
+
+    #config;
+    get config() {
+        return this.#config;
+    }
+
+    #diagnostics;
+    get diagnostics() {
+        return this.#diagnostics;
+    }
+
+    get valid() {
+        return this.diagnostics.valid;
+    }
+
+    constructor(packager, extname) {
+        super();
+        this.#packager = packager;
+        this.#extname = extname;
+
+        this.notifyOnFirst = true;
+
+        const children = [];
+
+        // The children can be the compiler if it exists, otherwise it could be the analyzer if it exists,
+        // or the processor sources
+        const {processor: {analyzer, files}, compiler} = packager;
+        if (compiler) {
+            children.push(['compiler', {'child': compiler}]);
+        }
+        else if (analyzer) {
+            children.push(['analyzer', {'child': analyzer}]);
+        }
+        else {
+            children.push(['files', {'child': files}]);
+        }
+
+        super.setup(new Map(children));
+        this.#hashes = new (require('./hashes'))(this);
+    }
+
+    /**
+     * Create the internal module id based on the relative file of it
+     * @param filename {string} The relative path of the internal module
+     * @return {string}
+     */
+    createImID(filename) {
+        let id = filename.replace(/\\/g, '/');
+        id = `./${id}`;
+
+        const extensions = ['.ts', '.map', '.d.ts', '.js', '.tsx'];
+        for (const ext of extensions) {
+            if (id.endsWith(ext)) {
+                return id.substr(0, id.length - ext.length)
+            }
+        }
+        return id;
+    }
+
+    _prepared(require) {
+        if (!this.#configured) return;
+        this.files?.forEach(source => require(source));
+    }
+
+    _build(diagnostics) {
+        void (diagnostics);
+        throw new Error('Method must be overridden');
+    }
+
+    _process() {
+        const {compiler} = this.#packager;
+        if (compiler && !compiler.valid) {
+            this.#hashes.update();
+            this.#diagnostics = compiler.diagnostics;
+            return;
+        }
+
+        const diagnostics = this.#diagnostics = new (require('./diagnostics'))();
+        const built = this._build(diagnostics);
+
+        const {code, ims} = built ? built : {};
+        this.#code = code;
+        this.#ims = ims;
+
+        this.#hashes.update();
+    }
+
+    configure(config) {
+        if (equal(config, this.#config)) return;
+
+        this.#config = config;
+        this.#configured = true;
+        this._invalidate();
+    }
+}
