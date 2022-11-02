@@ -1,28 +1,18 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const Preprocessor = require('./preprocessor');
-const Outputs = require('./outputs');
+const Generator = require('./generator');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'code';
+        return 'processor.code';
     }
 
     get resource() {
         throw new Error('This property must be overridden, ex: "js", "css", "types"');
     }
 
-    #conditional;
-    get conditional() {
-        return this.#conditional;
-    }
-
-    get plugin() {
-        return this.#conditional.plugin;
-    }
-
-    #config;
-    get config() {
-        return this.#config.value;
+    #processor;
+    get processor() {
+        return this.#processor;
     }
 
     #id;
@@ -30,13 +20,13 @@ module.exports = class extends DynamicProcessor() {
         return this.#id;
     }
 
-    #preprocessor;
-    get preprocessor() {
-        return this.#preprocessor;
+    #generator;
+    get generator() {
+        return this.#generator;
     }
 
     get data() {
-        return this.#preprocessor?.data;
+        return this.#generator?.data;
     }
 
     #outputs;
@@ -50,38 +40,36 @@ module.exports = class extends DynamicProcessor() {
      * @return {boolean}
      */
     cancelled(request) {
-        return this.#preprocessor?.cancelled(request);
+        return this.#generator?.cancelled(request);
     }
 
     /**
      * Code constructor
      *
-     * @param conditional {*}
-     * @param specs {{cache: boolean, preprocessor: boolean}} Cache enabled or not
+     * @param processor {*}
+     * @param specs {{cache: boolean, generator: boolean}} Cache enabled or not
      */
-    constructor(conditional, specs) {
+    constructor(processor, specs) {
         super();
-        this.#conditional = conditional;
-        this.#config = conditional.pexport.config;
-        this.#id = `${conditional.id}//${this.resource}`;
-        super.setup(new Map([['config', {child: this.#config}]]));
+        this.#processor = processor;
+        this.#id = `${processor.id}//${this.resource}`;
 
         specs = specs ? specs : {};
         const {cache} = specs;
 
         const update = async request => await this._update(request);
-        this.#preprocessor = specs.preprocessor && new Preprocessor(this, update, {cache});
+        this.#generator = specs.generator && new Generator(this, update, {cache});
 
         const generate = () => this._generate();
         this.#outputs = new Outputs(this, generate, {cache});
     }
 
     async _begin() {
-        await this.#conditional.ready;
+        await this.#processor.ready;
         await this.#outputs.load();
 
         if (this.#outputs.updated) return;
-        await this.#preprocessor?.load();
+        await this.#generator?.load();
     }
 
     /**
@@ -115,7 +103,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _process() {
-        !this.#preprocessor?.updated && this.#preprocessor?.invalidate();
+        !this.#generator?.updated && this.#generator?.invalidate();
         !this.#outputs.updated && this.#outputs.clear();
 
         return !this.#outputs.updated;

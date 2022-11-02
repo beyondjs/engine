@@ -33,7 +33,6 @@ module.exports = class extends DynamicProcessor() {
 
     constructor(container, specs) {
         super();
-
         this.#container = container;
         this.#specs = specs;
     }
