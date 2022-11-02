@@ -45,10 +45,10 @@ module.exports = new class {
         }
 
         await this.#run('CREATE TABLE IF NOT EXISTS compilations (' +
-            'packager_id TEXT NOT NULL, ' +
+            'compiler_id TEXT NOT NULL, ' +
             'data TEXT NOT NULL);');
 
-        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS packager_id_index on compilations (packager_id);');
+        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS compiler_id_index on compilations (compiler_id);');
         this.#ready.resolve();
     }
 }

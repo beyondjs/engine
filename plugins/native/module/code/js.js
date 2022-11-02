@@ -4,12 +4,16 @@ module.exports = class extends Code {
     constructor(conditional) {
         super(conditional, {cache: true});
 
-        const processors = conditional.processorsSets.get();
+        const {processors} = conditional;
         super.setup(new Map([['processors', {child: processors}]]));
     }
 
     get resource() {
         return 'js';
+    }
+
+    get hash() {
+        return 0;
     }
 
     _generate() {

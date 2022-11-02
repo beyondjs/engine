@@ -28,9 +28,11 @@ module.exports = class extends require('./index') {
             const built = this._buildSource(compiled);
             if (!built) return;
 
-            if (!built.errors && !built.im && !built.ims) throw new Error('Invalid built source received from build function. ' +
-                'Build function must return an object with the property errors or the property im set, ' +
-                'or can also return undefined');
+            if (!built.errors && !built.im && !built.ims) {
+                throw new Error('Invalid built source received from build function. ' +
+                    'Build function must return an object with the property errors or the property im set, ' +
+                    'or can also return undefined');
+            }
 
             if (built.errors) {
                 diagnostics.files.set(file, built.errors);

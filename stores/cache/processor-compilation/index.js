@@ -7,11 +7,11 @@ module.exports = class {
     }
 
     async load() {
-        const {id} = this.#compiler.packager;
+        const {id} = this.#compiler;
 
         let row;
         try {
-            const select = 'SELECT * FROM compilations WHERE packager_id=?';
+            const select = 'SELECT * FROM compilations WHERE compiler_id=?';
             row = await this.#db.get(select, id);
         }
         catch (exc) {
@@ -30,12 +30,12 @@ module.exports = class {
     }
 
     async save() {
-        const {id} = this.#compiler.packager;
+        const {id} = this.#compiler;
 
         try {
             const data = JSON.stringify(this.#compiler);
             await this.#db.run('INSERT OR REPLACE INTO compilations(' +
-                'packager_id, data) VALUES(?, ?)',
+                'compiler_id, data) VALUES(?, ?)',
                 [id, data]);
         }
         catch (exc) {
@@ -44,10 +44,10 @@ module.exports = class {
     }
 
     async delete() {
-        const {id} = this.#compiler.packager;
+        const {id} = this.#compiler;
 
         try {
-            const sentence = 'DELETE FROM compilations WHERE processor_id=?';
+            const sentence = 'DELETE FROM compilations WHERE compiler_id=?';
             await this.#db.run(sentence, id);
         }
         catch (exc) {

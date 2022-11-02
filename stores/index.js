@@ -5,7 +5,7 @@ exports.PreprocessedCodeCache = require('./cache/code/preprocessed');
 exports.GeneratedCodeCache = require('./cache/code/generated');
 exports.BundleTypesCache = require('./cache/bundle-types');
 exports.ExtenderPreprocessorCache = require('./cache/extenders-preprocessors');
-exports.PackagerCompilerCache = require('./cache/packagers-compilers');
+exports.ProcessorCompilerCache = require('./cache/processor-compilation');
 exports.TransversalsCodeCache = require('./cache/transversals-code');
 
 exports.dependencies = new (require('./dependencies'))();

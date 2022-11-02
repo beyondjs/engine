@@ -9,6 +9,14 @@ module.exports = class extends Code {
         return 'js';
     }
 
+    /**
+     * Because the generated code is always the same, the hash also always stays the same
+     * @return {number}
+     */
+    get hash() {
+        return 0;
+    }
+
     _generate() {
         const {plugin} = this;
         console.log('plugin test configuration:', plugin.properties.subpath, this.config);

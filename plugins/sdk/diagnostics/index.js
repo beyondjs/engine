@@ -36,9 +36,8 @@ module.exports = class {
         return !invalid;
     }
 
-    constructor(data) {
-        // To verify that there is no legacy code that should be removed
-        if (data) throw new Error('Invalid parameters');
+    constructor() {
+        if (arguments.length) throw new Error('Invalid parameters');
     }
 
     // Set and hydrate as two different methods just because the interface could change in the future

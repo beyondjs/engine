@@ -25,13 +25,18 @@ module.exports = class extends DynamicProcessor() {
         return this.#config.value;
     }
 
+    #id;
     get id() {
-        return `${this.#conditional.id}//${this.resource}`;
+        return this.#id;
     }
 
     #preprocessor;
     get preprocessor() {
         return this.#preprocessor;
+    }
+
+    data() {
+        return this.#preprocessor?.data;
     }
 
     #outputs;
@@ -58,6 +63,7 @@ module.exports = class extends DynamicProcessor() {
         super();
         this.#conditional = conditional;
         this.#config = conditional.pexport.config;
+        this.#id = `${conditional.id}//${this.resource}`;
         super.setup(new Map([['config', {child: this.#config}]]));
 
         specs = specs ? specs : {};
@@ -83,7 +89,7 @@ module.exports = class extends DynamicProcessor() {
      * @return {number}
      */
     get hash() {
-        return 0;
+        throw new Error('Property .hash must be overridden');
     }
 
     /**

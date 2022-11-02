@@ -6,7 +6,7 @@ const {processors: registry} = require('beyond/plugins/registry');
  */
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'pset';
+        return 'processors-set';
     }
 
     #conditional;
@@ -14,29 +14,9 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#conditional;
     }
 
-    #typecheck;
-    get typecheck() {
-        return this.#typecheck;
-    }
-
-    #errors = [];
-    get errors() {
-        return this.#errors;
-    }
-
-    get valid() {
-        return !this.#errors.length;
-    }
-
-    #warnings = [];
-    get warnings() {
-        return this.#warnings;
-    }
-
-    constructor(conditional, typecheck) {
+    constructor(conditional) {
         super();
         this.#conditional = conditional;
-        this.#typecheck = typecheck;
 
         super.setup(new Map([
             ['registry', {child: registry}],

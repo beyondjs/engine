@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 module.exports = class extends DynamicProcessor() {
     #container;
+    /**
+     * The processors set container of the current processor
+     * @return {*}
+     */
     get container() {
         return this.#container;
     }
@@ -21,6 +25,10 @@ module.exports = class extends DynamicProcessor() {
 
     get module() {
         return this.conditional.pexport.module;
+    }
+
+    get hash() {
+        throw new Error('Property .hash must be overridden');
     }
 
     constructor(container, specs) {

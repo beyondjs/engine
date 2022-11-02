@@ -1,11 +1,11 @@
-const {Conditional, ProcessorsSets} = require('beyond/plugins/sdk');
+const {Conditional, ProcessorsSet} = require('beyond/plugins/sdk');
 const Config = require('./config');
 const JS = require('./js');
 
 module.exports = class extends Conditional {
-    #processorsSets;
-    get processorsSets() {
-        return this.#processorsSets;
+    #processors;
+    get processors() {
+        return this.#processors;
     }
 
     #config;
@@ -21,7 +21,7 @@ module.exports = class extends Conditional {
     constructor(...params) {
         super(...params);
         this.#config = new Config(this);
-        this.#processorsSets = new ProcessorsSets(this);
+        this.#processors = new ProcessorsSet(this);
         this.#js = new JS(this);
     }
 }

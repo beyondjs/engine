@@ -1,5 +1,5 @@
 const Reprocessor = require('beyond/utils/reprocessor');
-const {PreprocessedCodeCache} = require('beyond/stores');
+const {ProcessorCompilerCache} = require('beyond/stores');
 
 module.exports = class extends Reprocessor {
     #cache;
@@ -15,33 +15,33 @@ module.exports = class extends Reprocessor {
         return this.#hash;
     }
 
-    #code;
-    #process;
+    #compiler;
+    #compile;
 
     /**
      * Required by the cache to identify the record
      * @return {string}
      */
     get id() {
-        return this.#code.id;
+        return this.#compiler.id;
     }
 
     get updated() {
         return this.#code.hash === this.#hash;
     }
 
-    constructor(code, process, specs) {
+    constructor(compiler, compile, specs) {
         super();
-        this.#code = code;
-        this.#process = process;
+        this.#compiler = compiler;
+        this.#compile = compile;
 
         const {cache} = specs;
-        cache && (this.#cache = new PreprocessedCodeCache(this));
+        cache && (this.#cache = new ProcessorCompilerCache(this));
     }
 
     get ready() {
         return new Promise((resolve, reject) => {
-            this.#code.ready
+            this.#compiler.ready
                 .then(() => {
                     if (this.updated) return;
                     return super.ready;
@@ -52,11 +52,11 @@ module.exports = class extends Reprocessor {
     }
 
     async process(request) {
-        const processed = await this.#process(request);
+        const processed = await this.#compile(request);
         if (this.cancelled(request)) return;
 
         this.#data = processed;
-        this.#hash = this.#code.hash;
+        this.#hash = this.#compiler.hash;
         this.#cache?.save();
     }
 
