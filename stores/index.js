@@ -1,11 +1,13 @@
 exports.DependenciesTreeCache = require('./cache/dependencies-tree');
-exports.ExternalsRegistryCache = require('./cache/externals-registry');
-exports.ProcessorAnalyzerCache = require('./cache/processors-analyzers');
-exports.PreprocessedCodeCache = require('./cache/code/preprocessed');
-exports.GeneratedCodeCache = require('./cache/code/generated');
-exports.BundleTypesCache = require('./cache/bundle-types');
-exports.ExtenderPreprocessorCache = require('./cache/extenders-preprocessors');
+exports.ConditionalCodeCache = require('./cache/code/generated');
 exports.ProcessorCompilerCache = require('./cache/processor-compilation');
-exports.TransversalsCodeCache = require('./cache/transversals-code');
+exports.ProcessorCodeCache = require('./cache/processor-code');
+
+
+// exports.ExternalsRegistryCache = require('./cache/externals-registry');
+// exports.ProcessorAnalyzerCache = require('./cache/processors-analyzers');
+// exports.BundleTypesCache = require('./cache/bundle-types');
+// exports.ExtenderPreprocessorCache = require('./cache/extenders-preprocessors');
+// exports.TransversalsCodeCache = require('./cache/transversals-code');
 
 exports.dependencies = new (require('./dependencies'))();

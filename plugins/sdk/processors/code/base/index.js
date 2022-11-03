@@ -1,5 +1,6 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const Generator = require('./generator');
+const Preprocessor = require('./preprocessor');
+const Outputs = require('./outputs');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
@@ -20,13 +21,13 @@ module.exports = class extends DynamicProcessor() {
         return this.#id;
     }
 
-    #generator;
-    get generator() {
-        return this.#generator;
+    #preprocessor;
+    get preprocessor() {
+        return this.#preprocessor;
     }
 
     get data() {
-        return this.#generator?.data;
+        return this.#preprocessor?.data;
     }
 
     #outputs;
@@ -40,14 +41,14 @@ module.exports = class extends DynamicProcessor() {
      * @return {boolean}
      */
     cancelled(request) {
-        return this.#generator?.cancelled(request);
+        return this.#preprocessor?.cancelled(request);
     }
 
     /**
      * Code constructor
      *
      * @param processor {*}
-     * @param specs {{cache: boolean, generator: boolean}} Cache enabled or not
+     * @param specs {{cache: boolean, preprocessor: boolean}} Cache enabled or not
      */
     constructor(processor, specs) {
         super();
@@ -58,7 +59,7 @@ module.exports = class extends DynamicProcessor() {
         const {cache} = specs;
 
         const update = async request => await this._update(request);
-        this.#generator = specs.generator && new Generator(this, update, {cache});
+        this.#preprocessor = specs.preprocessor && new Preprocessor(this, update);
 
         const generate = () => this._generate();
         this.#outputs = new Outputs(this, generate, {cache});
@@ -67,9 +68,6 @@ module.exports = class extends DynamicProcessor() {
     async _begin() {
         await this.#processor.ready;
         await this.#outputs.load();
-
-        if (this.#outputs.updated) return;
-        await this.#generator?.load();
     }
 
     /**
@@ -94,16 +92,14 @@ module.exports = class extends DynamicProcessor() {
 
     /**
      * This method should be overridden to generate the outputs
-     *
-     * @param hmr
      * @private
      */
-    _generate(hmr) {
+    _generate() {
         throw new Error('This method should be overridden');
     }
 
     _process() {
-        !this.#generator?.updated && this.#generator?.invalidate();
+        !this.#preprocessor?.updated && this.#preprocessor?.invalidate();
         !this.#outputs.updated && this.#outputs.clear();
 
         return !this.#outputs.updated;

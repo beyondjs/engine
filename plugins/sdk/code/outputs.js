@@ -1,5 +1,5 @@
-const {GeneratedCodeCache} = require('beyond/stores');
 const Resource = require('./resource');
+const {ConditionalCodeCache} = require('beyond/stores');
 
 module.exports = class {
     #cache;
@@ -28,7 +28,7 @@ module.exports = class {
         this.#generate = generate;
 
         const {cache} = specs;
-        cache && (this.#cache = new GeneratedCodeCache(this));
+        cache && (this.#cache = new ConditionalCodeCache(this));
     }
 
     get ready() {

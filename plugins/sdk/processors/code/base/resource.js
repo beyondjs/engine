@@ -9,29 +9,13 @@ module.exports = class {
         return this.#map;
     }
 
-    #errors;
-    get errors() {
-        return this.#errors;
-    }
-
-    #warnings;
-    get warnings() {
-        return this.#warnings;
-    }
-
-    get valid() {
-        return !this.#errors.length;
-    }
-
-    constructor({code, map, errors, warnings}) {
+    constructor({code, map}) {
         this.#code = code;
         this.#map = map;
-        this.#errors = errors ? errors : [];
-        this.#warnings = warnings ? warnings : [];
     }
 
     toJSON() {
-        const {code, map, errors, warnings} = this;
-        return {code, map, errors, warnings};
+        const {code, map} = this;
+        return {code, map};
     }
 }

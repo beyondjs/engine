@@ -4,6 +4,7 @@ exports.Code = require('./code');
 exports.Dependency = require('./dependencies/dependency');
 exports.ProcessorsSet = require('./processors/set');
 exports.Processor = require('./processors/processor');
+exports.ProcessorCode = require('./processors/code/base');
 exports.SourcesFile = require('./processors/sources/file');
 exports.Sources = require('./processors/sources');
 exports.SourcesHashes = require('./processors/sources/hashes');
