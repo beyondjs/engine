@@ -3,6 +3,10 @@ const Sources = require('./sources');
 const JS = require('./js');
 
 module.exports = class extends Processor {
+    get dp() {
+        return 'processor-ts';
+    }
+
     static get name() {
         return 'ts';
     }
@@ -10,6 +14,10 @@ module.exports = class extends Processor {
     #sources;
     get sources() {
         return this.#sources;
+    }
+
+    get hash() {
+        return 0;
     }
 
     #compilers = new Map();

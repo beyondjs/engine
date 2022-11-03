@@ -1,5 +1,4 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const Preprocessor = require('./preprocessor');
 const Outputs = require('./outputs');
 
 module.exports = class extends DynamicProcessor() {
@@ -21,15 +20,6 @@ module.exports = class extends DynamicProcessor() {
         return this.#id;
     }
 
-    #preprocessor;
-    get preprocessor() {
-        return this.#preprocessor;
-    }
-
-    get data() {
-        return this.#preprocessor?.data;
-    }
-
     #outputs;
     get outputs() {
         return this.#outputs;
@@ -41,14 +31,14 @@ module.exports = class extends DynamicProcessor() {
      * @return {boolean}
      */
     cancelled(request) {
-        return this.#preprocessor?.cancelled(request);
+        return this.#outputs?.cancelled(request);
     }
 
     /**
      * Code constructor
      *
      * @param processor {*}
-     * @param specs {{cache: boolean, preprocessor: boolean}} Cache enabled or not
+     * @param specs {{cache: boolean}} Cache enabled or not
      */
     constructor(processor, specs) {
         super();
@@ -58,11 +48,8 @@ module.exports = class extends DynamicProcessor() {
         specs = specs ? specs : {};
         const {cache} = specs;
 
-        const update = async request => await this._update(request);
-        this.#preprocessor = specs.preprocessor && new Preprocessor(this, update);
-
-        const generate = () => this._generate();
-        this.#outputs = new Outputs(this, generate, {cache});
+        const build = async request => await this._build(request);
+        this.#outputs = new Outputs(this, build, {cache});
     }
 
     async _begin() {
@@ -86,22 +73,12 @@ module.exports = class extends DynamicProcessor() {
      * @return {Promise<void>}
      * @private
      */
-    async _update(request) {
+    async _build(request) {
         void request;
     }
 
-    /**
-     * This method should be overridden to generate the outputs
-     * @private
-     */
-    _generate() {
-        throw new Error('This method should be overridden');
-    }
-
     _process() {
-        !this.#preprocessor?.updated && this.#preprocessor?.invalidate();
         !this.#outputs.updated && this.#outputs.clear();
-
         return !this.#outputs.updated;
     }
 }

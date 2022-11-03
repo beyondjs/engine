@@ -13,7 +13,7 @@ module.exports = class {
     }
 
     #code;
-    #generate;
+    #build;
 
     get id() {
         return this.#code.id;
@@ -23,9 +23,9 @@ module.exports = class {
         return this.#code.hash === this.#hash;
     }
 
-    constructor(code, generate, specs) {
+    constructor(code, build, specs) {
         this.#code = code;
-        this.#generate = generate;
+        this.#build = build;
 
         const {cache} = specs;
         cache && (this.#cache = new ConditionalCodeCache(this));
@@ -44,7 +44,7 @@ module.exports = class {
     get(hmr) {
         if (this.#resources.has(hmr)) return this.#resources.get(hmr);
 
-        const values = this.#generate(hmr);
+        const values = this.#build(hmr);
         if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
 
         const resource = new Resource(values);

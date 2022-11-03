@@ -45,7 +45,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     /**
-     * It allows to the _update method to know if its execution has been cancelled or not
+     * It allows to the _preprocess method to know if its execution has been cancelled or not
      * @param request
      * @return {boolean}
      */
@@ -69,11 +69,11 @@ module.exports = class extends DynamicProcessor() {
         specs = specs ? specs : {};
         const {cache} = specs;
 
-        const update = async request => await this._update(request);
-        this.#preprocessor = specs.preprocessor && new Preprocessor(this, update, {cache});
+        const preprocess = async request => await this._preprocess(request);
+        this.#preprocessor = specs.preprocessor && new Preprocessor(this, preprocess, {cache});
 
-        const generate = () => this._generate();
-        this.#outputs = new Outputs(this, generate, {cache});
+        const build = () => this._build();
+        this.#outputs = new Outputs(this, build, {cache});
     }
 
     async _begin() {
@@ -100,17 +100,17 @@ module.exports = class extends DynamicProcessor() {
      * @return {Promise<void>}
      * @private
      */
-    async _update(request) {
+    async _preprocess(request) {
         void request;
     }
 
     /**
-     * This method should be overridden to generate the outputs
+     * This method should be overridden to build the outputs
      *
      * @param hmr
      * @private
      */
-    _generate(hmr) {
+    _build(hmr) {
         throw new Error('This method should be overridden');
     }
 

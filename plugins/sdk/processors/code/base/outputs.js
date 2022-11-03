@@ -1,19 +1,24 @@
-const Resource = require('./resource');
+const Reprocessor = require('beyond/utils/reprocessor');
 const {ProcessorCodeCache} = require('beyond/stores');
+const Resource = require('./resource');
 
-module.exports = class {
+module.exports = class extends Reprocessor {
+    #code;
+    /**
+     * The pointer to the private method _build that is located in the code class
+     */
+    #build;
+
     #cache;
     #loaded = false;
 
     #ims;
     get ims() {
-        this.#process();
         return this.#ims;
     }
 
     #script;
     get script() {
-        this.#process();
         return this.#script;
     }
 
@@ -22,12 +27,44 @@ module.exports = class {
         return this.#hash;
     }
 
-    #code;
+    get updated() {
+        return this.#code.hash === this.#hash;
+    }
+
     /**
-     * The pointer to the private method _generate that is located in the code class
+     * Required by the cache to identify the record
+     * @return {number}
      */
-    #generate;
-    #processed;
+    get id() {
+        return this.#code.id;
+    }
+
+    get ready() {
+        return new Promise((resolve, reject) => {
+            this.#code.ready
+                .then(() => {
+                    if (this.updated) return;
+                    return super.ready;
+                })
+                .then(resolve)
+                .catch(exc => reject(exc));
+        });
+    }
+
+    constructor(code, build, specs) {
+        super();
+        this.#code = code;
+        this.#build = build;
+
+        const {cache} = specs;
+        cache && (this.#cache = new ProcessorCodeCache(this));
+    }
+
+    async load() {
+        const cached = await this.#cache?.load();
+        cached && this.hydrate(cached);
+        this.#loaded = !!cached;
+    }
 
     #resource(item) {
         void this;
@@ -36,9 +73,10 @@ module.exports = class {
         return new Resource({code, map});
     }
 
-    #process() {
-        if (this.#processed) return;
-        const values = this.#generate();
+    async process(request) {
+        const values = this.#build();
+        if (this.cancelled(request)) return;
+
         if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
 
         this.#script = (() => {
@@ -55,32 +93,8 @@ module.exports = class {
             values.ims.forEach((im, key) => ims.set(key, this.#resource(im)));
             return ims;
         })();
-    }
 
-    get id() {
-        return this.#code.id;
-    }
-
-    get updated() {
-        return this.#code.hash === this.#hash;
-    }
-
-    constructor(code, generate, specs) {
-        this.#code = code;
-        this.#generate = generate;
-
-        const {cache} = specs;
-        cache && (this.#cache = new ProcessorCodeCache(this));
-    }
-
-    get ready() {
-        return this.#code.preprocessor?.ready || this.#code.ready;
-    }
-
-    async load() {
-        const cached = await this.#cache?.load();
-        cached && this.hydrate(cached);
-        this.#loaded = !!cached;
+        this.#hash = this.#code.hash;
     }
 
     clear() {

@@ -1,5 +1,5 @@
 const {Plugin} = require('beyond/plugins/sdk');
-const Bundle = require('./bundle');
+const Conditional = require('./conditional');
 
 module.exports = class extends Plugin {
     static get name() {
@@ -7,6 +7,6 @@ module.exports = class extends Plugin {
     }
 
     _conditional(pexport, platform) {
-        return new Bundle(pexport, platform);
+        return new Conditional(pexport, platform);
     }
 }

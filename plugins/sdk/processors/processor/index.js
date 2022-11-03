@@ -1,6 +1,10 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 
 module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'processor';
+    }
+
     #container;
     /**
      * The processors set container of the current processor
