@@ -1,6 +1,6 @@
 exports.DependenciesTreeCache = require('./cache/dependencies-tree');
 exports.ConditionalCodeCache = require('./cache/conditional-code');
-exports.ProcessorCompilerCache = require('./cache/processor-compilation');
+exports.ProcessorCompilerCache = require('./cache/processor-compiler');
 exports.ProcessorCodeCache = require('./cache/processor-code');
 
 

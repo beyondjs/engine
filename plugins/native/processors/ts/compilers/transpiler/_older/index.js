@@ -4,11 +4,7 @@ const {ProcessorSinglyCompiler} = require('beyond/plugins/helpers');
 
 module.exports = class extends ProcessorSinglyCompiler {
     get dp() {
-        return 'ts.compiler.transpiler';
-    }
-
-    get is() {
-        return 'transpiler';
+        return 'ts-compiler-transpiler';
     }
 
     #CompiledSource = require('../source');

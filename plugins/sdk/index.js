@@ -1,12 +1,17 @@
-exports.Plugin = require('./plugin');
-exports.Conditional = require('./plugin/exports/export/conditional');
-exports.Code = require('./code');
 exports.Dependency = require('./dependencies/dependency');
+
+exports.Plugin = require('./plugin');
+
+exports.Conditional = require('./conditional/conditional');
+exports.ConditionalCode = require('./conditional/code');
+
 exports.ProcessorsSet = require('./processors/set');
 exports.Processor = require('./processors/processor');
-exports.ProcessorCode = require('./processors/code/base');
-exports.SourcesFile = require('./processors/sources/file');
+exports.ProcessorCode = require('./processors/code');
+exports.ProcessorCompiler = require('./processors/compiler');
+
 exports.Sources = require('./processors/sources');
+exports.SourcesFile = require('./processors/sources/file');
 exports.SourcesHashes = require('./processors/sources/hashes');
 
 // exports.BundleCodeBase = require('./bundle-code/base');

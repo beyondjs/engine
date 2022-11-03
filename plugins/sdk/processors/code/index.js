@@ -57,23 +57,12 @@ module.exports = class extends DynamicProcessor() {
         await this.#outputs.load();
     }
 
-    /**
-     * Expected to be overridden
-     * @return {number}
-     */
     get hash() {
         throw new Error('Property ".hash" must be overridden');
     }
 
-    /**
-     * This method can be overridden (optional) if implementation requires asynchronous processing
-     * previous to the construction of the code or map properties
-     *
-     * @param request
-     * @return {Promise<void>}
-     * @private
-     */
     async _build(request) {
+        void request;
         throw new Error('Method "._build(request)" must be overridden');
     }
 

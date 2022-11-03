@@ -1,4 +1,4 @@
-const PExport = require('../');
+const PExport = require('../../plugin/exports/export');
 
 module.exports = class {
     #pexport;

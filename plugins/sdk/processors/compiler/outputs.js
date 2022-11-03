@@ -2,6 +2,12 @@ const Reprocessor = require('beyond/utils/reprocessor');
 const {ProcessorCompilerCache} = require('beyond/stores');
 
 module.exports = class extends Reprocessor {
+    #compiler;
+    /**
+     * The pointer to the private method _compile that is located in the compiler class
+     */
+    #compile;
+
     #cache;
     #loaded = false;
 
@@ -15,8 +21,9 @@ module.exports = class extends Reprocessor {
         return this.#hash;
     }
 
-    #compiler;
-    #compile;
+    get updated() {
+        return this.#compiler.hash === this.#hash;
+    }
 
     /**
      * Required by the cache to identify the record
@@ -24,19 +31,6 @@ module.exports = class extends Reprocessor {
      */
     get id() {
         return this.#compiler.id;
-    }
-
-    get updated() {
-        return this.#code.hash === this.#hash;
-    }
-
-    constructor(compiler, compile, specs) {
-        super();
-        this.#compiler = compiler;
-        this.#compile = compile;
-
-        const {cache} = specs;
-        cache && (this.#cache = new ProcessorCompilerCache(this));
     }
 
     get ready() {
@@ -51,6 +45,21 @@ module.exports = class extends Reprocessor {
         });
     }
 
+    constructor(compiler, compile, specs) {
+        super();
+        this.#compiler = compiler;
+        this.#compile = compile;
+
+        const {cache} = specs;
+        cache && (this.#cache = new ProcessorCompilerCache(this));
+    }
+
+    async load() {
+        const cached = await this.#cache?.load();
+        cached && this.hydrate(cached);
+        this.#loaded = !!cached;
+    }
+
     async _process(request) {
         const processed = await this.#compile(request);
         if (this.cancelled(request)) return;
@@ -60,10 +69,8 @@ module.exports = class extends Reprocessor {
         this.#cache?.save();
     }
 
-    async load() {
-        const cached = await this.#cache?.load();
-        cached && this.hydrate(cached);
-        this.#loaded = !!cached;
+    clear() {
+        this.#data = void 0;
     }
 
     hydrate(cached) {

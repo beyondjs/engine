@@ -1,6 +1,6 @@
-const {Code} = require('beyond/plugins/sdk');
+const {ConditionalCode} = require('beyond/plugins/sdk');
 
-module.exports = class extends Code {
+module.exports = class extends ConditionalCode {
     constructor(conditional) {
         super(conditional, {cache: true});
     }

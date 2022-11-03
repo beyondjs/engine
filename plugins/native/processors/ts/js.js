@@ -9,7 +9,11 @@ module.exports = class extends ProcessorCode {
         return this.processor.hash;
     }
 
-    _build() {
+    async _build(request) {
+        const compiler = this.processor.compilers.get('default');
+        await compiler.outputs.ready;
+        if (this.cancelled(request)) return;
+
         return {script: `console.log('The "ts" processor!');`}
     }
 }

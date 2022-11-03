@@ -1,5 +1,6 @@
 const {Processor} = require('beyond/plugins/sdk');
 const Sources = require('./sources');
+const Compilers = require('./compilers');
 const JS = require('./js');
 
 module.exports = class extends Processor {
@@ -20,7 +21,7 @@ module.exports = class extends Processor {
         return 0;
     }
 
-    #compilers = new Map();
+    #compilers;
     get compilers() {
         return this.#compilers;
     }
@@ -34,6 +35,7 @@ module.exports = class extends Processor {
         super(bundle, processors, {});
 
         this.#sources = new Sources(this, {hashes: false});
+        this.#compilers = new Compilers(this);
         this.#js = new JS(this);
     }
 }

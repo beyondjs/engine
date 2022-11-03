@@ -1,6 +1,6 @@
 const Reprocessor = require('beyond/utils/reprocessor');
 const {ProcessorCodeCache} = require('beyond/stores');
-const Resource = require('./resource');
+const Output = require('./output');
 
 module.exports = class extends Reprocessor {
     #code;
@@ -66,15 +66,15 @@ module.exports = class extends Reprocessor {
         this.#loaded = !!cached;
     }
 
-    #resource(item) {
+    #output(item) {
         void this;
         if (typeof item !== 'object') throw new Error('Invalid "script" property received from code generation');
         const {code, map} = item;
-        return new Resource({code, map});
+        return new Output({code, map});
     }
 
     async _process(request) {
-        const values = await this.#build();
+        const values = await this.#build(request);
         if (this.cancelled(request)) return;
 
         if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
@@ -82,7 +82,7 @@ module.exports = class extends Reprocessor {
         this.#script = (() => {
             if (!values.script) return;
             const script = typeof values.script === 'string' ? {code: values.script} : values.script;
-            return this.#resource(script);
+            return this.#output(script);
         })();
 
         this.#ims = (() => {
@@ -90,7 +90,7 @@ module.exports = class extends Reprocessor {
             if (!(values instanceof Map)) throw new Error('Invalid "ims" property received from code generation');
 
             const ims = new Map();
-            values.ims.forEach((im, key) => ims.set(key, this.#resource(im)));
+            values.ims.forEach((im, key) => ims.set(key, this.#output(im)));
             return ims;
         })();
 
@@ -105,7 +105,7 @@ module.exports = class extends Reprocessor {
     hydrate(cached) {
         this.#script = cached.script;
         const ims = this.#ims = new Map(cached.ims);
-        ims.forEach((im, key) => ims.set(key, this.#resource(im)));
+        ims.forEach((im, key) => ims.set(key, this.#output(im)));
     }
 
     toJSON() {
