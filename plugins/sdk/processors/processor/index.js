@@ -23,6 +23,10 @@ module.exports = class extends DynamicProcessor() {
         return this.#container.conditional;
     }
 
+    get plugin() {
+        return this.conditional.plugin;
+    }
+
     get watcher() {
         return this.conditional.watcher;
     }
@@ -42,6 +46,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     configure(config) {
-        console.log('Processor configuration:', config);
+        void config;
+        throw new Error('Method ".configure" must be overridden');
     }
 }

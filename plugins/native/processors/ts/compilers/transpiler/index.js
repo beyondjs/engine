@@ -6,7 +6,11 @@ module.exports = class extends ProcessorCompiler {
         return this.processor.hash;
     }
 
-    _compile() {
+    async _compile() {
+        const {sources} = this.processor;
+        await sources.files.ready;
+
+        console.log('sources:', sources.files);
         return new Outputs();
     }
 }

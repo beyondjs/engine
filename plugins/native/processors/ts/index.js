@@ -38,4 +38,9 @@ module.exports = class extends Processor {
         this.#compilers = new Compilers(this);
         this.#js = new JS(this);
     }
+
+    configure(config) {
+        const {module} = this.plugin;
+        this.#sources.configure(module.path, config);
+    }
 }
