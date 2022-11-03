@@ -73,8 +73,8 @@ module.exports = class extends Reprocessor {
         return new Resource({code, map});
     }
 
-    async process(request) {
-        const values = this.#build();
+    async _process(request) {
+        const values = await this.#build();
         if (this.cancelled(request)) return;
 
         if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');

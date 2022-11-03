@@ -36,7 +36,7 @@ module.exports = class extends Reprocessor {
         });
     }
 
-    async process(request) {
+    async _process(request) {
         const processed = await this.#process(request);
         if (this.cancelled(request)) return;
 

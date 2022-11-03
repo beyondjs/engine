@@ -62,7 +62,7 @@ module.exports = class extends DynamicProcessor() {
      * @return {number}
      */
     get hash() {
-        throw new Error('Property .hash must be overridden');
+        throw new Error('Property ".hash" must be overridden');
     }
 
     /**
@@ -74,7 +74,7 @@ module.exports = class extends DynamicProcessor() {
      * @private
      */
     async _build(request) {
-        void request;
+        throw new Error('Method "._build(request)" must be overridden');
     }
 
     _process() {

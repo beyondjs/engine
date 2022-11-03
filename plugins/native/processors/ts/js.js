@@ -9,7 +9,7 @@ module.exports = class extends ProcessorCode {
         return this.processor.hash;
     }
 
-    _generate() {
+    _build() {
         return {script: `console.log('The "ts" processor!');`}
     }
 }

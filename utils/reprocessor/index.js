@@ -1,19 +1,6 @@
 const PendingPromise = require('../pending-promise');
 
 module.exports = class {
-    #process;
-    #done;
-
-    /**
-     * Reprocessor constructor
-     * @param process {function: Promise<void>} The async process function to be re-executed on invalidation
-     * @param done {function} Called after process is completed
-     */
-    constructor(process, done) {
-        this.#process = process;
-        this.#done = done;
-    }
-
     #processing = false;
     get processing() {
         return this.#processing;
@@ -37,8 +24,17 @@ module.exports = class {
 
     #promise;
 
+    async _process(request) {
+        void request;
+        throw new Error('Method ."_process" must be overridden');
+    }
+
+    _done(data) {
+        void data;
+    }
+
     get ready() {
-        if (!this.#promise) return this.#promise;
+        if (this.#promise) return this.#promise;
         this.#promise = new PendingPromise();
         this.#processing = true;
         this.#processed = false;
@@ -51,7 +47,7 @@ module.exports = class {
             this.#processing = false;
             this.#processed = true;
             response = response ? response : {};
-            this.#done(response);
+            this._done?.(response);
 
             this.#promise.resolve();
         }
@@ -59,7 +55,7 @@ module.exports = class {
         const process = () => {
             request = this.#request = Date.now();
 
-            this.#process(request)
+            this._process(request)
                 .then(done)
                 .catch(exc => {
                     console.log(exc.stack);

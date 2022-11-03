@@ -79,9 +79,6 @@ module.exports = class extends DynamicProcessor() {
     async _begin() {
         await this.#conditional.ready;
         await this.#outputs.load();
-
-        if (this.#outputs.updated) return;
-        await this.#preprocessor?.load();
     }
 
     /**
@@ -102,6 +99,7 @@ module.exports = class extends DynamicProcessor() {
      */
     async _preprocess(request) {
         void request;
+        if (this.#preprocessor) throw new Error('Method "._preprocess" must be overridden');
     }
 
     /**

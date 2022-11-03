@@ -2,7 +2,7 @@ const {Code} = require('beyond/plugins/sdk');
 
 module.exports = class extends Code {
     constructor(conditional) {
-        super(conditional, {cache: true});
+        super(conditional, {preprocessor: true, cache: true});
 
         const {processors} = conditional;
         super.setup(new Map([['processors', {child: processors}]]));
@@ -21,7 +21,7 @@ module.exports = class extends Code {
         processors.forEach(({js}) => js && require(js));
     }
 
-    async _build(request) {
+    async _preprocess() {
         const {processors} = this.conditional;
 
         // const {plugin} = this;
@@ -29,8 +29,14 @@ module.exports = class extends Code {
         const promises = [];
         processors.forEach(({js}) => promises.push(js.outputs.ready));
         await Promise.all(promises);
-        if (this.cancelled(request)) return;
+    }
 
-        return {code: 'console.log("bundle js - hello world");'};
+    _build(hmr) {
+        const {processors} = this.conditional;
+
+        let code = '';
+        processors.forEach(({js}, name) => code += js.outputs.script.code + '\n\n');
+
+        return {code};
     }
 }
