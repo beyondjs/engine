@@ -10,7 +10,6 @@ module.exports = class extends ProcessorCompiler {
         const {sources} = this.processor;
         await sources.files.ready;
 
-        console.log('sources:', sources.files);
         return new Outputs();
     }
 }
