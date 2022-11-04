@@ -87,7 +87,7 @@ module.exports = class extends Reprocessor {
 
         this.#ims = (() => {
             if (!values.ims) return;
-            if (!(values instanceof Map)) throw new Error('Invalid "ims" property received from code generation');
+            if (!(values.ims instanceof Map)) throw new Error('Invalid "ims" property received from code generation');
 
             const ims = new Map();
             values.ims.forEach((im, key) => ims.set(key, this.#output(im)));

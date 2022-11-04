@@ -23,7 +23,7 @@ module.exports = class extends ProcessorCompiler {
         for (const file of files.values()) {
             const {code, map, diagnostics} = transpile(file, tsconfig);
             const output = new Output(file, code, map, diagnostics);
-            outputs.set(file.file, output);
+            outputs.set(file.relative.file, output);
         }
         return outputs;
     }

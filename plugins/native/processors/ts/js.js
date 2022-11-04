@@ -14,6 +14,7 @@ module.exports = class extends ProcessorCode {
         await compiler.outputs.ready;
         if (this.cancelled(request)) return;
 
-        return {script: `console.log('The "ts" processor!');`}
+        const ims = compiler.outputs.data;
+        return {ims};
     }
 }

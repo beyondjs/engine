@@ -35,7 +35,12 @@ module.exports = class extends ConditionalCode {
         const {processors} = this.conditional;
 
         let code = '';
-        processors.forEach(({js}, name) => code += js.outputs.script.code + '\n\n');
+        processors.forEach(({js}, name) => {
+            const {ims, script} = js.outputs;
+
+            ims?.forEach(im => code += im.code + '\n\n');
+            script && (code += script.code + '\n\n');
+        });
 
         return {code};
     }
