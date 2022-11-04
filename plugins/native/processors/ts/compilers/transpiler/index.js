@@ -18,7 +18,7 @@ module.exports = class extends ProcessorCompiler {
         promises.push(tsconfig.ready);
         await Promise.all(promises);
         if (this.cancelled(request)) return;
-console.log('tsconfig:', tsconfig.content);
+
         const outputs = new Outputs();
         for (const file of files.values()) {
             const {code, map, diagnostics} = transpile(file, tsconfig);

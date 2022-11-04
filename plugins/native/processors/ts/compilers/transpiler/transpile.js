@@ -25,7 +25,7 @@ module.exports = function (source, tsconfig) {
 
     const code = transpiled.outputText;
     const map = transpiled.sourceMapText;
-
+console.log(code, map);
     // Set the diagnostics data if exists
     const diagnostics = [];
     transpiled.diagnostics?.forEach(diagnostic => diagnostics.push(new Diagnostic(diagnostic)));

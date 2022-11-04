@@ -19,4 +19,9 @@ module.exports = class extends Sources {
         this.#tsconfig = new TSConfig(processor);
         this.#hashes = new Hashes(this);
     }
+
+    configure(path, config) {
+        this.#tsconfig.configure(path);
+        super.configure(path, config);
+    }
 }
