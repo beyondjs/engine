@@ -1,6 +1,7 @@
 const ConfigurableFinder = require('../configurable');
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const WatchersClient = require('beyond/utils/watchers/client');
+const ItemBase = require('./item');
 
 class FinderCollection extends DynamicProcessor(Map) {
     get dp() {
@@ -56,13 +57,12 @@ class FinderCollection extends DynamicProcessor(Map) {
      */
     constructor(watcher, Item) {
         super();
-        this.#Item = Item;
 
-        if (!Item) throw new Error('Parameter Item is required');
         if (watcher && !(watcher instanceof WatchersClient)) {
             throw new Error('Parameter watcher is not a valid background watcher');
         }
 
+        this.#Item = Item ? Item : ItemBase;
         this.#finder = new ConfigurableFinder(watcher);
         super.setup(new Map([['finder', {child: this.#finder}]]));
         this.#finder.on('file.change', this.#onFileChanged);
@@ -142,11 +142,11 @@ class FinderCollection extends DynamicProcessor(Map) {
         const entries = [];
         this.#ordered.forEach(key => entries.push([key, super.get(key)]));
         return entries.values();
-    };
+    }
 
     [Symbol.iterator] = () => {
         return this.entries();
-    };
+    }
 
     keys() {
         const keys = [];

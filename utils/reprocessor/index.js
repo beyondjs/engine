@@ -1,5 +1,7 @@
 const PendingPromise = require('../pending-promise');
 
+let autoincremental = {id: 0, request: 0};
+
 module.exports = class {
     #processing = false;
     get processing() {
@@ -9,6 +11,11 @@ module.exports = class {
     #processed = false;
     get processed() {
         return this.#processed;
+    }
+
+    #autoincremented = autoincremental.id++;
+    get autoincremented() {
+        return this.#autoincremented;
     }
 
     #request;
@@ -53,7 +60,7 @@ module.exports = class {
         }
 
         const process = () => {
-            request = this.#request = Date.now();
+            request = this.#request = {is: 'reprocessor', value: autoincremental.request++};
 
             this._process(request)
                 .then(done)

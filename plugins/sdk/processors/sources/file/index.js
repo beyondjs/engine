@@ -64,7 +64,7 @@ module.exports = class extends DynamicProcessor() {
 
         const file = require('path').join(this.#processor.specs.bundle.path, this.#file);
         const exists = file && await fs.exists(file);
-        if (request !== this._request) return;
+        if (this.cancelled(request)) return;
 
         try {
             const content = exists ? await fs.readFile(file, 'utf8') : void 0;

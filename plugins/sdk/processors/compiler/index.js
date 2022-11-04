@@ -27,7 +27,7 @@ module.exports = class extends DynamicProcessor() {
      * @return {boolean}
      */
     cancelled(request) {
-        return this.#outputs?.cancelled(request);
+        return request.is === 'reprocessor' ? this.#outputs.cancelled(request) : super.cancelled(request);
     }
 
     /**

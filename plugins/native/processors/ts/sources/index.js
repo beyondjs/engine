@@ -1,5 +1,6 @@
-const {Sources, SourcesFile} = require('beyond/plugins/sdk');
+const {Sources} = require('beyond/plugins/sdk');
 const Hashes = require('./hashes');
+const TSConfig = require('./tsconfig');
 
 module.exports = class extends Sources {
     #tsconfig;
@@ -15,7 +16,7 @@ module.exports = class extends Sources {
     constructor(processor) {
         super(processor, {extname: ['.ts', '.tsx'], hashes: false});
 
-        this.#tsconfig = new SourcesFile(processor, {file: 'tsconfig.json'});
+        this.#tsconfig = new TSConfig(processor);
         this.#hashes = new Hashes(this);
     }
 }

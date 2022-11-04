@@ -1,32 +1,34 @@
+const ts = require('typescript');
+const {Diagnostic} = require('beyond/plugins/sdk');
+
+/**
+ * Transpile a ts source into javascript code
+ *
+ * @param source
+ * @param tsconfig
+ * @return {{code?: string, map?: *, diagnostics: Diagnostic[]}}
+ */
 module.exports = function (source, tsconfig) {
-    // Process the source
-    const ovalue = {
-        compilerOptions: tsconfig.compilerOptions,
-        fileName: source.relative.file,
-        reportDiagnostics: true
-    };
-
-    const {processor, cspecs} = this.packager;
-
-    // Transpile the code of the source file
     let transpiled;
     try {
-        const {content} = source;
-        transpiled = ts.transpileModule(content, ovalue);
+        transpiled = ts.transpileModule(source.content, {
+            compilerOptions: tsconfig.content.compilerOptions,
+            fileName: source.file,
+            reportDiagnostics: true
+        });
     }
     catch (exc) {
-        const compiled = new this.#CompiledSource(processor, cspecs, is, source, {});
-        const errors = [exc.message];
-        return {compiled, errors};
+        const diagnostic = new Diagnostic(source, exc.message);
+        const diagnostics = [diagnostic];
+        return {diagnostics};
     }
 
     const code = transpiled.outputText;
     const map = transpiled.sourceMapText;
 
     // Set the diagnostics data if exists
-    const errors = [];
-    transpiled.diagnostics?.forEach(diagnostic => errors.push(new Diagnostic(diagnostic)));
+    const diagnostics = [];
+    transpiled.diagnostics?.forEach(diagnostic => diagnostics.push(new Diagnostic(diagnostic)));
 
-    const compiled = new this.#CompiledSource(processor, cspecs, is, source, {code, map});
-    return {compiled, errors};
+    return {code, map, diagnostics};
 }

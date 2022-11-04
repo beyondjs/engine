@@ -192,6 +192,10 @@ module.exports = (Base = Nothing) => class extends Base {
         return this.#request;
     }
 
+    cancelled(request) {
+        return this.#request !== request;
+    }
+
     /**
      * Called by children when ready or upon a change in any of the children, or upon invalidation
      */
@@ -213,7 +217,7 @@ module.exports = (Base = Nothing) => class extends Base {
         // If not prepared, the children is responsible to call #preprocess again when ready
         if (!prepared || !this.#children.prepared) return;
 
-        const request = this.#request = autoincremental.request++;
+        const request = this.#request = {is: 'dynamic-processor', value: autoincremental.request++};
 
         const performance = {
             now: Date.now(),
@@ -266,7 +270,7 @@ module.exports = (Base = Nothing) => class extends Base {
 
     destroy() {
         if (this.#destroyed) throw new Error('Object is already destroyed');
-        this.#request = Date.now();
+        this.#request = void 0;
         this.#children.destroy();
         this.#destroyed = true;
         registry.delete(this);

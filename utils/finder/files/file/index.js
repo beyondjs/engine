@@ -1,4 +1,4 @@
-const path = require('path');
+const {dirname, basename, extname} = require('path');
 
 module.exports = class {
     #root;
@@ -18,36 +18,40 @@ module.exports = class {
 
     #dirname;
     get dirname() {
-        this.#dirname = this.#dirname !== undefined ? this.#dirname :
-            path.dirname(this.file);
+        this.#dirname = this.#dirname !== void 0 ? this.#dirname : dirname(this.#file);
         return this.#dirname;
     }
 
     #filename;
     get filename() {
-        this.#filename = this.#filename !== undefined ? this.#filename :
-            path.basename(this.file);
+        this.#filename = this.#filename !== void 0 ? this.#filename : basename(this.#file);
         return this.#filename;
     }
 
     #basename;
     get basename() {
-        this.#basename = this.#basename !== undefined ? this.#basename :
-            path.basename(this.file, this.extname);
+        this.#basename = this.#basename !== void 0 ? this.#basename : basename(this.#file, this.#extname);
         return this.#basename;
     }
 
     #extname;
     get extname() {
-        this.#extname = this.#extname !== undefined ? this.#extname :
-            path.extname(this.file);
+        this.#extname = this.#extname !== undefined ? this.#extname : extname(this.#file);
         return this.#extname;
     }
 
     constructor(root, file) {
-        root = root.startsWith('./') || root.startsWith('.\\') ? root.slice(2) : root;
+        root && this.hydrate({root, file});
+    }
+
+    hydrate({root, file}) {
         if (typeof root !== 'string' || typeof file !== 'string' || !root || !file) {
-            throw new Error('Parameters root and file are both required');
+            throw new Error('Parameters "root" and "file" are both required');
+        }
+
+        // root = root.startsWith('./') || root.startsWith('.\\') ? root.slice(2) : root;
+        if (root.startsWith('.') || file.startsWith('.')) {
+            throw new Error('Parameters "root" and "file" must be absolute paths');
         }
 
         // Remove trailing slashes
@@ -57,15 +61,8 @@ module.exports = class {
         this.#relative = new (require('./relative'))(root, file);
     }
 
-    toJSON = () => ({
-        file: this.file,
-        dirname: this.dirname,
-        filename: this.filename,
-        basename: this.basename,
-        extname: this.extname,
-        relative: {
-            file: this.#relative.file,
-            dirname: this.#relative.dirname
-        }
-    });
+    toJSON() {
+        const {root, file} = this;
+        return {root, file};
+    }
 }
