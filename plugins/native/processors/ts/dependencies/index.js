@@ -21,6 +21,11 @@ module.exports = class extends DynamicProcessor() {
         files.forEach(file => {
             const {name, line, character} = file.exports.get('message');
             console.log('Message export:', name, line, character);
+
+            console.log('Dependencies:');
+            file.dependencies.forEach(({specifier, line, character}) => {
+                console.log(`  => ${specifier}: ${line}:${character}`);
+            });
         });
     }
 }

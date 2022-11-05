@@ -28,7 +28,7 @@ module.exports = class extends Array {
             const is = specifier === 'beyond_context' ? 'internal.import' :
                 (!node.importClause?.isTypeOnly ? 'import' : 'type');
 
-            this.push(specifier, is, source, node.moduleSpecifier);
+            this.push(new Dependency(specifier, is, source, node.moduleSpecifier));
             return;
         }
 
