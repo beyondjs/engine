@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const SourceAnalyzer = require('./source-analyzer');
 
 module.exports = class extends DynamicProcessor(Map) {
+    get dp() {
+        return 'ts-processor.analyzer.sources-analyzer';
+    }
+
     #sourcesAST;
 
     constructor(sourcesAST) {
@@ -10,10 +14,7 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _prepared(require) {
-        const sources = this.#sourcesAST;
-        if (!require(sources)) return false;
-
-        sources.forEach(source => require(source));
+        if (!require(this.#sourcesAST)) return false;
     }
 
     _process() {

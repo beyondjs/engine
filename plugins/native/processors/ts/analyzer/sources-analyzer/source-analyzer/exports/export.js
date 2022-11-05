@@ -16,7 +16,7 @@ module.exports = class {
 
     constructor(name, source, node) {
         this.#name = name;
-        const {line, character} = source.getLineAndCharacterOfPosition(node.getStart());
+        const {line, character} = source.getLineAndCharacterOfPosition(node.getStart(source));
 
         this.#line = line;
         this.#character = character;

@@ -5,7 +5,7 @@ const Dependency = require('./dependency');
 module.exports = class extends Array {
     #source;
 
-    visit = (node) => {
+    #visit = (node) => {
         const source = this.#source;
 
         const isIM = dependency => dependency.startsWith('.');
@@ -16,7 +16,7 @@ module.exports = class extends Array {
             node.arguments[0].kind === tsKind.StringLiteral) {
 
             const specifier = node.arguments[0].text;
-            !isIM(specifier) && this.push(new Dependency(specifier, 'dynamic.import', source, node));
+            !isIM(specifier) && this.push(new Dependency(specifier, 'dynamic.import', source, node.arguments[0]));
             return;
         }
         // es6 import
@@ -28,17 +28,17 @@ module.exports = class extends Array {
             const is = specifier === 'beyond_context' ? 'internal.import' :
                 (!node.importClause?.isTypeOnly ? 'import' : 'type');
 
-            this.push(specifier, is, source, node);
+            this.push(specifier, is, source, node.moduleSpecifier);
             return;
         }
 
         // Keep looking for dependencies
-        ts.forEachChild(node, node => analyze(node, dependencies));
+        ts.forEachChild(node, node => this.#visit(node));
     }
 
     constructor(source) {
         super();
         this.#source = source;
-        ts.forEachChild(source, this.visit);
+        ts.forEachChild(source, this.#visit);
     }
 }

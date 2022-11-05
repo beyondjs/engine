@@ -5,7 +5,7 @@ const Export = require('./export');
 module.exports = class extends Map {
     #source;
 
-    visit = (node) => {
+    #visit = (node) => {
         const source = this.#source;
 
         // Check if node export is at bundle level
@@ -36,7 +36,7 @@ module.exports = class extends Map {
 
                 const name = declaration.name.escapedText;
                 if (!name) continue;
-                check(node) && this.set(name, new Export(name, source, node));
+                check(node) && this.set(name, new Export(name, source, declaration));
             }
         }
     }
@@ -44,6 +44,6 @@ module.exports = class extends Map {
     constructor(source) {
         super();
         this.#source = source;
-        ts.forEachChild(source, this.visit);
+        ts.forEachChild(source, this.#visit);
     }
 }

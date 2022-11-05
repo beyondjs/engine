@@ -1,5 +1,6 @@
 const SourcesAST = require('./sources-ast');
 const SourcesAnalyzer = require('./sources-analyzer');
+const Bridges = require('./bridges');
 
 module.exports = class {
     #files;
@@ -18,8 +19,9 @@ module.exports = class {
     }
 
     constructor(sources) {
-        this.#ast = new SourcesAST(sources);
-        this.#files = new SourcesAnalyzer(this.#ast.files);
-        // this.#extensions = new Sources(this.#ast.extensions);
+        const ast = new SourcesAST(sources);
+        this.#files = new SourcesAnalyzer(ast.files);
+        // this.#extensions = new Sources(ast.extensions);
+        // this.#bridges = new Bridges(ast.files);
     }
 }

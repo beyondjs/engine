@@ -27,7 +27,10 @@ module.exports = class extends ConditionalCode {
         // const {plugin} = this;
         // console.log('plugin test configuration:', plugin.properties.subpath, this.config);
         const promises = [];
-        processors.forEach(({js}) => promises.push(js.outputs.ready));
+        processors.forEach(({js: {outputs, dependencies}}) => {
+            dependencies && promises.push(dependencies.ready);
+            promises.push(outputs.ready);
+        });
         await Promise.all(promises);
     }
 
@@ -35,8 +38,8 @@ module.exports = class extends ConditionalCode {
         const {processors} = this.conditional;
 
         let code = '';
-        processors.forEach(({js}, name) => {
-            const {ims, script} = js.outputs;
+        processors.forEach(({js: {dependencies, outputs}}, name) => {
+            const {ims, script} = outputs;
 
             ims?.forEach(im => code += im.code + '\n\n');
             script && (code += script.code + '\n\n');

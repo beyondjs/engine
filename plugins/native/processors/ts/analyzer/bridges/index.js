@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const Bridge = require('./bridge');
 
 module.exports = class extends DynamicProcessor(Map) {
+    get dp() {
+        return 'ts-processor.analyzer.bridges';
+    }
+
     #sourcesAST;
 
     constructor(sourcesAST) {
