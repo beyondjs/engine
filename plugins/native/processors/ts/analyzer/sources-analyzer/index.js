@@ -18,16 +18,16 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _process() {
-        const sources = this.#sourcesAST;
+        const sourcesAST = this.#sourcesAST;
 
         let changed = false;
         const updated = new Map();
 
-        sources.forEach((ast, file) => {
+        sourcesAST.forEach((sourceAST, file) => {
             const analyzer = (() => {
-                if (this.has(file)) return this.get(file);
+                if (this.has(file) && this.get(file).hash === sourceAST.hash) return this.get(file);
                 changed = true;
-                return new SourceAnalyzer(file, ast);
+                return new SourceAnalyzer(file, sourceAST.ast);
             })();
             updated.set(file, analyzer);
         });

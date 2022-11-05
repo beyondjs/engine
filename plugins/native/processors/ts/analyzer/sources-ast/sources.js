@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const ts = require('typescript');
+const SourceAST = require('./source');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -7,7 +7,6 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     #collection;
-    #hashes = new Map();
 
     constructor(collection) {
         super();
@@ -24,22 +23,18 @@ module.exports = class extends DynamicProcessor(Map) {
         const updated = new Map();
 
         this.#collection.forEach(source => {
-            const {file, hash, content} = source;
-            const ast = (() => {
-                if (this.has(file) && this.#hashes.get(file) === hash) return this.get(file);
+            const {file, hash} = source;
+            const sourceAST = (() => {
+                if (this.get(file)?.hash === hash) return this.get(file);
                 changed = true;
-                return ts.createSourceFile(file, content);
+                return new SourceAST(source);
             })();
-            updated.set(file, {hash, ast});
+
+            updated.set(file, sourceAST);
         });
 
         this.clear();
-        this.#hashes.clear();
-
-        updated.forEach(({hash, ast}, file) => {
-            this.set(file, ast);
-            this.#hashes.set(file, hash);
-        });
+        updated.forEach((sourceAST, file) => this.set(file, sourceAST));
         return changed;
     }
 }

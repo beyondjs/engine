@@ -20,7 +20,7 @@ module.exports = class extends DynamicProcessor() {
         const {files} = this.#analyzer;
         files.forEach(file => {
             const {name, line, character} = file.exports.get('message');
-            console.log(name, line, character);
+            console.log('Message export:', name, line, character);
         });
     }
 }
