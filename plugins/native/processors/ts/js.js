@@ -1,6 +1,7 @@
 const {ProcessorCode} = require('beyond/plugins/sdk');
 const Analyzer = require('./analyzer');
 const Dependencies = require('./dependencies');
+const Exports = require('./exports');
 
 module.exports = class extends ProcessorCode {
     get resource() {
@@ -17,6 +18,11 @@ module.exports = class extends ProcessorCode {
         return this.#dependencies;
     }
 
+    #exports;
+    get exports() {
+        return this.#exports;
+    }
+
     get hash() {
         return this.processor.hash;
     }
@@ -26,6 +32,7 @@ module.exports = class extends ProcessorCode {
 
         this.#analyzer = new Analyzer(this.processor.sources);
         this.#dependencies = new Dependencies(this.#analyzer);
+        this.#exports = new Exports(this.#analyzer);
     }
 
     async _build(request) {

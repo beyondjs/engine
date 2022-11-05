@@ -2,7 +2,7 @@ const ts = require('typescript');
 const tsKind = ts.SyntaxKind;
 const Export = require('./export');
 
-module.exports = class extends Map {
+module.exports = class extends Array {
     #source;
 
     #visit = (node) => {
@@ -18,7 +18,7 @@ module.exports = class extends Map {
         // export default 'hello'
         if (node.kind === tsKind.ExportAssignment) {
             const name = 'default';
-            check(node) && this.set(name, new Export(name, source, node));
+            check(node) && this.push(new Export(name, source, node));
             return;
         }
 
@@ -27,7 +27,7 @@ module.exports = class extends Map {
 
         if (node.name?.escapedText) {
             const name = node.name.escapedText;
-            check(node) && this.set(name, new Export(name, source, node));
+            check(node) && this.push(new Export(name, source, node));
         }
         else if (node.declarationList && node.declarationList.declarations) {
             const {declarations} = node.declarationList;
@@ -36,7 +36,7 @@ module.exports = class extends Map {
 
                 const name = declaration.name.escapedText;
                 if (!name) continue;
-                check(node) && this.set(name, new Export(name, source, declaration));
+                check(node) && this.push(new Export(name, source, declaration));
             }
         }
     }

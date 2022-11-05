@@ -1,6 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const Dependency = require('./dependency');
 
-module.exports = class extends DynamicProcessor() {
+module.exports = class extends DynamicProcessor(Map) {
     get dp() {
         return 'ts-processor.dependencies';
     }
@@ -18,13 +19,18 @@ module.exports = class extends DynamicProcessor() {
 
     _process() {
         const {files} = this.#analyzer;
-        files.forEach(file => {
-            const {name, line, character} = file.exports.get('message');
-            console.log('Message export:', name, line, character);
 
-            console.log('Dependencies:');
-            file.dependencies.forEach(({specifier, line, character}) => {
-                console.log(`  => ${specifier}: ${line}:${character}`);
+        this.clear();
+
+        files.forEach(file => {
+            file.dependencies.forEach(dependencyFile => {
+                const {specifier} = dependencyFile;
+
+                const dependency = this.has(specifier) ? this.get(specifier) : new Dependency(specifier);
+                dependency.sources.push(dependencyFile);
+                dependency.is.add(dependencyFile.is);
+
+                this.set(specifier, dependency);
             });
         });
     }

@@ -27,8 +27,9 @@ module.exports = class extends ConditionalCode {
         // const {plugin} = this;
         // console.log('plugin test configuration:', plugin.properties.subpath, this.config);
         const promises = [];
-        processors.forEach(({js: {outputs, dependencies}}) => {
+        processors.forEach(({js: {outputs, dependencies, exports}}) => {
             dependencies && promises.push(dependencies.ready);
+            exports && promises.push(exports.ready);
             promises.push(outputs.ready);
         });
         await Promise.all(promises);
