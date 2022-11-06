@@ -11,7 +11,7 @@ module.exports = function (conditional, hmr) {
     const sourcemap = new SourceMap();
 
     /**
-     * The imports
+     * The code of the imports
      */
     imports.code && sourcemap.concat(imports.code);
 
