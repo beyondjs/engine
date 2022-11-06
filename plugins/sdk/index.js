@@ -8,6 +8,8 @@ exports.ConditionalCode = require('./conditional/code');
 exports.ProcessorsSet = require('./processors/set');
 exports.Processor = require('./processors/processor');
 exports.ProcessorCode = require('./processors/code');
+exports.ProcessorScriptOutput = require('./processors/code-outputs/script');
+exports.ProcessorIMOutput = require('./processors/code-outputs/im');
 exports.ProcessorCompiler = require('./processors/compiler');
 
 exports.Sources = require('./processors/sources');
@@ -16,6 +18,8 @@ exports.SourcesHashes = require('./processors/sources/hashes');
 
 exports.Diagnostics = require('./diagnostics/diagnostics');
 exports.Diagnostic = require('./diagnostics/diagnostic');
+
+exports.BundleJsCode = require('./bundle/js');
 
 // exports.BundleCodeBase = require('./bundle-code/base');
 // exports.BundleJsCode = (require('./bundle-code/js'));

@@ -1,4 +1,5 @@
 const Config = require('./config');
+const Specifier = require('./specifier');
 
 /**
  * Package export
@@ -13,11 +14,20 @@ module.exports = class {
         return this.#plugin.module;
     }
 
+    get pkg() {
+        return this.#plugin.module.pkg;
+    }
+
     #creator;
 
     #subpath;
     get subpath() {
-        return this.#subpath();
+        return this.#subpath;
+    }
+
+    #specifier;
+    get specifier() {
+        return this.#specifier;
     }
 
     #id;
@@ -36,6 +46,7 @@ module.exports = class {
         this.#plugin = plugin;
         this.#creator = creator;
         this.#subpath = subpath;
+        this.#specifier = new Specifier(this);
         this.#id = `${this.#plugin.id}//${subpath}`;
 
         this.#config = new Config();

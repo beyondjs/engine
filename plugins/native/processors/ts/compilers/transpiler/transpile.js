@@ -23,7 +23,12 @@ module.exports = function (source, tsconfig) {
         return {diagnostics};
     }
 
-    const code = transpiled.outputText;
+    const code = (() => {
+        const code = transpiled.outputText;
+
+        // Remove the sourcemap reference to the source file left by typescript
+        return code.replace(/\/\/([#@])\s(sourceURL|sourceMappingURL)=\s*(\S*?)\s*$/m, '');
+    })();
     const map = transpiled.sourceMapText;
 
     // Set the diagnostics data if exists

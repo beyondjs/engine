@@ -1,6 +1,7 @@
 const Reprocessor = require('beyond/utils/reprocessor');
 const {ProcessorCodeCache} = require('beyond/stores');
-const Output = require('./output');
+const ScriptOutput = require('../code-outputs/script');
+const IMOutput = require('../code-outputs/im')
 
 module.exports = class extends Reprocessor {
     #code;
@@ -66,33 +67,27 @@ module.exports = class extends Reprocessor {
         this.#loaded = !!cached;
     }
 
-    #output(item) {
-        void this;
-        if (typeof item !== 'object') throw new Error('Invalid "script" property received from code generation');
-        const {code, map} = item;
-        return new Output({code, map});
-    }
-
     async _process(request) {
         const values = await this.#build(request);
         if (this.cancelled(request)) return;
 
-        if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
-
-        this.#script = (() => {
-            if (!values.script) return;
-            const script = typeof values.script === 'string' ? {code: values.script} : values.script;
-            return this.#output(script);
+        /**
+         * Check if build output is valid
+         */
+        (() => {
+            const message = 'Invalid returned data from outputs generation';
+            if (typeof values !== 'object') throw new Error(message);
+            if (values.script && !(values.script instanceof ScriptOutput)) throw new Error(message);
+            if (values.ims && !(values.ims instanceof Map)) throw new Error(message);
+            values.ims?.forEach(im => {
+                if (!(im instanceof IMOutput)) throw new Error(message);
+            })
         })();
 
-        this.#ims = (() => {
-            if (!values.ims) return;
-            if (!(values.ims instanceof Map)) throw new Error('Invalid "ims" property received from code generation');
+        this.#script = values.script;
 
-            const ims = new Map();
-            values.ims.forEach((im, key) => ims.set(key, this.#output(im)));
-            return ims;
-        })();
+        this.#ims = new Map();
+        values.ims?.forEach((im, key) => this.#ims.set(key, im));
 
         this.#hash = this.#code.hash;
     }
@@ -105,7 +100,7 @@ module.exports = class extends Reprocessor {
     hydrate(cached) {
         this.#script = cached.script;
         const ims = this.#ims = new Map(cached.ims);
-        ims.forEach((im, key) => ims.set(key, this.#output(im)));
+        ims.forEach((im, key) => ims.set(key, im));
     }
 
     toJSON() {

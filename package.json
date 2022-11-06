@@ -78,7 +78,6 @@
     "./utils/dynamic-processor": "./utils/dynamic-processor/index.js",
     "./utils/reprocessor": "./utils/reprocessor/index.js",
     "./utils/config": "./utils/config/index.js",
-    "./utils/code": "./utils/code/index.js",
     "./utils/ipc": "./utils/ipc/index.js",
     "./utils/watchers/service": "./utils/watchers/service/index.js",
     "./utils/watchers/client": "./utils/watchers/client/index.js",

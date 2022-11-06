@@ -1,4 +1,4 @@
-const Output = require('./output');
+const {ProcessorIMOutput} = require('beyond/plugins/sdk');
 
 module.exports = class extends Map {
     toJSON() {
@@ -7,7 +7,7 @@ module.exports = class extends Map {
 
     hydrate(cached) {
         cached.forEach(([key, value]) => {
-            const output = new Output();
+            const output = new ProcessorIMOutput();
             output.hydrate(value);
             this.set(key, output);
         });

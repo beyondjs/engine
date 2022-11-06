@@ -1,4 +1,5 @@
 const {ConditionalCode} = require('beyond/plugins/sdk');
+const build = require('./build');
 
 module.exports = class extends ConditionalCode {
     constructor(conditional) {
@@ -17,7 +18,8 @@ module.exports = class extends ConditionalCode {
     }
 
     _prepared(require) {
-        const {processors} = this.conditional;
+        const {pexport, processors} = this.conditional;
+        require(pexport.specifier);
         processors.forEach(({js}) => js && require(js));
     }
 
@@ -36,16 +38,6 @@ module.exports = class extends ConditionalCode {
     }
 
     _build(hmr) {
-        const {processors} = this.conditional;
-
-        let code = '';
-        processors.forEach(({js: {dependencies, outputs}}, name) => {
-            const {ims, script} = outputs;
-
-            ims?.forEach(im => code += im.code + '\n\n');
-            script && (code += script.code + '\n\n');
-        });
-
-        return {code};
+        return build(this.conditional, hmr);
     }
 }

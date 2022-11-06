@@ -15,6 +15,10 @@ module.exports = class {
         return this.#pexport.plugin;
     }
 
+    get pkg() {
+        return this.#pexport.plugin.module.pkg;
+    }
+
     get watcher() {
         return this.plugin.module.pkg.watcher;
     }

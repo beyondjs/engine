@@ -1,6 +1,5 @@
-const {ProcessorCompiler} = require('beyond/plugins/sdk');
+const {ProcessorCompiler, ProcessorIMOutput} = require('beyond/plugins/sdk');
 const Outputs = require('./outputs');
-const Output = require('./output');
 const transpile = require('./transpile');
 
 module.exports = class extends ProcessorCompiler {
@@ -22,7 +21,7 @@ module.exports = class extends ProcessorCompiler {
         const outputs = new Outputs();
         for (const file of files.values()) {
             const {code, map, diagnostics} = transpile(file, tsconfig);
-            const output = new Output(file, code, map, diagnostics);
+            const output = new ProcessorIMOutput(file, code, map, diagnostics);
             outputs.set(file.relative.file, output);
         }
         return outputs;
