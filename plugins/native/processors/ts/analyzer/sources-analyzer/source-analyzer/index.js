@@ -9,9 +9,9 @@ const Exports = require('./exports');
  * @return {{dependencies: Map, exports: Set}}
  */
 module.exports = class {
-    #file;
-    get file() {
-        return this.#file;
+    #source;
+    get source() {
+        return this.#source;
     }
 
     #dependencies = new Map();
@@ -24,8 +24,8 @@ module.exports = class {
         return this.#exports;
     }
 
-    constructor(file, ast) {
-        this.#file = file;
+    constructor(source, ast) {
+        this.#source = source;
         this.#dependencies = new Dependencies(ast);
         this.#exports = new Exports(ast);
     }

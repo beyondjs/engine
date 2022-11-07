@@ -27,7 +27,7 @@ module.exports = class extends DynamicProcessor(Map) {
             const analyzer = (() => {
                 if (this.has(file) && this.get(file).hash === sourceAST.hash) return this.get(file);
                 changed = true;
-                return new SourceAnalyzer(file, sourceAST.ast);
+                return new SourceAnalyzer(sourceAST.source, sourceAST.ast);
             })();
             updated.set(file, analyzer);
         });

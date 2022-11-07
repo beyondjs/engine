@@ -3,6 +3,7 @@ const Imports = require('./imports');
 const bundleCreation = require('./bundle-creation');
 const processScripts = require('./process-scripts')
 const processIMs = require('./process-ims')
+const processExports = require('./process-exports');
 
 module.exports = function (conditional, hmr) {
     const {processors, plugin} = conditional;
@@ -29,6 +30,11 @@ module.exports = function (conditional, hmr) {
      * Process the internal modules exposed by the processors
      */
     processIMs(conditional, transversal, hmr, sourcemap);
+
+    /**
+     * Process the exports of the bundle
+     */
+    processExports(conditional, transversal, hmr, sourcemap);
 
     /**
      * Only required for .jsx legacy processor support

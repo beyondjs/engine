@@ -1,8 +1,9 @@
 const {File} = require('beyond/utils/finder');
 const {Diagnostic} = require('../../diagnostics/diagnostic');
 const crc32 = require('beyond/utils/crc32');
+const {sep} = require('path');
 
-module.exports = class extends File {
+class ProcessorIMOutput extends File {
     #code;
     get code() {
         return this.#code;
@@ -23,6 +24,19 @@ module.exports = class extends File {
         return this.#diagnostics;
     }
 
+    #specifier;
+    get specifier() {
+        return this.#specifier;
+    }
+
+    static specifier(file) {
+        const {relative, extname} = file;
+        const normalized = sep === '/' ? relative.file : relative.file.replace(/\\/g, `/`);
+
+        const resource = normalized.slice(0, normalized.length - extname.length);
+        return `./${resource}`;
+    }
+
     constructor(file, code, map, diagnostics) {
         super();
         const hash = crc32(code);
@@ -37,6 +51,8 @@ module.exports = class extends File {
 
     hydrate(cached) {
         super.hydrate(cached.file);
+
+        this.#specifier = ProcessorIMOutput.specifier(this);
         this.#code = cached.code;
         this.#map = cached.map;
         this.#hash = cached.hash;
@@ -48,3 +64,5 @@ module.exports = class extends File {
         });
     }
 }
+
+module.exports = ProcessorIMOutput;

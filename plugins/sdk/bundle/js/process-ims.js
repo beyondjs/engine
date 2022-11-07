@@ -1,18 +1,7 @@
 const header = require('./header');
-const {sep} = require('path');
 
 module.exports = function (conditional, transversal, hmr, sourcemap) {
-    function processIM(im) {
-        const {hash, code, map, specifier} = (() => {
-            const {hash, code, map, extname} = im;
-            const {file} = im.relative;
-            const normalized = sep === '/' ? file : file.replace(/\\/g, `/`);
-
-            const resource = normalized.slice(0, normalized.length - extname.length);
-            const specifier = `./${resource}`;
-            return {hash, code, map, specifier};
-        })();
-
+    function processIM({hash, code, map, specifier}) {
         sourcemap.concat(header(`INTERNAL MODULE: ${specifier}`));
 
         const creator = 'creator: function (require, exports) {';

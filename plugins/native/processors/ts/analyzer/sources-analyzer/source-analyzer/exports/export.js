@@ -4,6 +4,10 @@ module.exports = class {
         return this.#name;
     }
 
+    get from() {
+        return this.#name;
+    }
+
     #line;
     get line() {
         return this.#line;

@@ -1,4 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
+const BundleExport = require('./bundle-export');
 
 module.exports = class extends DynamicProcessor(Array) {
     get dp() {
@@ -19,6 +20,9 @@ module.exports = class extends DynamicProcessor(Array) {
     _process() {
         const {files} = this.#analyzer;
         this.length = 0;
-        files.forEach(file => file.exports.forEach(e => this.push(e)));
+        files.forEach(({source, exports}) => exports.forEach(sourceExport => {
+            const bundleExport = new BundleExport(source, sourceExport);
+            this.push(bundleExport);
+        }));
     }
 }

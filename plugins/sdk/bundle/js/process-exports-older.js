@@ -1,28 +1,18 @@
-/**
- * Process the exports of the bundle
- *
- * @param packager {object} The bundle packager
- * @param hmr {boolean} Is it an hmr bundle?
- * @param bkb {boolean} Is it the @beyond-js/kernel/bundle bundle?
- * @param sourcemap {object} The sourcemap of the processed script
- * @param transversal {boolean} Is it a transversal bundle or not
- */
-module.exports = function (packager, hmr, bkb, sourcemap, transversal) {
-    const {processors} = packager;
+const tab = '    ';
+
+module.exports = function (conditional, transversal, hmr, sourcemap) {
+    const {processors} = conditional;
 
     // scripts.module:
     // Module export processing updates the module's standard interface (esm, amd, cjs).
     let exp = {module: '', descriptor: []};
-    const tab = '    ';
 
     // Add the declaration of all exports (not used on HMR code)
     const declaration = hmr ? void 0 : new Set();
 
-    const process = (processor) => {
-        const {packager} = processor;
-        if (!packager || !packager.js) return;
+    processors.forEach(processor => {
+        if (!processor.js?.exports) return;
 
-        const {ims} = packager.js
         ims?.forEach(im => {
             const {exports, id} = im;
             exports?.forEach(({name, from}) => {
@@ -40,8 +30,7 @@ module.exports = function (packager, hmr, bkb, sourcemap, transversal) {
                 }
             });
         });
-    }
-    processors.forEach(processor => process(processor));
+    });
 
     // Set the exports descriptor
     exp.descriptor.length && (transversal && !hmr ?
@@ -61,5 +50,18 @@ module.exports = function (packager, hmr, bkb, sourcemap, transversal) {
         sourcemap.concat('};');
     }
 
-    !hmr && !transversal && require('./hmr')(packager, sourcemap);
+    /**
+     * Injects the code to activate hmr support
+     */
+    const excludes = [
+        '@beyond-js/kernel/bundle',
+        '@beyond-js/kernel/routing',
+        '@beyond-js/bee/main'
+    ];
+    if (excludes.includes(packager.bundle.specifier)) return;
+
+    sourcemap.concat('export const hmr = new (function () {\n' +
+        '    this.on = (event, listener) => __pkg.hmr.on(event, listener);\n' +
+        '    this.off = (event, listener) => __pkg.hmr.off(event, listener);\n' +
+        '});\n\n');
 }
