@@ -3,7 +3,7 @@ const JS = require('./js');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'package.standard-export.wrapper';
+        return 'package.standard-export.bundle';
     }
 
     #pexport;
@@ -11,18 +11,25 @@ module.exports = class extends DynamicProcessor() {
         return this.#pexport;
     }
 
-    #condition;
+    #platform;
+    get platform() {
+        return this.#platform;
+    }
+
     #entry;
+    get entry() {
+        return this.#entry;
+    }
 
     #js;
     get js() {
         return this.#js;
     }
 
-    constructor(pexport, condition, entry) {
+    constructor(pexport, platform, entry) {
         super();
         this.#pexport = pexport;
-        this.#condition = condition;
+        this.#platform = platform;
         this.#entry = entry;
 
         this.#js = new JS(this);

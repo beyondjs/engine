@@ -9,8 +9,13 @@ module.exports = class extends PackageExportCode {
         return 0;
     }
 
-    async _preprocess() {
+    constructor(conditional) {
+        super(conditional, {preprocessor: true});
+    }
 
+    async _preprocess() {
+        const {platform, entry} = this.conditional;
+        console.log('Build the standard export', entry, platform);
     }
 
     _build() {

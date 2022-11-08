@@ -45,7 +45,7 @@ module.exports = class extends DynamicProcessor() {
         const bundle = this.#bundles.get('default');
 
         const wrapper = new BundleWrapper(platform);
-        this.#wrappers.set(platform);
+        this.#wrappers.set(platform, wrapper);
         wrapper.bundle = bundle;
         return wrapper;
     }
@@ -63,13 +63,13 @@ module.exports = class extends DynamicProcessor() {
         const updated = new Map();
         let changed = false;
 
-        config.forEach((entry, condition) => {
+        config.forEach((entry, platform) => {
             const bundle = (() => {
-                if (this.#bundles.has(condition)) return this.#bundles.get(condition);
+                if (this.#bundles.has(platform)) return this.#bundles.get(platform);
                 changed = true;
-                return new Bundle(this, condition, entry);
+                return new Bundle(this, platform, entry);
             })();
-            updated.set(condition, bundle);
+            updated.set(platform, bundle);
         });
 
         // Destroy unused bundles
