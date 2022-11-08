@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 const Resolver = require('./resolver');
 
 module.exports = class {
-    #bundle;
+    #conditional;
 
     // The plugin name
     get name() {
@@ -35,23 +35,23 @@ module.exports = class {
         return this.#subpath;
     }
 
-    constructor(bundle, platform) {
-        this.#bundle = bundle;
+    constructor(conditional, platform) {
+        this.#conditional = conditional;
         this.#platform = platform;
-        this.#pkg = this.#bundle.module.pkg;
+        this.#pkg = this.#conditional.module.pkg;
         this.#vspecifier = this.#pkg.vspecifier;
         this.#namespace = `beyond:${this.#vspecifier}`;
-        this.#subpath = this.#bundle.subpath;
+        this.#subpath = this.#conditional.subpath;
     }
 
-    #canceled = false;
+    #cancelled = false;
 
     cancel() {
-        this.#canceled = true;
+        this.#cancelled = true;
     }
 
     #resolve(args) {
-        if (this.#canceled) throw new Error('Build was canceled');
+        if (this.#cancelled) throw new Error('Build was cancelled');
 
         // The node of the graph being imported/required
         const resolver = new Resolver(this, args);
@@ -74,13 +74,13 @@ module.exports = class {
         }
 
         /**
-         * If the path being requested is not an external bundle, then include it in the package
+         * If the path being requested is not a package export, then include it in the bundle
          */
         return {namespace, path: resource};
     }
 
     async #load(args) {
-        if (this.#canceled) throw new Error('Build was canceled');
+        if (this.#cancelled) throw new Error('Build was cancelled');
 
         const {path, namespace} = args;
 
