@@ -60,7 +60,7 @@ module.exports = class {
             /**
              * If it is not an HMR resource, save to cache
              */
-            this.#cache.save();
+            this.#cache?.save();
         }
 
         return resource;

@@ -2,6 +2,10 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const JS = require('./js');
 
 module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'package.standard-export.wrapper';
+    }
+
     #pexport;
     get pexport() {
         return this.#pexport;

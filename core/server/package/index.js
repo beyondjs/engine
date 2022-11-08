@@ -44,16 +44,8 @@ module.exports = async function (url) {
     const condition = pexport.condition('browser');
     const {js} = condition;
 
-    const resource = await (async () => {
-        if (pexport.is === 'standard') {
-            await js.ready;
-            return js;
-        }
-        else {
-            await js.outputs.ready;
-            return js.outputs.get();
-        }
-    })();
+    await js.outputs.ready;
+    const resource = js.outputs.get();
 
     return resource.valid ?
         {content: resource.code, statusCode: 200, contentType: 'application/javascript'} :
