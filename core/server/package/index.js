@@ -36,11 +36,25 @@ module.exports = async function (url) {
     })(specifier);
     if (error) return {content: error, statusCode: 404, contentType: 'text/plain'};
 
-    const conditional = pexport.conditional('browser');
-    const {js} = conditional;
-    await js.outputs.ready;
+    /**
+     * Standard exports are dynamic processors, while exports from modules aren't
+     */
+    pexport.is === 'standard' && await pexport.ready;
 
-    const resource = js.outputs.get();
+    const condition = pexport.condition('browser');
+    const {js} = condition;
+
+    const resource = await (async () => {
+        if (pexport.is === 'standard') {
+            await js.ready;
+            return js;
+        }
+        else {
+            await js.outputs.ready;
+            return js.outputs.get();
+        }
+    })();
+
     return resource.valid ?
         {content: resource.code, statusCode: 200, contentType: 'application/javascript'} :
         {content: 'Errors found processing resource', statusCode: 500, contentType: 'text/plain'};

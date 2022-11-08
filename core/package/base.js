@@ -53,6 +53,7 @@ module.exports = class extends Attributes {
         this.#warnings = warnings;
         this.#dependencies.configure(config.dependencies);
         this.#_static.configure(this.path, config.static);
+        this.#exports.configure(config);
 
         return changed;
     }

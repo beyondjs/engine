@@ -3,7 +3,7 @@ const Module = require('./exported');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
-        return 'package.modules.exports';
+        return 'package.exports';
     }
 
     #pkg;
@@ -22,23 +22,21 @@ module.exports = class extends DynamicProcessor(Map) {
         const updated = new Map();
         let changed = false;
 
-        const modules = new Map();
+        const exports = new Map();
         this.#config.forEach((conditional, subpath) => {
-            const bundles = new Map();
-            bundles.set('', conditional);
-            modules.set(subpath, bundles);
+            exports.set(subpath, conditional);
         });
 
-        modules.forEach((bundles, subpath) => {
+        exports.forEach((conditional, subpath) => {
             const module = this.has(subpath) ? this.get(subpath) : (changed = true) && new Module(this.#pkg, subpath);
             updated.set(subpath, module);
             module.bundles.configure(bundles);
         });
 
-        // Destroy unused modules
+        // Destroy unused exports
         this.forEach((module, subpath) => !updated.has(subpath) && (changed = true) && module.destroy());
 
-        // Set the modules in the collection
+        // Set the exports in the collection
         this.clear();
         updated.forEach((value, key) => this.set(key, value));
 

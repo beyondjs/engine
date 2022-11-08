@@ -52,7 +52,7 @@ module.exports = class {
         this.#config = new Config();
     }
 
-    conditional(platform) {
+    condition(platform) {
         if (this.#conditionals.has(platform)) return this.#conditionals.get(platform);
 
         const conditional = this.#creator.conditional(this, platform);
