@@ -9,6 +9,6 @@
   },
   "exports": {
     ".": "./lib/index.js",
-    "./analytics": "./lib/analytics/index.js"
+    "./calculator": "./lib/calculator/index.js"
   }
 }
