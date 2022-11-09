@@ -18,7 +18,8 @@ module.exports = class extends PackageExportCode {
     }
 
     _prepared(require) {
-        if (!require(packages) || !require(packages.exports)) return;
+        if (!require(packages)) return;
+        packages.forEach(pkg => require(pkg.exports));
         return super._prepared(require);
     }
 
