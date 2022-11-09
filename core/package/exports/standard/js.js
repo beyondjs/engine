@@ -6,6 +6,8 @@ module.exports = class extends PackageExportCode {
         return 'js';
     }
 
+    #plugin;
+
     get hash() {
         return 0;
     }

@@ -41,6 +41,7 @@ module.exports = class extends DynamicProcessor(Map) {
         const exports = (() => {
             if (typeof config.exports === 'string') return new Map([['.', config.exports]]);
             if (typeof config.exports === 'object') return new Map(Object.entries(config.exports));
+            return new Map();
         })();
 
         if (!exports.has('.')) {

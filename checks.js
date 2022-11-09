@@ -7,7 +7,8 @@ module.exports = async function (args) {
         const value = parseInt(args.get(arg));
         if (!Number.isInteger(value)) return {error: `The port specified to the ${arg} is invalid (${value}).`};
 
-        return await ports.check(value) ? {value} : {error: `The port specified to the ${arg} is already in use.`};
+        return await ports.check(value) ? {value} :
+            {error: `The port "${value}" that is assigned to the ${arg} is already in use.`};
     }
 
     const inspect = await port('workspace');
