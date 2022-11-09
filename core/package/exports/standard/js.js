@@ -1,12 +1,12 @@
 const {PackageExportCode} = require('beyond/extensible-objects');
 const Plugin = (require('./plugin'));
-const packages = require('beyond/packages');
 
 module.exports = class extends PackageExportCode {
     get resource() {
         return 'js';
     }
 
+    #packages;
     #plugin;
 
     get hash() {
@@ -15,11 +15,14 @@ module.exports = class extends PackageExportCode {
 
     constructor(conditional) {
         super(conditional, {preprocessor: true});
+
+        // Do not import at the beginning of the file to avoid cyclical import
+        this.#packages = require('beyond/packages');
     }
 
     _prepared(require) {
-        if (!require(packages)) return;
-        packages.forEach(pkg => require(pkg.exports));
+        if (!require(this.#packages)) return;
+        this.#packages.forEach(pkg => require(pkg.exports));
         return super._prepared(require);
     }
 
@@ -31,7 +34,7 @@ module.exports = class extends PackageExportCode {
         let errors = [];
 
         try {
-            const incremental = this.bundle.pexport.pkg.is === 'internal';
+            const incremental = this.conditional.pexport.pkg.is === 'internal';
 
             build = await require('esbuild').build({
                 entryPoints: ['app.js'],
@@ -49,6 +52,7 @@ module.exports = class extends PackageExportCode {
         }
         catch (exc) {
             if (this.cancelled(request)) return;
+            console.log(exc.stack);
             errors.push(`Exception caught: ${exc.message}`);
             return;
         }
@@ -64,6 +68,7 @@ module.exports = class extends PackageExportCode {
     }
 
     _build() {
-        return {code: `console.log('hello world');`};
+        const {code, errors} = this.data;
+        return {code};
     }
 }

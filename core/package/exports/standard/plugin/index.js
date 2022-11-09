@@ -1,10 +1,12 @@
-const packages = require('beyond/packages');
 const {join, sep} = require('path');
 const fs = require('fs').promises;
 const Resolver = require('./resolver');
 
 module.exports = class {
     #bundle;
+    get bundle() {
+        return this.#bundle;
+    }
 
     // The plugin name
     get name() {
@@ -19,6 +21,11 @@ module.exports = class {
     #pkg;
     get pkg() {
         return this.#pkg;
+    }
+
+    #specifier;
+    get specifier() {
+        return this.#specifier;
     }
 
     #vspecifier;
@@ -43,6 +50,7 @@ module.exports = class {
         this.#pkg = this.#bundle.pkg;
         this.#subpath = this.#bundle.pexport.subpath;
 
+        this.#specifier = this.#pkg.specifier;
         this.#vspecifier = this.#pkg.vspecifier;
         this.#namespace = `beyond:${this.#vspecifier}`;
     }
@@ -58,25 +66,10 @@ module.exports = class {
 
         // The node of the graph being imported/required
         const resolver = new Resolver(this, args);
+        if (resolver.external) return {external: true};
 
-        if (resolver.kind === 'entry-point') {
-            const resolved = vpackage.exports.solve(resource, {platform: this.#platform, kind});
-            if (!resolved) throw new Error(`Bundle "${building.vspecifier}" not found`);
-            return {namespace, path: resolved};
-        }
-
-        /**
-         * Check if it is an external resource
-         */
-        const found = vpackage.exports.solve(resource, {platform: 'web', kind});
-        if (found) {
-            return {external: true};
-        }
-
-        /**
-         * If the path being requested is not a package export, then include it in the bundle
-         */
-        return {namespace, path: resource};
+        const {namespace, path} = resolver;
+        return {namespace, path};
     }
 
     async #load(args) {
@@ -86,9 +79,12 @@ module.exports = class {
 
         if (!namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
 
+        // Do not import at the beginning of the file to avoid cyclical import
+        const packages = require('beyond/packages');
+
         const vspecifier = namespace.slice('beyond:'.length);
-        if (!packages.has(vspecifier)) throw new Error(`Package "${vspecifier}" not found`);
-        const pkg = packages.get(vspecifier);
+        const pkg = packages.find({vspecifier});
+        if (!pkg) throw new Error(`Package "${vspecifier}" not found`);
 
         /**
          * The absolute path of the file that resolves the node being imported/required

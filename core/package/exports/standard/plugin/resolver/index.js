@@ -1,4 +1,3 @@
-const packages = require('beyond/packages');
 const {join, dirname, sep} = require('path');
 const Dependency = require('./dependency');
 const Importer = require('./importer');
@@ -37,6 +36,26 @@ module.exports = class {
         return this.#pkg;
     }
 
+    #external;
+    /**
+     * Is it an external module (export of a package) that has not to be imported in the dependency graph
+     * of the graph being built
+     * @return {boolean}
+     */
+    get external() {
+        return this.#external;
+    }
+
+    #orphan;
+    /**
+     * When the specifier being imported is from an external package, but the exports are not defined, or the specifier
+     * does not comply any of the exports defined in it
+     * @return {boolean}
+     */
+    get orphan() {
+        return this.#orphan;
+    }
+
     #path;
     /**
      * The absolute path of the file that resolves for the resource being imported
@@ -61,30 +80,38 @@ module.exports = class {
         return this.#kind;
     }
 
-    #orphan;
-    /**
-     * When the specifier being imported is a file of another package where the resource is not a subpath
-     * @return {boolean}
-     */
-    get orphan() {
-        return this.#orphan;
-    }
-
     constructor(plugin, args) {
         this.#plugin = plugin;
-        this.#specifier = args.path;
         const kind = this.#kind = args.kind;
+
+        /**
+         * The entry point
+         */
+        if (kind === 'entry-point') {
+            this.#pkg = this.#plugin.pkg;
+            this.#specifier = this.#plugin.specifier;
+            this.#vspecifier = this.#plugin.vspecifier;
+            this.#path = this.#plugin.bundle.entry;
+            return;
+        }
+
+        this.#specifier = args.path;
         const importer = this.#importer = new Importer(args);
 
         const done = ({vspecifier, subpath, path}) => {
             this.#vspecifier = vspecifier;
 
             const pkg = this.#pkg = (() => {
-                if (!packages.has(vspecifier)) {
-                    const by = `file "${importer.path}" of package "${importer.vspecifier}"`;
-                    throw new Error(`Package "${vspecifier}" not found, imported by ${by}`);
+                // Do not import at the beginning of the file to avoid cyclical import
+                const packages = require('beyond/packages');
+
+                const pkg = packages.find({vspecifier});
+                if (!pkg) {
+                    const by = kind !== 'entry-point' ?
+                        `, imported by file "${importer.path}" of package "${importer.vspecifier}"` : '';
+                    throw new Error(`Package "${vspecifier}" not found${by}`);
                 }
-                return packages.get(vspecifier);
+                return pkg;
             })();
 
             this.#path = (() => {
@@ -93,15 +120,10 @@ module.exports = class {
                     this.#orphan = true;
                     return subpath;
                 }
+                else {
+                    this.#external = true;
+                }
             })();
-        }
-
-        /**
-         * The entry point
-         */
-        if (kind === 'entry-point') {
-            const {vspecifier, subpath} = plugin;
-            return done({vspecifier, subpath});
         }
 
         if (!args.namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
