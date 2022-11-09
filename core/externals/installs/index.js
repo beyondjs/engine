@@ -26,10 +26,11 @@ module.exports = new class extends DynamicProcessor(Map) {
         await fs.mkdir(this.#path, {recursive: true});
 
         const process = async vspecifier => {
-            const pkgjson = join(this.#path, vspecifier, 'package.json');
+            const path = join(this.#path, vspecifier);
+            const pkgjson = join(path, 'package.json');
             if (!(await fs.exists(pkgjson))) return;
 
-            const vpackage = new VPackage(pkgjson, vspecifier);
+            const vpackage = new VPackage(path, vspecifier);
             await vpackage.process();
             vpackage.error ?
                 `Package "${vspecifier}" couldn't be processed: ${vpackage.error}` :

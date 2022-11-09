@@ -1,4 +1,5 @@
 const fs = require('beyond/utils/fs');
+const {join} = require('path');
 
 module.exports = class {
     #path;
@@ -28,7 +29,8 @@ module.exports = class {
 
     async process() {
         try {
-            const content = await fs.readFile(this.#path, 'utf8');
+            const file = join(this.#path, 'package.json');
+            const content = await fs.readFile(file, 'utf8');
             this.#json = JSON.parse(content);
         }
         catch (exc) {
