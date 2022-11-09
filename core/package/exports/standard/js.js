@@ -31,7 +31,7 @@ module.exports = class extends PackageExportCode {
         let errors = [];
 
         try {
-            const incremental = this.bundle.module.pkg.is === 'internal';
+            const incremental = this.bundle.pexport.pkg.is === 'internal';
 
             build = await require('esbuild').build({
                 entryPoints: ['app.js'],
