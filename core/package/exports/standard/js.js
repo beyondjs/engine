@@ -25,7 +25,7 @@ module.exports = class extends PackageExportCode {
 
     async _preprocess(request) {
         this.#plugin?.cancel();
-        this.#plugin = new Plugin(this.conditional, platform);
+        this.#plugin = new Plugin(this.conditional);
 
         let build;
         let errors = [];

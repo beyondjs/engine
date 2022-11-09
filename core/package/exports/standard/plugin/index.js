@@ -1,3 +1,4 @@
+const packages = require('beyond/packages');
 const {join, sep} = require('path');
 const fs = require('fs').promises;
 const Resolver = require('./resolver');
@@ -35,9 +36,9 @@ module.exports = class {
         return this.#subpath;
     }
 
-    constructor(bundle, platform) {
+    constructor(bundle) {
         this.#bundle = bundle;
-        this.#platform = platform;
+        this.#platform = bundle.platform;
 
         this.#pkg = this.#bundle.pkg;
         this.#subpath = this.#bundle.pexport.subpath;
@@ -58,9 +59,6 @@ module.exports = class {
         // The node of the graph being imported/required
         const resolver = new Resolver(this, args);
 
-        /**
-         * Check if we are resolving the resource being requested
-         */
         if (resolver.kind === 'entry-point') {
             const resolved = vpackage.exports.solve(resource, {platform: this.#platform, kind});
             if (!resolved) throw new Error(`Bundle "${building.vspecifier}" not found`);
