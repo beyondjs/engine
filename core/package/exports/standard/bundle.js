@@ -11,6 +11,10 @@ module.exports = class extends DynamicProcessor() {
         return this.#pexport;
     }
 
+    get pkg() {
+        return this.#pexport.pkg;
+    }
+
     #platform;
     get platform() {
         return this.#platform;

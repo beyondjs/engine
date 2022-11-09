@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 const Resolver = require('./resolver');
 
 module.exports = class {
-    #conditional;
+    #bundle;
 
     // The plugin name
     get name() {
@@ -35,13 +35,15 @@ module.exports = class {
         return this.#subpath;
     }
 
-    constructor(conditional, platform) {
-        this.#conditional = conditional;
+    constructor(bundle, platform) {
+        this.#bundle = bundle;
         this.#platform = platform;
-        this.#pkg = this.#conditional.module.pkg;
+
+        this.#pkg = this.#bundle.pkg;
+        this.#subpath = this.#bundle.pexport.subpath;
+
         this.#vspecifier = this.#pkg.vspecifier;
         this.#namespace = `beyond:${this.#vspecifier}`;
-        this.#subpath = this.#conditional.subpath;
     }
 
     #cancelled = false;

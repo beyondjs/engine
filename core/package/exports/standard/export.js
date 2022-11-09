@@ -7,6 +7,11 @@ module.exports = class extends DynamicProcessor() {
         return 'package.standard-export';
     }
 
+    #pkg;
+    get pkg() {
+        return this.#pkg;
+    }
+
     #subpath;
     get subpath() {
         return this.#subpath;
@@ -34,8 +39,9 @@ module.exports = class extends DynamicProcessor() {
     #bundles = new Map();
     #wrappers = new Map();
 
-    constructor(subpath) {
+    constructor(pkg, subpath) {
         super();
+        this.#pkg = pkg;
         this.#subpath = subpath;
     }
 

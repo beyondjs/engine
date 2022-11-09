@@ -64,7 +64,15 @@ module.exports = class {
         this.#subpath = requiring.subpath;
 
         /**
-         * The package dependencies tree of the bundle being processed
+         * Check if it is a self package specifier
+         */
+        if (requiring.pkg === plugin.pkg.name) {
+            this.#vspecifier = plugin.pkg.vspecifier;
+            return;
+        }
+
+        /**
+         * Find the vspecifier from the dependencies tree of the package of the bundle being processed
          */
         const {dependencies} = plugin.pkg;
 

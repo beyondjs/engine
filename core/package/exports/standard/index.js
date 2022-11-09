@@ -23,7 +23,7 @@ module.exports = class extends DynamicProcessor(Map) {
         let changed = false;
 
         this.#config.forEach((conditional, subpath) => {
-            const pexport = this.has(subpath) ? this.get(subpath) : new Export(subpath);
+            const pexport = this.has(subpath) ? this.get(subpath) : new Export(this.#pkg, subpath);
             pexport.configure(conditional);
             updated.set(subpath, pexport);
         });

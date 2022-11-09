@@ -40,6 +40,7 @@ module.exports = class {
     #path;
     /**
      * The absolute path of the file that resolves for the resource being imported
+     * It is undefined if the specifier is an external module (export of a package)
      * @return {string}
      */
     get path() {
@@ -88,10 +89,7 @@ module.exports = class {
 
             this.#path = (() => {
                 if (path) return path;
-                const bundle = pkg.exports.get(subpath);
-                const {platform} = plugin;
-                const resolved = bundle.conditional({platform, kind});
-                if (!resolved) {
+                if (!pkg.exports.has(subpath)) {
                     this.#orphan = true;
                     return subpath;
                 }
