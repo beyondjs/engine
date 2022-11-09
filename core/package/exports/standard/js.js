@@ -1,5 +1,6 @@
 const {PackageExportCode} = require('beyond/extensible-objects');
 const Plugin = (require('./plugin'));
+const packages = require('beyond/packages');
 
 module.exports = class extends PackageExportCode {
     get resource() {
@@ -14,6 +15,11 @@ module.exports = class extends PackageExportCode {
 
     constructor(conditional) {
         super(conditional, {preprocessor: true});
+    }
+
+    _prepared(require) {
+        if (!require(packages) || !require(packages.exports)) return;
+        return super._prepared(require);
     }
 
     async _preprocess(request) {
