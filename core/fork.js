@@ -27,22 +27,12 @@ new class extends EventEmitter {
         return this.#server;
     }
 
-    #applications;
-    get applications() {
-        return this.#applications;
-    }
-
     constructor() {
         super();
 
         const config = new Config(process.cwd(), {
             '/plugins': 'object',
-            '/packages': 'array',
-            '/packages/children/template': 'object',
-            '/packages/children/template/application': 'object',
-            '/packages/children/template/global': 'object',
-            '/packages/children/template/processors': 'object',
-            '/packages/children/template/overwrites': 'object'
+            '/packages': 'array'
         });
         this.#config = config;
         this.#config.data = 'beyond.json';

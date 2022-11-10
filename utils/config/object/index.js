@@ -1,6 +1,10 @@
 const equal = (require('../../equal'));
 
 module.exports = class extends require('../property') {
+    get dp() {
+        return 'utils.config.property.object';
+    }
+
     get is() {
         return 'object';
     }
@@ -10,8 +14,13 @@ module.exports = class extends require('../property') {
         return this.#properties;
     }
 
-    has = (name) => this.#properties.has(name);
-    get = (name) => this.#properties.get(name);
+    has(name) {
+        return this.#properties.has(name);
+    }
+
+    get(name) {
+        return this.#properties.get(name);
+    }
 
     constructor(path, branchesSpecs, branch, parent) {
         super(path, branchesSpecs, branch, parent);

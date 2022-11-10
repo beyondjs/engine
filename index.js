@@ -14,9 +14,9 @@ module.exports = class {
         return this.#inspect;
     }
 
-    #launchers;
-    get launchers() {
-        return this.#launchers;
+    #applications;
+    get applications() {
+        return this.#applications;
     }
 
     async #initialise(args) {
@@ -29,7 +29,7 @@ module.exports = class {
         this.#watchers = new WatchersService('watchers');
         this.#core = new (require('./core'))({repository});
         inspect && (this.#inspect = new (require('./inspect'))(inspect));
-        // this.#launchers = new (require('./launchers'))({inspect});
+        this.#applications = new (require('./applications'))({inspect});
     }
 
     constructor(args) {

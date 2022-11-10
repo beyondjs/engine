@@ -1,17 +1,19 @@
 const ipc = require('beyond/utils/ipc');
-const registry = require('./registry');
-const Actions = require('./actions');
 
 /**
- * Actions exposed for interprocess communication
+ * Interprocess communication exposed actions
+ *
+ * @param core {object} The client core
+ * @param http {object} The http manager
  */
-module.exports = function () {
+module.exports = function (core, http) {
     'use strict';
 
-    const actions = new Actions();
+    const model = require('./model');
+    model.initialise(core, http);
 
     const procedures = new Map;
-    registry.forEach(action => ipc.handle(action, async (...params) => {
+    require('./actions.js').forEach(action => ipc.handle(action, async (...params) => {
         const split = action.split('/');
         const method = split.pop();
         const path = `./${split.join('/')}`;
@@ -21,7 +23,7 @@ module.exports = function () {
             procedure = procedures.get(path);
         }
         else {
-            const p = new (require(path))(actions);
+            const p = new (require(path))(model);
             procedures.set(path, p);
             procedure = p;
         }

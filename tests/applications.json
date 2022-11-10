@@ -1,0 +1,28 @@
+[
+  {
+    "name": "web",
+    "platform": "browser",
+    "path": "./web",
+    "port": 8081,
+    "dependencies": {
+      "contoso": "0.0.1"
+    }
+  },
+  {
+    "name": "xx",
+    "platform": "browser",
+    "environment": "development",
+    "development": {
+      "tools": true
+    },
+    "port": 8080,
+    "ssr": "ssr",
+    "backend": "backend",
+    "minify": false,
+    "bundles": {
+      "mode": "sjs"
+    },
+    "gzip": false,
+    "maps": "inline"
+  }
+]

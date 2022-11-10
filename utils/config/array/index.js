@@ -1,9 +1,13 @@
 module.exports = class extends require('../property') {
+    get dp() {
+        return 'utils.config.property.array';
+    }
+
     get is() {
         return 'array';
     }
 
-    errors() {
+    get errors() {
         return super.errors.concat(this.#items.errors);
     }
 

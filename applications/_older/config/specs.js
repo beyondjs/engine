@@ -4,7 +4,7 @@ const equal = require('beyond/utils/equal');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'bees.instances.config.item';
+        return 'applications.config.item';
     }
 
     #key;
