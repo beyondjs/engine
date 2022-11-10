@@ -4,6 +4,11 @@ module.exports = class {
         return this.#platform;
     }
 
+    #dependencies;
+    get dependencies() {
+        return this.#dependencies;
+    }
+
     #port;
     get port() {
         return this.#port;
@@ -35,8 +40,9 @@ module.exports = class {
         this.#warnings = warnings.slice();
         if (!valid || !value) return;
 
-        const {platform, port} = value;
+        const {platform, port, dependencies} = value;
         this.#platform = platform;
         this.#port = port;
+        this.#dependencies = dependencies;
     }
 }

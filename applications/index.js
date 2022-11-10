@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const Factory = require('./factory');
+const Application = require('./application');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -48,13 +48,13 @@ module.exports = class extends DynamicProcessor(Map) {
 
         const config = this.children.get('config').child;
         config.forEach((specs, key) => {
-            const factory = (() => {
+            const application = (() => {
                 if (this.has(key)) return this.get(key);
                 changed = true;
-                return new Factory(specs, this.#inspect);
+                return new Application(specs, this.#inspect);
             })();
 
-            updated.set(key, factory);
+            updated.set(key, application);
         });
 
         // Destroy processes that has been removed from configuration
