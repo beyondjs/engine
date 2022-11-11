@@ -63,6 +63,7 @@
   "exports": {
     ".": "./index.js",
     "./packages": "./core/packages/index.js",
+    "./applications": "./applications/index.js",
     "./package": "./core/package/index.js",
     "./extensible-objects": "./extensible-objects/index.js",
     "./dependencies-tree": "./core/dependencies-tree/index.js",

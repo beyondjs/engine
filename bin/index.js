@@ -9,11 +9,14 @@ module.exports = new class {
             .scriptName('beyond')
             .usage(usage)
 
-        commands.forEach(({command, description, options, handler}) => {
+        commands.forEach(({command, description, options, positionals, handler}) => {
             yargs.command(
                 command,
                 description,
-                yargs => options?.forEach(option => yargs.positional(option.name, option)),
+                yargs => {
+                    options?.forEach(option => yargs.option(option.name, option));
+                    positionals?.forEach(positional => yargs.positional(positional.name, positional));
+                },
                 handler
             );
         });

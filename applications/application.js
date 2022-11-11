@@ -4,9 +4,19 @@ const DependenciesTree = require('beyond/dependencies-tree');
 module.exports = class {
     #manager;
     #dependencies;
+    get dependencies() {
+        return this.#dependencies;
+    }
+
+    #name;
+    get name() {
+        return this.#name;
+    }
 
     constructor(specs, inspect) {
-        const {platform, dependencies} = specs;
+        const {name, platform, dependencies} = specs;
+        this.#name = name;
+
         const Manager = (() => {
             if (platform === 'browser') return Browser;
         })();
@@ -17,5 +27,9 @@ module.exports = class {
 
     async start() {
         return this.#manager.start();
+    }
+
+    destroy() {
+        this.#manager?.destroy();
     }
 }

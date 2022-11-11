@@ -27,7 +27,7 @@ module.exports = new class {
         if (this.#ready) return this.#ready;
         this.#ready = new PendingPromise();
 
-        const name = 'dependencies.db';
+        const name = 'dependencies-tree.db';
         const dirname = require('path').join(process.cwd(), '.beyond/cache');
         const store = require('path').join(dirname, name);
 
@@ -44,10 +44,10 @@ module.exports = new class {
         }
 
         await this.#run('CREATE TABLE IF NOT EXISTS dependencies (' +
-            'vspecifier TEXT NOT NULL, ' +
+            'hash NUMBER NOT NULL, ' +
             'data TEXT NOT NULL);');
 
-        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS vspecifier_index on dependencies (vspecifier);');
+        await this.#run('CREATE UNIQUE INDEX IF NOT EXISTS hash_index on dependencies (hash);');
         this.#ready.resolve();
     }
 }

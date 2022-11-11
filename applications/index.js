@@ -28,6 +28,7 @@ module.exports = class extends DynamicProcessor(Map) {
      */
     constructor(specs) {
         super();
+        specs = specs ? specs : {};
         this.#inspect = specs.inspect;
 
         new (require('./ipc'))(this);
@@ -61,5 +62,10 @@ module.exports = class extends DynamicProcessor(Map) {
         this.forEach((manager, path) => !config.has(path) && manager.destroy());
         this.clear();
         updated.forEach((value, key) => !this.has(key) && (changed = true) && this.set(key, value));
+    }
+
+    destroy() {
+        super.destroy();
+        this.forEach(application => application.destroy());
     }
 }

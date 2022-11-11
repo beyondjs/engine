@@ -1,4 +1,9 @@
 module.exports = class {
+    #name;
+    get name() {
+        return this.#name;
+    }
+
     #platform;
     get platform() {
         return this.#platform;
@@ -40,7 +45,8 @@ module.exports = class {
         this.#warnings = warnings.slice();
         if (!valid || !value) return;
 
-        const {platform, port, dependencies} = value;
+        const {name, platform, port, dependencies} = value;
+        this.#name = name;
         this.#platform = platform;
         this.#port = port;
         this.#dependencies = dependencies;

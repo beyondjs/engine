@@ -89,7 +89,7 @@ module.exports = class extends DynamicProcessor() {
             return output;
         }
 
-        const value = await recursive(this.#dependencies);
+        const value = await recursive(this.#dependencies.config);
         if (this.#request !== request) return;
 
         this.#working = false;

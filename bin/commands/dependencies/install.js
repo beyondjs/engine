@@ -3,7 +3,7 @@ const externals = require('beyond/externals/installs');
 module.exports = {
     command: 'dependencies-install',
     description: 'Installs an external package',
-    options: [{
+    positionals: [{
         name: 'name',
         type: 'string',
         optional: false,

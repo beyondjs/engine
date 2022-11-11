@@ -35,4 +35,13 @@ module.exports = class {
 
         this.#server = new Server(this.#specs, {inspect: this.#inspect});
     }
+
+    stop() {
+        this.#server?.destroy();
+        this.#server = void 0;
+    }
+
+    destroy() {
+        this.stop();
+    }
 }

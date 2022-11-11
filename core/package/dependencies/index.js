@@ -51,7 +51,7 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#tree && this.children.unregister(['tree']);
         this.#tree?.destroy();
 
-        const child = this.#tree = new DependenciesTree(this.#pkg.vspecifier, this.#config);
+        const child = this.#tree = new DependenciesTree(this.#config);
         this.children.register(new Map([['tree', {child}]]));
 
         this.#packages.forEach(pkg => require(pkg));

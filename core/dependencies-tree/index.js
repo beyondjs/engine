@@ -10,11 +10,6 @@ module.exports = class extends DynamicProcessor(Map) {
         return 'dependencies-tree';
     }
 
-    #vspecifier;
-    get vspecifier() {
-        return this.#vspecifier;
-    }
-
     #config;
     get config() {
         return this.#config;
@@ -53,10 +48,11 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#processor.done;
     }
 
-    constructor(vspecifier, config) {
+    constructor(config) {
         super();
-        this.#vspecifier = vspecifier;
-        this.#config = config;
+        if (typeof config !== 'object') throw new Error('Invalid parameters');
+
+        this.#config = new Map(Object.entries(config));
         this.#data = new DependenciesData();
         this.#cache = new DependenciesTreeCache(this);
         this.#processor = new DependenciesProcessor(this);
