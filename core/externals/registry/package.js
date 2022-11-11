@@ -4,6 +4,10 @@ const {ExternalsRegistryCache} = require('beyond/stores');
 const PackageFetcher = require('./fetcher');
 
 module.exports = class Package extends DynamicProcessor() {
+    get dp() {
+        return 'externals.registry';
+    }
+
     #name;
     #cache;
     #fetcher;
@@ -54,7 +58,7 @@ module.exports = class Package extends DynamicProcessor() {
         this.#cache = new ExternalsRegistryCache(name);
         this.#fetcher = new PackageFetcher(name, this.#cache);
 
-        super.setup([['fetcher', {child: this.#fetcher}]]);
+        super.setup(new Map([['fetcher', {child: this.#fetcher}]]));
     }
 
     #process(value, time) {

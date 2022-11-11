@@ -1,5 +1,5 @@
 const Browser = require('./browser');
-const DependenciesTree = require('beyond/dependencies-tree');
+const {Tree: DependenciesTree, Config: DependenciesConfig} = require('beyond/dependencies');
 
 module.exports = class {
     #manager;
@@ -22,7 +22,10 @@ module.exports = class {
         })();
 
         this.#manager = new Manager(specs, inspect);
-        this.#dependencies = new DependenciesTree(dependencies);
+        this.#dependencies = (() => {
+            const config = new DependenciesConfig({dependencies});
+            return new DependenciesTree(config);
+        })();
     }
 
     async start() {

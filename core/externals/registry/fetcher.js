@@ -3,6 +3,10 @@ const PendingPromise = require('beyond/utils/pending-promise');
 const fetch = require('node-fetch');
 
 module.exports = class extends DynamicProcessor() {
+    get dp() {
+        return 'externals.registry.fetcher';
+    }
+
     #name;
     #cache;
 

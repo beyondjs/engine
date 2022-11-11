@@ -1,3 +1,5 @@
+const {Config: DependenciesConfig} = require('beyond/dependencies');
+
 module.exports = class {
     #json;
     get json() {
@@ -19,6 +21,6 @@ module.exports = class {
 
     constructor(json) {
         this.#json = json;
-        this.#dependencies = new (require('./dependencies'))(json);
+        this.#dependencies = new DependenciesConfig(json);
     }
 }

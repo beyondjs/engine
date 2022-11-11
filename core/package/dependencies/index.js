@@ -1,7 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const DependenciesTree = require('beyond/dependencies-tree');
-const equal = require('beyond/utils/equal');
-const crc32 = require('beyond/utils/crc32');
+const {Tree: DependenciesTree, Config: DependenciesConfig} = require('beyond/dependencies');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -11,8 +9,11 @@ module.exports = class extends DynamicProcessor(Map) {
     #packages;
     #pkg;
     #tree;
+
     #config;
-    #hash;
+    get config() {
+        return this.#config;
+    }
 
     #installed;
     get installed() {
@@ -46,7 +47,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _prepared(require) {
         if (!this.#config) return false;
-        if (this.#tree?.hash === this.#hash) return;
+        if (this.#tree?.hash === this.#config.hash) return;
 
         this.#tree && this.children.unregister(['tree']);
         this.#tree?.destroy();
@@ -59,7 +60,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _process() {
         const done = (installed) => {
-            const changed = this.#tree.hash !== this.#hash || this.#installed !== installed;
+            const changed = this.#tree.hash !== this.#config.hash || this.#installed !== installed;
             this.#installed = installed;
             return changed;
         }
@@ -79,8 +80,7 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     configure(config) {
-        this.#config = typeof config === 'object' ? config : {};
-        this.#hash = crc32(equal.generate(this.#config));
+        this.#config = new DependenciesConfig(config);
         this._invalidate();
     }
 }

@@ -2,8 +2,7 @@ const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const DependenciesData = require('./data');
 const {DependenciesTreeCache} = require('beyond/stores');
 const DependenciesProcessor = require('./processor');
-const crc32 = require('beyond/utils/crc32');
-const equal = require('beyond/utils/equal');
+const DependenciesConfig = require('../config');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -15,9 +14,8 @@ module.exports = class extends DynamicProcessor(Map) {
         return this.#config;
     }
 
-    #hash;
     get hash() {
-        return this.#hash;
+        return this.#config.hash;
     }
 
     #data;
@@ -50,13 +48,12 @@ module.exports = class extends DynamicProcessor(Map) {
 
     constructor(config) {
         super();
-        if (typeof config !== 'object') throw new Error('Invalid parameters');
+        if (!(config instanceof DependenciesConfig)) throw new Error('Invalid parameters');
 
-        this.#config = new Map(Object.entries(config));
+        this.#config = config;
         this.#data = new DependenciesData();
         this.#cache = new DependenciesTreeCache(this);
         this.#processor = new DependenciesProcessor(this);
-        this.#hash = crc32(equal.generate(config));
 
         super.setup(new Map([['processor', {child: this.#processor}]]));
     }
@@ -64,7 +61,7 @@ module.exports = class extends DynamicProcessor(Map) {
     async _begin() {
         const cache = this.#cache;
         await cache.load();
-        cache.value && cache.value.hash === this.#hash && this.#data.hydrate(cache.value);
+        cache.value && cache.value.hash === this.#config.hash && this.#data.hydrate(cache.value);
     }
 
     #time;
@@ -96,7 +93,7 @@ module.exports = class extends DynamicProcessor(Map) {
 
     toJSON() {
         const json = this.#data.toJSON();
-        json.hash = this.#hash;
+        json.hash = this.#config.hash;
         return json;
     }
 
