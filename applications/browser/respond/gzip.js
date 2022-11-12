@@ -2,4 +2,4 @@ const util = require('util');
 const zlib = require('zlib');
 const gzip = util.promisify(zlib.gzip);
 
-module.exports = () => gzip(content);
+module.exports = content => gzip(content);

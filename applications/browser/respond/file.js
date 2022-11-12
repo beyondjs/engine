@@ -1,6 +1,6 @@
 const fs = require('beyond/utils/fs');
 const {extname} = require('path');
-const messageResponse = require('./message');
+const contentResponse = require('./content');
 const contentTypes = require('./content-types');
 const gzip = require('./gzip');
 
@@ -36,7 +36,8 @@ module.exports = function (specs, response) {
             response.end();
         })
         .catch(exc => {
-            messageResponse({statusCode: 500, message: exc.message}, response);
+            const content = `Error caught: "${exc.message}"`;
+            contentResponse({statusCode: 500, content}, response);
             console.log(exc.stack);
         });
 }

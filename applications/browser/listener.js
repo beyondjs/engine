@@ -2,6 +2,7 @@ const {URL} = require('url');
 const {join} = require('path');
 const fs = require('beyond/utils/fs');
 const respond = require('./respond');
+const dependenciesScript = require('./dependencies');
 
 /**
  * The http listener that serves an application
@@ -28,5 +29,17 @@ module.exports = (specs, local) => async function (request, response) {
     })();
     if (resolved) return;
 
-    response.end(`request pathname: "${url.pathname}"`);
+    /**
+     * Check if the requested resource is the dependencies object
+     */
+    if (url.pathname === '/dependencies') {
+        dependenciesScript(specs, response);
+        return;
+    }
+
+    /**
+     * Resource not found
+     */
+    const message = `404 - Resource "${url.pathname}" not found`;
+    respond({message, statusCode: 404}, response);
 }
