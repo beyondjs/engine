@@ -8,8 +8,8 @@
     <script src="./dependencies.js"></script>
     <script>
         (async () => {
-            const ReactDOM = await System.import('react-dom');
-            console.log('ReactDOM', ReactDOM)
+            const React = await System.import('react');
+            console.log('React', React)
         })().catch(exc => console.error(exc.stack));
     </script>
 </head>
