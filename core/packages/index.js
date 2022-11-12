@@ -66,4 +66,9 @@ module.exports = new class extends DynamicProcessor(Map) {
             return new Set(versions);
         }
     }
+
+    destroy() {
+        this.#internals.destroy();
+        this.#externals.destroy();
+    }
 }

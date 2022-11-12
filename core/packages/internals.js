@@ -30,4 +30,9 @@ module.exports = class extends ConfigCollection {
     _createItem(config) {
         return new InternalPackage(config, this.#specs);
     }
+
+    destroy() {
+        super.destroy();
+        this.forEach(pkg => pkg.destroy());
+    }
 }

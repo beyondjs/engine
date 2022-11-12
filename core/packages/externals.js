@@ -25,4 +25,9 @@ module.exports = class extends DynamicProcessor(Map) {
         this.clear();
         updated.forEach((value, key) => this.set(key, value));
     }
+
+    destroy() {
+        super.destroy();
+        this.forEach(pkg => pkg.destroy());
+    }
 }

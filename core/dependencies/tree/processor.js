@@ -88,7 +88,10 @@ module.exports = class extends DynamicProcessor() {
                         done({error: `Package ${vspecifier} has reported errors`});
                         continue;
                     }
-                    done({vpackage: pkg, dependencies: pkg.dependencies.config});
+
+                    const dependencies = await recursive(pkg.dependencies.config);
+                    if (this.#request !== request) return;
+                    done({vpackage: pkg, dependencies});
                     continue;
                 }
 
@@ -110,7 +113,6 @@ module.exports = class extends DynamicProcessor() {
 
                 const dependencies = await recursive(vpackage.dependencies);
                 if (this.#request !== request) return;
-
                 done({vpackage, dependencies});
             }
             return output;

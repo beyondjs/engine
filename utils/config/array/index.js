@@ -28,6 +28,6 @@ module.exports = class extends require('../property') {
 
     destroy() {
         super.destroy();
-        this.#items.destroy().catch(exc => console.error(exc.stack));
+        this.#items.destroy();
     }
 }

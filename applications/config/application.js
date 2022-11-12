@@ -1,7 +1,14 @@
+const {join} = require('path');
+
 module.exports = class {
     #name;
     get name() {
         return this.#name;
+    }
+
+    #path;
+    get path() {
+        return this.#path;
     }
 
     #platform;
@@ -39,7 +46,7 @@ module.exports = class {
     }
 
     constructor(config) {
-        const {errors, warnings, value, valid} = config;
+        const {errors, warnings, value, valid, path} = config;
 
         this.#errors = errors.slice();
         this.#warnings = warnings.slice();
@@ -47,6 +54,7 @@ module.exports = class {
 
         const {name, platform, port, dependencies} = value;
         this.#name = name;
+        this.#path = join(path, value.path ? value.path : '');
         this.#platform = platform;
         this.#port = port;
         this.#dependencies = dependencies;
