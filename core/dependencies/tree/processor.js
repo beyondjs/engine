@@ -7,6 +7,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     #dependencies;
+    #packages;
 
     #working = false;
     get working() {
@@ -35,12 +36,21 @@ module.exports = class extends DynamicProcessor() {
     constructor(dependencies) {
         super();
         this.#dependencies = dependencies;
+
+        // Do not use 'beyond/packages' at the beginning of the file to a avoid circular dependency
+        this.#packages = require('beyond/packages');
     }
 
     #request;
 
     cancel() {
         this.#request = void 0;
+    }
+
+    _prepared(require) {
+        const packages = this.#packages;
+        if (!require(packages)) return false;
+        packages.forEach(pkg => require(pkg));
     }
 
     async process() {
@@ -66,10 +76,27 @@ module.exports = class extends DynamicProcessor() {
                     output.set(name, {version, dependencies});
                 }
 
-                const pkg = registry.obtain(name);
-                await pkg.fill();
-                if (this.#request !== request) return;
+                let pkg;
 
+                /**
+                 * Check if the dependency is an internal package
+                 */
+                const vspecifier = `${name}@${version}`;
+                pkg = this.#packages.find({vspecifier});
+                if (pkg) {
+                    if (!pkg.valid) {
+                        done({error: `Package ${vspecifier} has reported errors`});
+                        continue;
+                    }
+                    done({vpackage: pkg, dependencies: pkg.dependencies.config});
+                    continue;
+                }
+
+                /**
+                 * Look up the dependency in NPM
+                 */
+                pkg = registry.obtain(name);
+                await pkg.fill();
                 if (pkg.error) {
                     done({error: `Error fetching package "${name}": ${pkg.error}`});
                     continue;

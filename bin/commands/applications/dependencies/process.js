@@ -1,3 +1,5 @@
+const {Config} = require('beyond/utils/config');
+const packages = require('beyond/packages');
 const Applications = require('beyond/applications');
 
 module.exports = {
@@ -9,6 +11,13 @@ module.exports = {
         type: 'string'
     }],
     handler: async (argv) => {
+        /**
+         * Initialise the packages
+         */
+        const config = new Config(process.cwd(), {'/packages': 'array'});
+        config.data = 'beyond.json';
+        packages.setup(config.get('packages'), {watchers: false});
+
         const applications = new Applications();
         await applications.ready;
         const promises = [...applications.values()].map(application => application.ready);

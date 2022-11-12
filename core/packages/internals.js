@@ -7,8 +7,17 @@ module.exports = class extends ConfigCollection {
         return 'packages.internals';
     }
 
-    constructor(config) {
+    #specs;
+
+    /**
+     * Internal packages constructor
+     *
+     * @param config {*}
+     * @param specs {watchers: {boolean}}
+     */
+    constructor(config, specs) {
         super(config);
+        this.#specs = specs;
     }
 
     _notify() {
@@ -19,6 +28,6 @@ module.exports = class extends ConfigCollection {
     }
 
     _createItem(config) {
-        return new InternalPackage(config);
+        return new InternalPackage(config, this.#specs);
     }
 }

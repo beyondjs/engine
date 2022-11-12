@@ -17,8 +17,13 @@ module.exports = new class extends DynamicProcessor(Map) {
         return this.#externals;
     }
 
-    create(config) {
-        const internals = this.#internals = new Internals(config);
+    /**
+     * Initialise the packages according they are configured in the beyond.json file
+     * @param config {*}
+     * @param specs {watchers: {boolean}}
+     */
+    setup(config, specs) {
+        const internals = this.#internals = new Internals(config, specs);
         const externals = this.#externals = new Externals();
         super.setup(new Map([['internals', {child: internals}], ['externals', {child: externals}]]));
 

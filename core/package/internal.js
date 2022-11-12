@@ -7,6 +7,8 @@ module.exports = class extends PackageBase {
         return 'internal';
     }
 
+    #specs;
+
     #watcher;
     get watcher() {
         return this.#watcher;
@@ -50,8 +52,8 @@ module.exports = class extends PackageBase {
         /**
          * Create the watcher before calling super._begin, as it is required by PackageBase
          */
-        this.#watcher = new WatchersClient({is: 'package', path: config.path});
-        this.#watcher.start().catch(exc => console.error(exc.stack));
+        this.#watcher = this.#specs.watchers ? new WatchersClient({is: 'package', path: config.path}) : void 0;
+        this.#watcher?.start().catch(exc => console.error(exc.stack));
 
         this.#modules = new Modules(this);
         // this.#config = new (require('./config'))(this);
@@ -67,9 +69,15 @@ module.exports = class extends PackageBase {
      * Package constructor
      *
      * @param config {*} The package configuration manager
+     * @param specs {watchers: {boolean}}
      */
-    constructor(config) {
+    constructor(config, specs) {
         super(config.path);
+
+        specs = specs ? specs : {};
+        specs.watchers = specs.watchers === void 0 ? true : specs.watchers;
+        this.#specs = specs;
+
         super.setup(new Map([['config', {child: config}]]));
     }
 

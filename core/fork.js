@@ -38,7 +38,7 @@ new class extends EventEmitter {
         this.#config.data = 'beyond.json';
 
         plugins.initialise(config.get('plugins'));
-        packages.create(config.get('packages'));
+        packages.setup(config.get('packages'));
         this.#server = new (require('./server'))(repository, {gzip: false});
 
         // Expose interprocess communication actions
