@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <title>My Beyond Application</title>
 
+    <script src="./s.js"></script>
     <script src="./dependencies.js"></script>
     <script>
-        import 'contoso/bundle';
+        (async () => {
+            const ReactDOM = await System.import('react-dom');
+            console.log('ReactDOM', ReactDOM)
+        })().catch(exc => console.error(exc.stack));
     </script>
 </head>
 
