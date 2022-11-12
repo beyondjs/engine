@@ -47,12 +47,6 @@ module.exports = class extends DynamicProcessor() {
         this.#request = void 0;
     }
 
-    _prepared(require) {
-        const packages = this.#packages;
-        if (!require(packages)) return false;
-        packages.forEach(pkg => require(pkg));
-    }
-
     async process() {
         if (this.#working) return;
         this.#working = true;
@@ -60,6 +54,22 @@ module.exports = class extends DynamicProcessor() {
 
         const request = this.#request = Date.now();
 
+        /**
+         * Al internal packages must be ready to process the dependencies tree
+         */
+        const packages = this.#packages;
+        await packages.ready;
+        if (this.#request !== request) return;
+        const promises = [];
+        packages.forEach(pkg => promises.push(pkg.ready));
+        await Promise.all(promises);
+        if (this.#request !== request) return;
+
+        /**
+         * Recursively find the dependencies
+         * @param dependencies
+         * @return {Promise<Map<string, *>>}
+         */
         const recursive = async dependencies => {
             const output = new Map();
 

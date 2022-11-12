@@ -61,7 +61,7 @@ module.exports = class extends DynamicProcessor(Map) {
     async _begin() {
         const cache = this.#cache;
         await cache.load();
-        cache.value && cache.value.hash === this.#config.hash && this.#data.hydrate(cache.value);
+        cache.value && this.hydrate(cache.value);
     }
 
     #time;
@@ -92,9 +92,18 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     toJSON() {
-        const json = this.#data.toJSON();
-        json.hash = this.#config.hash;
-        return json;
+        return this.#data.toJSON();
+    }
+
+    hydrate(cached) {
+        try {
+            this.#data.hydrate(cached);
+            this.#data.tree.forEach((value, specifier) => this.set(specifier, value));
+        }
+        catch (exc) {
+            console.log(`Error hydrating dependencies from cache`);
+            this.#cache.delete();
+        }
     }
 
     destroy() {

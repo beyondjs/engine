@@ -36,7 +36,6 @@ module.exports = class {
 
     save() {
         const {hash} = this.#dependencies;
-
         this.#value = this.#dependencies.toJSON();
 
         const statement = 'INSERT OR REPLACE INTO dependencies(hash, data) VALUES(?, ?)';
