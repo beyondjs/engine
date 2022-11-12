@@ -1,5 +1,7 @@
 const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
+const mformat = require('beyond/mformat');
+const querystring = require('querystring');
 
 module.exports = async function (url) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
@@ -47,7 +49,24 @@ module.exports = async function (url) {
     await js.outputs.ready;
     const resource = js.outputs.get();
 
+    /**
+     * Transform to the requested format if not esm
+     */
+    const qs = querystring.parse(url.search.slice(1));
+    const format = qs.format ? qs.format : 'esm';
+    const minify = qs.min !== void 0;
+
+    if (!mformat.platforms.includes(format)) {
+        return {content: `Format "${format}" is not a valid option`, statusCode: 404, contentType: 'text/plain'};
+    }
+
+    const {code, map, errors} = mformat({format, minify, code: resource.code, map: resource.map});
+    if (errors?.length) {
+        const content = `Error transforming module to "${format}" format:` + JSON.stringify(errors);
+        return {content, statusCode: 500, contentType: 'text/plain'};
+    }
+
     return resource.valid ?
-        {content: resource.code, statusCode: 200, contentType: 'application/javascript'} :
+        {content: code, statusCode: 200, contentType: 'application/javascript'} :
         {content: 'Errors found processing resource', statusCode: 500, contentType: 'text/plain'};
 }
