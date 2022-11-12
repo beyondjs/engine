@@ -35,13 +35,14 @@ module.exports = class {
         const errors = new Map();
 
         const recursive = dependencies => dependencies.forEach(({error, dependencies, version, vpackage}, name) => {
+            const specifier = name;
             const vspecifier = `${name}@${version}`;
             if (error) {
                 errors.set(vspecifier, {error});
                 return;
             }
 
-            !list.has(vspecifier) && list.set(vspecifier, {version, dependencies});
+            !list.has(vspecifier) && list.set(vspecifier, {specifier, version, dependencies});
             dependencies && recursive(dependencies);
         });
         recursive(tree);

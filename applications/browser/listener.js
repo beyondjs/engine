@@ -23,6 +23,8 @@ module.exports = (specs, local) => async function (request, response) {
         const file = join(specs.path, url.pathname);
         const exists = await fs.exists(file);
         if (!exists) return;
+        const stat = await fs.stat(file);
+        if (!stat.isFile()) return;
 
         respond({file}, response);
         return true;
@@ -32,7 +34,7 @@ module.exports = (specs, local) => async function (request, response) {
     /**
      * Check if the requested resource is the dependencies object
      */
-    if (url.pathname === '/dependencies') {
+    if (url.pathname === '/dependencies.js') {
         dependenciesScript(specs, response);
         return;
     }
@@ -40,6 +42,6 @@ module.exports = (specs, local) => async function (request, response) {
     /**
      * Resource not found
      */
-    const message = `404 - Resource "${url.pathname}" not found`;
-    respond({message, statusCode: 404}, response);
+    const content = `404 - Resource "${url.pathname}" not found`;
+    respond({content, statusCode: 404}, response);
 }
