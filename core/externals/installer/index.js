@@ -58,6 +58,10 @@ module.exports = class {
 
             return {version: registered.latest};
         })();
+        if (error) {
+            this.#errors.push(error);
+            return;
+        }
 
         const downloader = new Downloader(pkg, version, this.#path);
         await downloader.process();
