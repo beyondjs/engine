@@ -1,8 +1,7 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const fs = require('beyond/utils/fs');
 const {join} = require('path');
-const Downloader = require('./downloader');
-const VPackage = require('./vpackage');
+const PackageReader = require('./package-reader');
 
 module.exports = new class extends DynamicProcessor(Map) {
     get dp() {
@@ -30,11 +29,11 @@ module.exports = new class extends DynamicProcessor(Map) {
             const pkgjson = join(path, 'package.json');
             if (!(await fs.exists(pkgjson))) return;
 
-            const vpackage = new VPackage(path, vspecifier);
-            await vpackage.process();
-            vpackage.error ?
-                `Package "${vspecifier}" couldn't be processed: ${vpackage.error}` :
-                this.set(vspecifier, vpackage);
+            const reader = new PackageReader(path, vspecifier);
+            await reader.process();
+            reader.error ?
+                `Package "${vspecifier}" couldn't be processed: ${reader.error}` :
+                this.set(vspecifier, reader);
         }
 
         const promises = [];
@@ -55,10 +54,5 @@ module.exports = new class extends DynamicProcessor(Map) {
         }
 
         await Promise.all(promises);
-    }
-
-    async install(pkg, version) {
-        const downloader = new Downloader(pkg, version, this.#path);
-        await downloader.process();
     }
 }

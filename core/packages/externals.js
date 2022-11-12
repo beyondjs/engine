@@ -1,4 +1,4 @@
-const externals = require('beyond/externals/installs');
+const {installed: externals} = require('beyond/externals');
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const {External: ExternalPackage} = require('beyond/package');
 

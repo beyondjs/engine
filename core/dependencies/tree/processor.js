@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const registry = require('beyond/externals/registry');
+const {registry} = require('beyond/externals');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {

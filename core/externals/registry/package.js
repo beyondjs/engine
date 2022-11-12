@@ -37,6 +37,11 @@ module.exports = class Package extends DynamicProcessor() {
         return this.#versions;
     }
 
+    #latest;
+    get latest() {
+        return this.#latest;
+    }
+
     get filled() {
         return !!this.#versions;
     }
@@ -63,6 +68,7 @@ module.exports = class Package extends DynamicProcessor() {
 
     #process(value, time) {
         this.#versions = Object.values(value.versions).reverse();
+        this.#latest = value['dist-tags'].latest;
         this.#time = time;
     }
 

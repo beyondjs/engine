@@ -1,7 +1,7 @@
-const externals = require('beyond/externals/installs');
+const {installed: externals} = require('beyond/externals');
 
 module.exports = {
-    command: 'dependencies-list',
+    command: 'dependencies <list>',
     description: 'List the installed dependencies',
     handler: async () => {
         await externals.ready;
