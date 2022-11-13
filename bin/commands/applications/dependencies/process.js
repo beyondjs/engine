@@ -25,6 +25,7 @@ module.exports = {
 
         const application = [...applications.values()].find(({name}) => name === argv.name);
         await application.dependencies.fill();
+
         applications.destroy();
         config.destroy();
         packages.destroy();

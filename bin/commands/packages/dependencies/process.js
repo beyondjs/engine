@@ -25,6 +25,7 @@ module.exports = {
             return;
         }
 
+        await pkg.ready;
         await pkg.dependencies.fill();
 
         config.destroy();
