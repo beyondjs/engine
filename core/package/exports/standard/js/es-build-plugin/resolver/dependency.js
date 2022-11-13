@@ -72,18 +72,21 @@ module.exports = class {
         }
 
         /**
-         * Find the vspecifier from the dependencies tree of the package of the bundle being processed
+         * Get the version of the package of the specifier being required according to the dependencies tree
          */
-        const {dependencies} = plugin.pkg;
+        const version = (() => {
+            const dependencies = importer.vspecifier === plugin.pkg.vspecifier ?
+                plugin.pkg.dependencies :
+                plugin.pkg.dependencies.list.get(importer.vspecifier);
 
-        /**
-         * Get the list of dependencies of the package from where the specifier is being imported
-         * The property dependencies.list is the complete list of vspecifiers that are used across the dependencies tree
-         * @type Map<string, {version, dependencies}>
-         */
-        const ip = dependencies.list.get(importer.vspecifier);
-
-        const {version} = ip.dependencies.get(requiring.pkg);
+            /**
+             * Get the list of dependencies of the package from where the specifier is being imported
+             * The property dependencies.list is the complete list of vspecifiers that are used across the dependencies tree
+             * @type Map<string, {version, dependencies}>
+             */
+            const {version} = dependencies.get(requiring.pkg);
+            return version;
+        })();
         this.#vspecifier = `${requiring.pkg}@${version}`;
     }
 }

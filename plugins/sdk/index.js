@@ -20,6 +20,7 @@ exports.Diagnostics = require('./diagnostics/diagnostics');
 exports.Diagnostic = require('./diagnostics/diagnostic');
 
 exports.BundleJsCode = require('./bundle/js');
+exports.SourceMap = (require('./sourcemap'));
 
 // exports.BundleCodeBase = require('./bundle-code/base');
 // exports.BundleJsCode = (require('./bundle-code/js'));
@@ -53,4 +54,3 @@ exports.BundleJsCode = require('./bundle/js');
 // exports.ProcessorsExtender = (require('./processor/extender'));
 // exports.ProcessorsExtenderPreprocessor = (require('./processor/extender/preprocessor'));
 // exports.ProcessorsExtenderSinglyPreprocessor = (require('./processor/extender/preprocessor/singly'));
-// exports.SourceMap = (require('./sourcemap'));

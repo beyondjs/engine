@@ -1,5 +1,8 @@
 const {PackageExportCode} = require('beyond/extensible-objects');
-const Plugin = (require('./plugin'));
+const Plugin = (require('./es-build-plugin'));
+const {sep} = require('path');
+const {SourceMap} = require('beyond/plugins/sdk');
+const resolveRequireCalls = require('./require-calls');
 
 module.exports = class extends PackageExportCode {
     get resource() {
@@ -21,6 +24,7 @@ module.exports = class extends PackageExportCode {
     }
 
     _prepared(require) {
+        require(this.conditional.pkg.dependencies);
         if (!require(this.#packages)) return;
         this.#packages.forEach(pkg => require(pkg.exports));
         return super._prepared(require);
@@ -39,6 +43,7 @@ module.exports = class extends PackageExportCode {
             build = await require('esbuild').build({
                 entryPoints: ['app.js'],
                 incremental,
+                sourcemap: 'external',
                 logLevel: 'silent',
                 platform: 'browser',
                 format: 'esm',
@@ -61,10 +66,25 @@ module.exports = class extends PackageExportCode {
 
         const result = build;
         errors = build.errors ? errors.concat(build.errors) : errors;
+        const {warnings, outputFiles: outputs} = result;
+        if (errors?.length) return {errors, warnings};
 
-        const {warnings, outputFiles: output} = result;
-        const code = output?.[0]?.text;
-        return {errors, warnings, code};
+        const {code, map} = (() => {
+            const output = {};
+            output.code = outputs?.find(({path}) => path.endsWith(`${sep}out.js`))?.text;
+            output.map = outputs?.find(({path}) => path.endsWith(`${sep}out.js.map`))?.text;
+
+            const requires = resolveRequireCalls(this.#plugin);
+            if (!requires) return output;
+
+            const sourcemap = new SourceMap();
+            sourcemap.concat(requires.imports);
+            sourcemap.concat(requires.resolver);
+            sourcemap.concat(output.code, void 0, output.map);
+            return sourcemap;
+        })();
+
+        return {errors, warnings, code, map};
     }
 
     _build() {

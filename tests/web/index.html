@@ -8,12 +8,15 @@
     <script src="./dependencies.js"></script>
     <script>
         (async () => {
-            const React = await System.import('react');
-            console.log('React', React);
+            const ReactDOM = (await System.import('react-dom/client')).default;
+            const React = (await System.import('react')).default;
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(React.createElement('h1', null, 'Hello, world!'));
         })().catch(exc => console.error(exc.stack));
     </script>
 </head>
 
 <body>
+<div id="root"></div>
 </body>
 </html>

@@ -20,7 +20,7 @@ module.exports = class {
 
     concat(code, file, map) {
         if (!code) return;
-        this.#code = this.#map = undefined;
+        this.#code = this.#map = void 0;
 
         if (!file && !map) {
             this.#concat.add(null, code);

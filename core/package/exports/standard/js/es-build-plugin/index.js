@@ -43,6 +43,11 @@ module.exports = class {
         return this.#subpath;
     }
 
+    #externals = new Map();
+    get externals() {
+        return this.#externals;
+    }
+
     constructor(bundle) {
         this.#bundle = bundle;
         this.#platform = bundle.platform;
@@ -66,7 +71,16 @@ module.exports = class {
 
         // The node of the graph being imported/required
         const resolver = new Resolver(this, args);
-        if (resolver.external) return {external: true};
+        if (resolver.external) {
+            const {specifier, kind} = resolver;
+            const external = this.#externals.has(specifier) ? this.#externals.get(specifier) : new Set();
+            external.add(kind);
+            this.#externals.set(specifier, external);
+
+            return kind === 'require-call' ?
+                {namespace: `beyond_external:${resolver.specifier}`, path: '.'} :
+                {external: true};
+        }
 
         const {namespace, path} = resolver;
         return {namespace, path};
@@ -76,6 +90,15 @@ module.exports = class {
         if (this.#cancelled) throw new Error('Build was cancelled');
 
         const {path, namespace} = args;
+
+        /**
+         *
+         */
+        if (namespace.startsWith('beyond_external:')) {
+            const specifier = namespace.slice('beyond_external:'.length);
+            const contents = `module.exports = __beyond_resolve_external('${specifier}');\n`;
+            return {contents};
+        }
 
         if (!namespace.startsWith('beyond:')) throw new Error('Namespace should start with "beyond:"');
 
