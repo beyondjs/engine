@@ -1,13 +1,13 @@
 const header = require('./header');
 
 module.exports = function (conditional, transversal, hmr, sourcemap) {
-    function processIM({hash, code, map, specifier}) {
+    function processIM({hash, cjs, specifier}) {
         sourcemap.concat(header(`INTERNAL MODULE: ${specifier}`));
 
         const creator = 'creator: function (require, exports) {';
 
         sourcemap.concat(`ims.set('${specifier}', {hash: ${hash}, ${creator}`);
-        sourcemap.concat(code, specifier, map);
+        sourcemap.concat(cjs.code, specifier, cjs.map);
         sourcemap.concat('}});\n');
     }
 

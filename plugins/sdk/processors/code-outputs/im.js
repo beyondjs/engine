@@ -2,6 +2,7 @@ const {File} = require('beyond/utils/finder');
 const {Diagnostic} = require('../../diagnostics/diagnostic');
 const crc32 = require('beyond/utils/crc32');
 const {sep} = require('path');
+const mformat = require('beyond/mformat');
 
 class ProcessorIMOutput extends File {
     #code;
@@ -12,6 +13,17 @@ class ProcessorIMOutput extends File {
     #map;
     get map() {
         return this.#map;
+    }
+
+    #cjs;
+    get cjs() {
+        if (this.#cjs) return this.#cjs;
+
+        // Transform IM to CJS
+        const cjs = mformat({code: this.#code, map: this.#map, format: 'cjs'});
+        if (cjs.errors?.length) return {errors: [{message: cjs.errors, kind: 'html'}]};
+        const {code, map} = cjs;
+        return this.#cjs = {code, map};
     }
 
     #hash;

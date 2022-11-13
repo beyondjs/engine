@@ -1,6 +1,5 @@
 const ts = require('typescript');
 const {Diagnostic} = require('beyond/plugins/sdk');
-const mformat = require('beyond/mformat');
 
 /**
  * Transpile a ts source into javascript code
@@ -24,7 +23,7 @@ module.exports = function (source, tsconfig) {
         return {diagnostics};
     }
 
-    const {code, map, errors} = (() => {
+    const {code, map} = (() => {
         let code = transpiled.outputText;
         const map = JSON.parse(transpiled.sourceMapText);
         if (!code) return {};
@@ -35,10 +34,7 @@ module.exports = function (source, tsconfig) {
         // Remove the sourcemap reference to the source file left by typescript
         code = code.replace(/\/\/([#@])\s(sourceURL|sourceMappingURL)=\s*(\S*?)\s*$/m, '');
 
-        // Transform to CJS
-        const cjs = mformat({code, map, format: 'cjs'});
-        if (cjs.errors?.length) return {errors: [{message: cjs.errors, kind: 'html'}]};
-        return {code: cjs.code, map: cjs.map};
+        return {code, map};
     })();
 
     // Set the diagnostics data if exists
