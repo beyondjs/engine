@@ -95,8 +95,6 @@ module.exports = class extends PackageExportCode {
     }
 
     _build() {
-        if (!this.valid) return {};
-
         const {code, map} = this.data;
         return {code, map};
     }
