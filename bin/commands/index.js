@@ -3,5 +3,6 @@ module.exports = [
     require('./dependencies/list'),
     require('./dependencies/install'),
     require('./applications/list'),
-    require('./applications/dependencies/process')
+    require('./applications/dependencies/process'),
+    require('./packages/dependencies/process')
 ]

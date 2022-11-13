@@ -32,6 +32,11 @@ module.exports = class extends PackageExportCode {
 
     async _preprocess(request) {
         this.#plugin?.cancel();
+
+        if (!this.conditional.pkg.dependencies.filled) {
+            return {errors: ['Package dependencies are not updated']};
+        }
+
         this.#plugin = new Plugin(this.conditional);
 
         let build;
@@ -62,7 +67,9 @@ module.exports = class extends PackageExportCode {
             return;
         }
 
-        if (errors.length) return {errors};
+        if (errors.length) {
+            return {errors};
+        }
 
         const result = build;
         errors = build.errors ? errors.concat(build.errors) : errors;
@@ -84,11 +91,13 @@ module.exports = class extends PackageExportCode {
             return sourcemap;
         })();
 
-        return {errors, warnings, code, map};
+        return {code, map, warnings};
     }
 
     _build() {
-        const {code, errors} = this.data;
-        return {code};
+        if (!this.valid) return {};
+
+        const {code, map} = this.data;
+        return {code, map};
     }
 }

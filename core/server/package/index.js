@@ -47,6 +47,10 @@ module.exports = async function (url) {
     const {js} = condition;
 
     await js.outputs.ready;
+    if (!js.outputs.valid) {
+        const content = `Errors found processing bundle "${specifier.specifier}": ` + JSON.stringify(js.outputs.errors);
+        return {content, statusCode: 500, contentType: 'text/plain'};
+    }
     const resource = js.outputs.get();
 
     /**
@@ -56,7 +60,7 @@ module.exports = async function (url) {
     const format = qs.format ? qs.format : 'esm';
     const minify = qs.min !== void 0;
 
-    if (!mformat.platforms.includes(format)) {
+    if (!mformat.formats.includes(format)) {
         return {content: `Format "${format}" is not a valid option`, statusCode: 404, contentType: 'text/plain'};
     }
 

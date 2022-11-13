@@ -19,6 +19,21 @@ module.exports = class {
         return this.#code.id;
     }
 
+    get errors() {
+        if (!this.#code.preprocessor) return [];
+        return this.#code.preprocessor.errors;
+    }
+
+    get warnings() {
+        if (!this.#code.preprocessor) return [];
+        return this.#code.preprocessor.warnings;
+    }
+
+    get valid() {
+        if (!this.#code.preprocessor) return true;
+        return this.#code.preprocessor.valid;
+    }
+
     get updated() {
         return this.#code.hash === this.#hash;
     }

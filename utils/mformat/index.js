@@ -1,7 +1,7 @@
 const toHtml = new (require('ansi-to-html'));
 const {minify} = require('uglify-js');
 
-const platforms = ['sjs', 'amd', 'cjs', 'esm'];
+const formats = ['sjs', 'amd', 'cjs', 'esm'];
 
 /**
  * Transform from esm to sjs and/or minify code
@@ -15,7 +15,7 @@ const mformat = function (specs) {
     specs.format = !specs.format ? 'esm' : specs.format;
 
     if (!specs.code) throw new Error('Code specification is not defined');
-    if (!platforms.includes(specs.format)) throw new Error('Invalid parameters');
+    if (!formats.includes(specs.format)) throw new Error('Invalid parameters');
 
     let {code, map, errors} = (() => {
         const {code, map} = specs;
@@ -58,6 +58,6 @@ const mformat = function (specs) {
     }
 }
 
-mformat.platforms = platforms;
+mformat.formats = formats;
 
 module.exports = mformat;

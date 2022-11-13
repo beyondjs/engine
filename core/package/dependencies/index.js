@@ -36,6 +36,11 @@ module.exports = class extends DynamicProcessor(Map) {
         return !this.errors?.length;
     }
 
+    async fill() {
+        await this.ready;
+        await this.#tree.fill();
+    }
+
     constructor(pkg) {
         super();
         this.#pkg = pkg;
