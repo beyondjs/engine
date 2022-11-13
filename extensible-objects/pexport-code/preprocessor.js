@@ -55,8 +55,8 @@ module.exports = class extends Reprocessor {
         if (this.cancelled(request)) return;
 
         this.#data = processed;
-        this.#errors = processed.errors ? processed.errors : [];
-        this.#warnings = processed.warnings ? processed.warnings : [];
+        this.#errors = processed?.errors ? processed.errors : [];
+        this.#warnings = processed?.warnings ? processed.warnings : [];
         this.#hash = this.#code.hash;
     }
 }

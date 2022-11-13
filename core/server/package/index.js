@@ -46,17 +46,24 @@ module.exports = async function (url) {
     const condition = pexport.condition('browser');
     const {js} = condition;
 
+    const qs = querystring.parse(url.search.slice(1));
+
     await js.outputs.ready;
     if (!js.outputs.valid) {
         const content = `Errors found processing bundle "${specifier.specifier}": ` + JSON.stringify(js.outputs.errors);
         return {content, statusCode: 500, contentType: 'text/plain'};
     }
-    const resource = js.outputs.get();
+    const hmr = qs.hmr !== void 0 ? {hmr: qs.hmr} : void 0;
+    const local = hmr ? {hmr} : void 0;
+    const resource = await js.outputs.build(local);
+    if (resource.errors?.length) {
+        const content = `Error building bundle:` + JSON.stringify(resource.errors);
+        return {content, statusCode: 500, contentType: 'text/plain'};
+    }
 
     /**
      * Transform to the requested format if not esm
      */
-    const qs = querystring.parse(url.search.slice(1));
     const format = qs.format ? qs.format : 'esm';
     const minify = qs.min !== void 0;
 

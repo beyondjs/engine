@@ -61,7 +61,7 @@ module.exports = class extends DynamicProcessor() {
         const preprocess = async request => await this._preprocess(request);
         this.#preprocessor = specs.preprocessor && new Preprocessor(this, preprocess, {cache});
 
-        const build = () => this._build();
+        const build = local => this._build(local);
         this.#outputs = new Outputs(this, build, {cache});
     }
 
@@ -97,7 +97,7 @@ module.exports = class extends DynamicProcessor() {
      * @param hmr
      * @private
      */
-    _build(hmr) {
+    async _build(hmr) {
         throw new Error('This method should be overridden');
     }
 

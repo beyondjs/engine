@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {processors: registry} = require('beyond/plugins/registry');
+const registry = require('beyond/plugins/registry');
 
 /**
  * The processors of a packager
@@ -19,7 +19,7 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#conditional = conditional;
 
         super.setup(new Map([
-            ['registry', {child: registry}],
+            ['registry', {child: registry.processors}],
             ['config', {child: conditional.config}]
         ]));
     }
@@ -36,7 +36,7 @@ module.exports = class extends DynamicProcessor(Map) {
             const processor = (() => {
                 if (this.has(name)) return this.get(name);
                 changed = true;
-                const Processor = registry.get(name);
+                const Processor = registry.processors.get(name);
                 return new Processor(this);
             })();
 

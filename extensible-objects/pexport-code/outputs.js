@@ -56,10 +56,10 @@ module.exports = class {
         this.#loaded = !!cached;
     }
 
-    get(hmr) {
+    async build(hmr) {
         if (this.#resources.has(hmr)) return this.#resources.get(hmr);
 
-        const values = this.#build(hmr);
+        const values = await this.#build(hmr);
         if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
 
         const resource = new Resource(values);

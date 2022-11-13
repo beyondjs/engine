@@ -46,7 +46,7 @@ module.exports = class extends PackageExportCode {
             const incremental = this.conditional.pexport.pkg.is === 'internal';
 
             build = await require('esbuild').build({
-                entryPoints: ['app.js'],
+                entryPoints: ['bundle.js'],
                 incremental,
                 sourcemap: 'external',
                 logLevel: 'silent',

@@ -10,7 +10,7 @@ module.exports = class {
 
     // The plugin name
     get name() {
-        return 'beyond';
+        return 'beyond-standard-export';
     }
 
     #platform;

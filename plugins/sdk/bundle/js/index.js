@@ -37,7 +37,7 @@ module.exports = class extends ConditionalCode {
         await Promise.all(promises);
     }
 
-    _build(hmr) {
-        return build(this.conditional, hmr);
+    async _build(local) {
+        return await build(this.conditional, local);
     }
 }
