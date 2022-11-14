@@ -6,15 +6,18 @@ const processIMs = require('./process-ims')
 const processExports = require('./process-exports');
 
 module.exports = function (conditional, hmr) {
+    const {pexport} = conditional;
+    const specifier = pexport.specifier.value;
+
     const {processors, plugin} = conditional;
     const {transversal} = plugin;
-    const imports = new Imports(processors);
+    const imports = specifier !== '@beyond-js/kernel/bundle' ? new Imports(processors) : void 0;
     const sourcemap = new SourceMap();
 
     /**
      * The code of the imports
      */
-    imports.code && sourcemap.concat(imports.code);
+    imports?.code && sourcemap.concat(imports.code);
 
     /**
      * The creation of the bundle object that controls the execution in development environment

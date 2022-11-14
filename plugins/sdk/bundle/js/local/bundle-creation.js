@@ -5,7 +5,7 @@ module.exports = function (conditional, hmr, imports, sourcemap) {
     /**
      * The bundle '@beyond-js/kernel/bundle'
      */
-    if (specifier.value === '@beyond-js/kernel/bundle') {
+    if (specifier === '@beyond-js/kernel/bundle') {
         sourcemap.concat('let __bundle = {exports: {}};');
         return;
     }
@@ -21,14 +21,14 @@ module.exports = function (conditional, hmr, imports, sourcemap) {
      */
     const bbm = imports.get('@beyond-js/kernel/bundle').variable;
 
-    if (hmr) {
+    if (specifier !== '@beyond-js/kernel/bundle' && hmr) {
         /**
          * In HMR, get the bundle instance, as it is already created
          */
         sourcemap.concat(`const {instances} = ${bbm};`);
         sourcemap.concat(`const __bundle = instances.get('${vspecifier}');`);
     }
-    else {
+    else if (specifier !== '@beyond-js/kernel/bundle') {
         /**
          * Create the bundle
          * The name of the var __Bundle (instead of Bundle) is because the ims of the

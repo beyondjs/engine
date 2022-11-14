@@ -16,6 +16,15 @@ module.exports = class {
         return this.#from;
     }
 
+    #kind;
+    /**
+     * The kind of export
+     * @return {string} Can be 'export', 'type'
+     */
+    get kind() {
+        return this.#kind;
+    }
+
     #line;
     get line() {
         return this.#line;
@@ -29,9 +38,10 @@ module.exports = class {
     constructor(source, sourceExport) {
         this.#imSpecifier = ProcessorIMOutput.specifier(source);
 
-        const {name, from, line, character} = sourceExport;
+        const {name, from, kind, line, character} = sourceExport;
         this.#name = name;
         this.#from = from;
+        this.#kind = kind;
         this.#line = line;
         this.#character = character;
     }

@@ -4,7 +4,8 @@ module.exports = function (processors) {
      */
     const exports = new Map();
     processors.forEach(({js}) => js?.exports?.forEach(bundleExport => {
-        const {imSpecifier, name, from} = bundleExport;
+        const {imSpecifier, kind, name, from} = bundleExport;
+        if (kind !== 'export') return;
 
         const imExports = exports.has(imSpecifier) ? exports.get(imSpecifier) : new Map();
         exports.set(imSpecifier, imExports);
@@ -14,6 +15,7 @@ module.exports = function (processors) {
     function processIM({specifier}) {
         const vars = (() => {
             if (!exports.has(specifier)) return '';
+
             const vars = [...exports.get(specifier)].map(([from, name]) => {
                 return name === from ? name : `${from} as ${name}`;
             });
