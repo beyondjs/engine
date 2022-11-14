@@ -100,6 +100,7 @@ module.exports = class extends DynamicProcessor() {
 
         values.subpath = (() => {
             if (values.subpath) return values.subpath;
+            if (values.name) return values.name;
 
             let subpath = this.file.relative.dirname;
             subpath = sep === '/' ? subpath : subpath.replace(/\\/g, '/');
