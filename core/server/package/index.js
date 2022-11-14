@@ -57,7 +57,8 @@ module.exports = async function (url) {
     const local = hmr ? {hmr} : void 0;
     const resource = await js.outputs.build(local);
     if (resource.errors?.length) {
-        const content = `Error building bundle:` + JSON.stringify(resource.errors);
+        let content = `Error building bundle:\n`;
+        resource.errors.forEach(error => (content += `-> ${error}\n`));
         return {content, statusCode: 500, contentType: 'text/plain'};
     }
 

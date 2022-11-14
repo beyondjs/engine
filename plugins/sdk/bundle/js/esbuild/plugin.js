@@ -1,4 +1,5 @@
 const entryPoint = require('./entry-point');
+const {resolve, sep} = require('path');
 
 module.exports = class {
     // The plugin name
@@ -21,7 +22,20 @@ module.exports = class {
         if (args.kind === 'entry-point') {
             return {namespace: 'beyond:entry-point', path: '.'};
         }
-        return {namespace: 'beyond:im', path: args.path};
+
+        const path = (() => {
+            let path = '.' + resolve('/', args.importer, '..', args.path);
+            path = sep === '/' ? path : path.replace(/\\/g, '/');
+
+            /**
+             * Check if im is a /index file
+             */
+            path = this.#ims.has(path) ? path : path + '/index';
+            if (!this.#ims.has(path)) throw new Error(`Internal module "${args.path}" not found`);
+
+            return path;
+        })();
+        return {namespace: 'beyond:im', path};
     }
 
     #load(args) {
