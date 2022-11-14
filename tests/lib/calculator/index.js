@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom';
 import sum from './sum.js';
 
 export class Calculator {
