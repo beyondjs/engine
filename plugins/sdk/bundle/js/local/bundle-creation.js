@@ -12,13 +12,13 @@ module.exports = function (conditional, local, imports, sourcemap) {
     /**
      * Create the bundle object
      */
-    const bbm = imports.get('@beyond-js/kernel/bundle').variable;
+    const blb = imports.get('@beyond-js/local/bundle').variable;
 
     if (hmr) {
         /**
          * In HMR, get the bundle instance, as it is already created
          */
-        sourcemap.concat(`const {instances} = ${bbm};`);
+        sourcemap.concat(`const {instances} = ${blb};`);
         sourcemap.concat(`const __bundle = instances.get('${vspecifier}');`);
     }
     else {
@@ -27,12 +27,9 @@ module.exports = function (conditional, local, imports, sourcemap) {
          * The name of the var __Bundle (instead of Bundle) is because the ims of the
          * legacy projects (js processor) are not scoped
          */
-        sourcemap.concat(`const {Bundle: __Bundle} = ${bbm};`);
-
-        const {type, name} = conditional;
-        const specs = {vspecifier, type, name};
-
-        const params = JSON.stringify(specs) + ', import.meta.url';
+        sourcemap.concat(`const {Bundle: __Bundle} = ${blb};`);
+        const specs = {vspecifier};
+        const params = JSON.stringify(specs);
         sourcemap.concat(`const __bundle = new __Bundle(${params});`);
     }
 
@@ -41,15 +38,9 @@ module.exports = function (conditional, local, imports, sourcemap) {
      */
     (() => {
         const register = [...imports.values()]
-            .filter(({specifier}) => specifier !== '@beyond-js/kernel/bundle')
+            .filter(({specifier}) => specifier !== '@beyond-js/local/bundle')
             .map(({specifier, variable}) => `['${specifier}', ${variable}]`);
 
         sourcemap.concat(`\n__bundle.dependencies.update([${register.join(',')}]);\n`);
     })();
-
-    /**
-     * Just for legacy projects
-     */
-    const {engine} = conditional.pkg;
-    engine === 'legacy' && sourcemap.concat(`const {module} = __bundle;`);
 }

@@ -44,6 +44,8 @@ module.exports = function (conditional, local) {
         sourcemap.concat(`const ReactDOM = ${imports.get('react-dom').variable};`);
     }
 
+    sourcemap.concat(`__bundle.${local.hmr ? 'update' : 'initialise'}(ims);`);
+
     const {code, map} = sourcemap;
     return {code, map};
 }

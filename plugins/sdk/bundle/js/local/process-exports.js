@@ -31,7 +31,7 @@ module.exports = function (conditional, transversal, local, sourcemap) {
     // Set the exports descriptor
     exp.descriptor.length && (transversal && !hmr ?
         sourcemap.concat(`exports.descriptor = ${JSON.stringify(exp.descriptor)};\n`) :
-        sourcemap.concat(`__pkg.exports.descriptor = ${JSON.stringify(exp.descriptor)};\n`));
+        sourcemap.concat(`__bundle.exports.descriptor = ${JSON.stringify(exp.descriptor)};\n`));
 
     if (!hmr && !transversal) {
         const exports = [...declaration].join(', ');
@@ -41,7 +41,7 @@ module.exports = function (conditional, transversal, local, sourcemap) {
         sourcemap.concat('// Module exports');
 
         const params = '{require, prop, value}';
-        sourcemap.concat(`__pkg.exports.process = function(${params}) {`);
+        sourcemap.concat(`__bundle.exports.process = function(${params}) {`);
         sourcemap.concat(exp.module);
         sourcemap.concat('};');
     }
@@ -50,17 +50,13 @@ module.exports = function (conditional, transversal, local, sourcemap) {
      * Injects the code to activate hmr support
      */
     (() => {
-        const excludes = [
-            '@beyond-js/kernel/bundle',
-            '@beyond-js/kernel/routing',
-            '@beyond-js/bee/main'
-        ];
+        const excludes = ['@beyond-js/local/bundle'];
         const specifier = conditional.pexport.specifier.value;
         if (excludes.includes(specifier)) return;
 
         sourcemap.concat('export const hmr = new (function () {\n' +
-            '    this.on = (event, listener) => __pkg.hmr.on(event, listener);\n' +
-            '    this.off = (event, listener) => __pkg.hmr.off(event, listener);\n' +
+            '    this.on = (event, listener) => __bundle.hmr.on(event, listener);\n' +
+            '    this.off = (event, listener) => __bundle.hmr.off(event, listener);\n' +
             '});\n\n');
     })();
 }

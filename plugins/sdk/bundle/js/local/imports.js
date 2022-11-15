@@ -10,8 +10,8 @@ module.exports = class extends Map {
                 .map(({specifier}) => specifier));
         });
 
-        // The bundle '@beyond-js/kernel/bundle' is always required
-        this.#register(['@beyond-js/kernel/bundle']);
+        // The bundle '@beyond-js/local/bundle' is always required
+        this.#register(['@beyond-js/local/bundle']);
     }
 
     get code() {
