@@ -35,7 +35,10 @@ module.exports = (specs, local) => async function (request, response) {
      * Check if the requested resource is the dependencies object
      */
     if (url.pathname === '/dependencies.js') {
-        dependenciesScript(specs, response);
+        const qs = url.searchParams;
+        const repository = qs.get('repository');
+        const hmr = qs.has('hmr');
+        dependenciesScript(specs, repository, hmr, response);
         return;
     }
 

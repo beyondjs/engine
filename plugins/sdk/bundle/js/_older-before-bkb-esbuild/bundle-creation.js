@@ -1,7 +1,14 @@
-module.exports = function (conditional, local, imports, sourcemap) {
+module.exports = function (conditional, hmr, imports, sourcemap) {
     const {pexport} = conditional;
-    const vspecifier = pexport.specifier.vspecifier;
-    const {hmr} = local;
+    const specifier = pexport.specifier.value, vspecifier = pexport.specifier.vspecifier;
+
+    /**
+     * The bundle '@beyond-js/kernel/bundle'
+     */
+    if (specifier === '@beyond-js/kernel/bundle') {
+        sourcemap.concat('let __bundle = {exports: {}};');
+        return;
+    }
 
     /**
      * In transversals, the bundle is created by the transversal itself
@@ -14,14 +21,14 @@ module.exports = function (conditional, local, imports, sourcemap) {
      */
     const bbm = imports.get('@beyond-js/kernel/bundle').variable;
 
-    if (hmr) {
+    if (specifier !== '@beyond-js/kernel/bundle' && hmr) {
         /**
          * In HMR, get the bundle instance, as it is already created
          */
         sourcemap.concat(`const {instances} = ${bbm};`);
         sourcemap.concat(`const __bundle = instances.get('${vspecifier}');`);
     }
-    else {
+    else if (specifier !== '@beyond-js/kernel/bundle') {
         /**
          * Create the bundle
          * The name of the var __Bundle (instead of Bundle) is because the ims of the

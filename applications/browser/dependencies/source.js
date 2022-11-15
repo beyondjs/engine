@@ -1,5 +1,5 @@
 module.exports = `(() => {
-const dependencies = new Map(/* dependencies */);
+const dependencies = new Map(/*dependencies*/);
 System.constructor.prototype.resolve = (id, parent) => {
     let [resource, qs] = id.split('?');
     qs = qs ? \`?\${qs}\` : \'\';
@@ -9,6 +9,6 @@ System.constructor.prototype.resolve = (id, parent) => {
 
     if(!dependencies.has(pkg)) return id;
     const version = dependencies.get(pkg);
-    return \`http://localhost:8080/\${pkg}@\${version}\${subpath}?format=sjs\`;
+    return \`http://localhost:/*repository*//\${pkg}@\${version}\${subpath}?format=sjs/*hmr*/\`;
 };
 })()`.trim();

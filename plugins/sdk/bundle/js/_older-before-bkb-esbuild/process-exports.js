@@ -1,7 +1,8 @@
 const tab = '    ';
 
-module.exports = function (conditional, transversal, local, sourcemap) {
-    const {hmr} = local;
+module.exports = function (conditional, transversal, hmr, sourcemap) {
+    const {processors, pexport} = conditional;
+    const bkb = pexport.specifier.value === '@beyond-js/kernel/bundle';
 
     // scripts.module:
     // Module export processing updates the module's standard interface (esm, amd, cjs).
@@ -11,10 +12,8 @@ module.exports = function (conditional, transversal, local, sourcemap) {
     const declaration = hmr ? void 0 : new Set();
 
     let counter = 0;
-    conditional.processors.forEach(({js}) => js?.exports?.forEach(bundleExport => {
-        const {imSpecifier, name, from, kind} = bundleExport;
-        if (kind !== 'export') return;
-
+    processors.forEach(({js}) => js?.exports?.forEach(bundleExport => {
+        const {imSpecifier, name, from} = bundleExport;
         const require = `require('${imSpecifier}').${from}`;
         exp.descriptor.push({im: imSpecifier, from, name});
 
@@ -24,7 +23,8 @@ module.exports = function (conditional, transversal, local, sourcemap) {
 
             declaration.add(n);
             exp.module = counter++ ? '\n' : '';
-            exp.module += `${tab}(require || prop === '${n}') && (${n} = require ? ${require} : value);`;
+            exp.module += bkb ? `${tab}${n} = ${require};` :
+                `${tab}(require || prop === '${n}') && (${n} = require ? ${require} : value);`;
         }
     }));
 
@@ -40,7 +40,7 @@ module.exports = function (conditional, transversal, local, sourcemap) {
 
         sourcemap.concat('// Module exports');
 
-        const params = '{require, prop, value}';
+        const params = bkb ? 'require' : '{require, prop, value}';
         sourcemap.concat(`__pkg.exports.process = function(${params}) {`);
         sourcemap.concat(exp.module);
         sourcemap.concat('};');

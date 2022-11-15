@@ -36,7 +36,6 @@ module.exports = class extends DynamicProcessor(Map) {
             main.data = 'beyond.json';
             return main.properties.get('applications');
         })();
-
         super.setup(new Map([['config', {child: this.#config}]]));
     }
 

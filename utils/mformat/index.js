@@ -1,6 +1,4 @@
-const toHtml = new (require('ansi-to-html'));
 const {minify} = require('uglify-js');
-
 const formats = ['sjs', 'amd', 'cjs', 'esm'];
 
 /**
@@ -38,11 +36,12 @@ const mformat = function (specs) {
             return {code: transform.code, map: transform.map ? transform.map : void 0};
         }
         catch (exc) {
-            let message = toHtml.toHtml(exc.message);
-            message = message.replace(/\n/g, '<br/>');
-            message = `<div style="background: #333; color: white;">${message}</div>`;
-            message = `Error transforming to ${specs.format} module: <br/><br/>${message}`;
-            return {errors: [message]};
+            // const toHtml = new (require('ansi-to-html'));
+            // let message = toHtml.toHtml(exc.message);
+            // message = message.replace(/\n/g, '<br/>');
+            // message = `<div style="background: #333; color: white;">${message}</div>`;
+            // message = `Error transforming to ${specs.format} module: <br/><br/>${message}`;
+            return {errors: [exc.message]};
         }
     })();
     if (errors) return {errors};

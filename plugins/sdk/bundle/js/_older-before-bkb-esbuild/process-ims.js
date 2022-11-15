@@ -1,8 +1,6 @@
 const header = require('./header');
 
-module.exports = function (conditional, transversal, local, sourcemap) {
-    const {hmr} = local;
-
+module.exports = function (conditional, transversal, hmr, sourcemap) {
     function processIM({hash, cjs, specifier}) {
         sourcemap.concat(header(`INTERNAL MODULE: ${specifier}`));
 

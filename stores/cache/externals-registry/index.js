@@ -11,8 +11,14 @@ module.exports = class {
     }
 
     constructor(name) {
-        this.#path = join(process.cwd(), `.beyond/externals/registry`);
-        this.#file = join(this.#path, `${name}.json`);
+        const parsed = (() => {
+            const split = name.split('/');
+            const scope = split[0].startsWith('@') ? split.shift() : '';
+            return {scope, name: split.shift()};
+        })();
+
+        this.#path = join(process.cwd(), `.beyond/externals/registry`, parsed.scope);
+        this.#file = join(this.#path, `${parsed.name}.json`);
     }
 
     async load() {
@@ -36,6 +42,7 @@ module.exports = class {
                 return fs.writeFile(this.#file, JSON.stringify(value));
             })
             .catch(exc => {
+                console.log(this.#path, this.#file);
                 console.log(`Error saving package metadata to cache: ${exc.message}`);
             });
     }

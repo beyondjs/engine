@@ -2,7 +2,7 @@ const respond = require('../respond');
 const {Tree: DependenciesTree, Config: DependenciesConfig} = require('beyond/dependencies');
 const source = (require('./source'));
 
-module.exports = function (specs, response) {
+module.exports = function (specs, repository, hmr, response) {
     const done = ({script, error}) => {
         const statusCode = error ? 500 : 200;
         const content = error ? error : script;
@@ -25,7 +25,13 @@ module.exports = function (specs, response) {
             return JSON.stringify([...dependencies]);
         })();
 
-        const script = source.replace(/\/\*(\s*)dependencies(\s*)\*\//, dependencies);
+        repository = repository ? repository : '8080';
+        hmr = hmr ? '&hmr' : '';
+
+        const script = source
+            .replace(/\/\*(\s*)dependencies(\s*)\*\//, dependencies)
+            .replace(/\/\*(\s*)repository(\s*)\*\//, repository)
+            .replace(/\/\*(\s*)hmr(\s*)\*\//, hmr);
         done({script});
     });
 }

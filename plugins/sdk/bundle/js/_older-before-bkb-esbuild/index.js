@@ -5,10 +5,13 @@ const processScripts = require('./process-scripts')
 const processIMs = require('./process-ims')
 const processExports = require('./process-exports');
 
-module.exports = function (conditional, local) {
+module.exports = function (conditional, hmr) {
+    const {pexport} = conditional;
+    const specifier = pexport.specifier.value;
+
     const {processors, plugin} = conditional;
     const {transversal} = plugin;
-    const imports = new Imports(processors);
+    const imports = specifier !== '@beyond-js/kernel/bundle' ? new Imports(processors) : void 0;
     const sourcemap = new SourceMap();
 
     /**
@@ -19,7 +22,7 @@ module.exports = function (conditional, local) {
     /**
      * The creation of the bundle object that controls the execution in development environment
      */
-    bundleCreation(conditional, local, imports, sourcemap);
+    bundleCreation(conditional, hmr, imports, sourcemap);
 
     /**
      * Process the scripts exposed by the processors
@@ -29,12 +32,12 @@ module.exports = function (conditional, local) {
     /**
      * Process the internal modules exposed by the processors
      */
-    processIMs(conditional, transversal, local, sourcemap);
+    processIMs(conditional, transversal, hmr, sourcemap);
 
     /**
      * Process the exports of the bundle
      */
-    processExports(conditional, transversal, local, sourcemap);
+    processExports(conditional, transversal, hmr, sourcemap);
 
     /**
      * Only required for .jsx legacy processor support

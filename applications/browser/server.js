@@ -63,7 +63,6 @@ module.exports = class {
     }
 
     destroy() {
-        super.destroy();
         this.#close();
     }
 }

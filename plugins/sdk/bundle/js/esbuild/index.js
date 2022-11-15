@@ -31,7 +31,7 @@ module.exports = async function (conditional) {
     const {code, map} = (() => {
         const code = outputs?.find(({path}) => path.endsWith(`${sep}out.js`))?.text;
         const map = outputs?.find(({path}) => path.endsWith(`${sep}out.js.map`))?.text;
-        return {code, map};
+        return {code, map: JSON.parse(map)};
     })();
 
     return {code, map, warnings};

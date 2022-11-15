@@ -1,7 +1,6 @@
 const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
 const mformat = require('beyond/mformat');
-const querystring = require('querystring');
 
 module.exports = async function (url) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
@@ -46,18 +45,19 @@ module.exports = async function (url) {
     const condition = pexport.condition('browser');
     const {js} = condition;
 
-    const qs = querystring.parse(url.search.slice(1));
+    const qs = url.searchParams;
 
     await js.outputs.ready;
     if (!js.outputs.valid) {
-        const content = `Errors found processing bundle "${specifier.specifier}": ` + JSON.stringify(js.outputs.errors);
+        let content = `Errors found processing bundle "${specifier.specifier}":\n`;
+        js.outputs.errors.forEach(error => (content += `-> ${error}\n`));
         return {content, statusCode: 500, contentType: 'text/plain'};
     }
-    const hmr = qs.hmr !== void 0 ? {hmr: qs.hmr} : void 0;
-    const local = hmr ? {hmr} : void 0;
+
+    const local = qs.has('hmr') !== void 0 ? {hmr: qs.hmr} : void 0;
     const resource = await js.outputs.build(local);
     if (resource.errors?.length) {
-        let content = `Error building bundle:\n`;
+        let content = `Error building bundle "${specifier.specifier}":\n`;
         resource.errors.forEach(error => (content += `-> ${error}\n`));
         return {content, statusCode: 500, contentType: 'text/plain'};
     }
@@ -65,8 +65,8 @@ module.exports = async function (url) {
     /**
      * Transform to the requested format if not esm
      */
-    const format = qs.format ? qs.format : 'esm';
-    const minify = qs.min !== void 0;
+    const format = qs.has('format') ? qs.get('format') : 'esm';
+    const minify = qs.has('min');
 
     if (!mformat.formats.includes(format)) {
         return {content: `Format "${format}" is not a valid option`, statusCode: 404, contentType: 'text/plain'};
@@ -74,7 +74,8 @@ module.exports = async function (url) {
 
     const {code, map, errors} = mformat({format, minify, code: resource.code, map: resource.map});
     if (errors?.length) {
-        const content = `Error transforming module to "${format}" format:` + JSON.stringify(errors);
+        let content = `Error transforming module to "${format}" format:\n`;
+        errors.forEach(error => (content += `-> ${error}\n`));
         return {content, statusCode: 500, contentType: 'text/plain'};
     }
 
