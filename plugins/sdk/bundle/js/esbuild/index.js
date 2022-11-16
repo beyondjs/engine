@@ -15,7 +15,6 @@ module.exports = async function (conditional) {
             format: 'esm',
             bundle: true,
             write: false,
-            treeShaking: false,
             outfile: 'out.js',
             plugins: [plugin]
         });

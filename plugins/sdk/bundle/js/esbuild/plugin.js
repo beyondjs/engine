@@ -23,6 +23,8 @@ module.exports = class {
             return {namespace: 'beyond:entry-point', path: '.'};
         }
 
+        if (!args.path.startsWith('.')) return {external: true};
+
         const path = (() => {
             let path = '.' + resolve('/', args.importer, '..', args.path);
             path = sep === '/' ? path : path.replace(/\\/g, '/');
@@ -43,6 +45,7 @@ module.exports = class {
             const contents = entryPoint(this.#processors);
             return {contents};
         }
+
         if (args.namespace !== 'beyond:im') throw new Error('Unexpected error. Namespace "beyond:im" was expected');
 
         const im = this.#ims.get(args.path);

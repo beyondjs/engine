@@ -54,7 +54,6 @@ module.exports = class extends PackageExportCode {
                 format: 'esm',
                 bundle: true,
                 write: false,
-                treeShaking: false,
                 outfile: 'out.js',
                 plugins: [this.#plugin]
             });

@@ -54,7 +54,7 @@ module.exports = async function (url) {
         return {content, statusCode: 500, contentType: 'text/plain'};
     }
 
-    const local = qs.has('hmr') !== void 0 ? {hmr: qs.hmr} : void 0;
+    const local = qs.has('hmr') ? {hmr: qs.get('hmr')} : {};
     const resource = await js.outputs.build(local);
     if (resource.errors?.length) {
         let content = `Error building bundle "${specifier.specifier}":\n`;
