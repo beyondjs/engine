@@ -1,18 +1,20 @@
-const {ProcessorDeclaration} = require('beyond/plugins/helpers');
+const {ProcessorCode} = require('beyond/plugins/sdk');
 
-module.exports = class extends ProcessorDeclaration {
-    get dp() {
-        return 'ts.declaration';
+module.exports = class extends ProcessorCode {
+    get resource() {
+        return 'types';
     }
 
-    _build(diagnostics) {
-        void (diagnostics);
-        let code = '';
+    get hash() {
+        return this.processor.hash;
+    }
 
-        const compiler = this.compiler;
-        code += require('./modules')(compiler);
-        code += require('./exports')(compiler);
+    async _build(request) {
+        const compiler = this.processor.compilers.get('typecheck');
+        await compiler.outputs.ready;
+        if (this.cancelled(request)) return;
 
-        return code;
+        const ims = compiler.outputs.data;
+        return {ims};
     }
 }

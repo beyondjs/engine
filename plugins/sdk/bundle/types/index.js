@@ -10,7 +10,7 @@ module.exports = class extends ConditionalCode {
     }
 
     get resource() {
-        return 'js';
+        return 'types';
     }
 
     get hash() {
@@ -20,14 +20,18 @@ module.exports = class extends ConditionalCode {
     _prepared(require) {
         const {pexport, processors} = this.conditional;
         require(pexport.specifier);
-        processors.forEach(({js}) => js && require(js));
+        processors.forEach(({types}) => types && require(types));
     }
 
     async _preprocess() {
+        return;
         const {processors} = this.conditional;
 
         const promises = [];
-        processors.forEach(({js: {outputs, dependencies, exports}}) => {
+        processors.forEach(({js, types}) => {
+            const {dependencies, exports} = js;
+            const {outputs} = types;
+
             dependencies && promises.push(dependencies.ready);
             exports && promises.push(exports.ready);
             promises.push(outputs.ready);
@@ -36,6 +40,7 @@ module.exports = class extends ConditionalCode {
     }
 
     async _build(local) {
+        return {code: 'The typescript declaration'};
         return await build(this.conditional, local);
     }
 }

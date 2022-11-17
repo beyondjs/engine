@@ -1,4 +1,4 @@
-const {Conditional, ProcessorsSet, BundleJsCode} = require('beyond/plugins/sdk');
+const {Conditional, ProcessorsSet, BundleJS, BundleTypes} = require('beyond/plugins/sdk');
 const Config = require('./config');
 
 module.exports = class extends Conditional {
@@ -17,10 +17,16 @@ module.exports = class extends Conditional {
         return this.#js;
     }
 
+    #types;
+    get types() {
+        return this.#types;
+    }
+
     constructor(...params) {
         super(...params);
         this.#config = new Config(this);
         this.#processors = new ProcessorsSet(this);
-        this.#js = new BundleJsCode(this);
+        this.#js = new BundleJS(this);
+        this.#types = new BundleTypes(this);
     }
 }

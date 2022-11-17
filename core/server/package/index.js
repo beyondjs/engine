@@ -1,6 +1,7 @@
 const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
-const mformat = require('beyond/mformat');
+const processJs = require('./js');
+const processTypes = require('./types');
 
 module.exports = async function (url) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
@@ -42,44 +43,23 @@ module.exports = async function (url) {
      */
     pexport.is === 'standard' && await pexport.ready;
 
-    const condition = pexport.condition('browser');
-    const {js} = condition;
-
     const qs = url.searchParams;
+    const platform = qs.get('platform');
+    if (!platform) return {content: 'Platform must be specified', statusCode: 404, contentType: 'text/plain'};
 
-    await js.outputs.ready;
-    if (!js.outputs.valid) {
-        let content = `Errors found processing bundle "${specifier.specifier}":\n`;
-        js.outputs.errors.forEach(error => (content += `-> ${error}\n`));
-        return {content, statusCode: 500, contentType: 'text/plain'};
-    }
+    const condition = pexport.condition(platform);
+    if (!condition) return {
+        content: `Platform "${platform}" is not supported by "${specifier}" module`,
+        statusCode: 404,
+        contentType: 'text/plain'
+    };
+
+    const types = qs.has('types');
+    if (types) return await processTypes(specifier, condition);
 
     const local = qs.has('hmr') ? {hmr: qs.get('hmr')} : {};
-    const resource = await js.outputs.build(local);
-    if (resource.errors?.length) {
-        let content = `Error building bundle "${specifier.specifier}":\n`;
-        resource.errors.forEach(error => (content += `-> ${error}\n`));
-        return {content, statusCode: 500, contentType: 'text/plain'};
-    }
-
-    /**
-     * Transform to the requested format if not esm
-     */
     const format = qs.has('format') ? qs.get('format') : 'esm';
     const minify = qs.has('min');
-
-    if (!mformat.formats.includes(format)) {
-        return {content: `Format "${format}" is not a valid option`, statusCode: 404, contentType: 'text/plain'};
-    }
-
-    const {code, map, errors} = mformat({format, minify, code: resource.code, map: resource.map});
-    if (errors?.length) {
-        let content = `Error transforming module to "${format}" format:\n`;
-        errors.forEach(error => (content += `-> ${error}\n`));
-        return {content, statusCode: 500, contentType: 'text/plain'};
-    }
-
-    return resource.valid ?
-        {content: code, statusCode: 200, contentType: 'application/javascript'} :
-        {content: 'Errors found processing resource', statusCode: 500, contentType: 'text/plain'};
+    const map = qs.has('map');
+    return await processJs(specifier, condition, local, {format, minify, map});
 }

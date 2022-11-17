@@ -19,7 +19,8 @@ exports.SourcesHashes = require('./processors/sources/hashes');
 exports.Diagnostics = require('./diagnostics/diagnostics');
 exports.Diagnostic = require('./diagnostics/diagnostic');
 
-exports.BundleJsCode = require('./bundle/js');
+exports.BundleJS = require('./bundle/js');
+exports.BundleTypes = require('./bundle/types');
 exports.SourceMap = (require('./sourcemap'));
 
 // exports.BundleCodeBase = require('./bundle-code/base');

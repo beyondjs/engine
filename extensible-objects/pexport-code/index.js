@@ -4,7 +4,7 @@ const Outputs = require('./outputs');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'package.export.js';
+        return 'package.export';
     }
 
     get resource() {
