@@ -1,8 +1,4 @@
-module.exports = class {
-    get x() {
-        return 'the x property of the compiler outputs';
-    }
-
+module.exports = class extends Map {
     toJSON() {
 
     }

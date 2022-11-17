@@ -24,17 +24,15 @@ module.exports = class extends ConditionalCode {
     }
 
     async _preprocess() {
-        return;
         const {processors} = this.conditional;
 
         const promises = [];
         processors.forEach(({js, types}) => {
             const {dependencies, exports} = js;
-            const {outputs} = types;
 
             dependencies && promises.push(dependencies.ready);
             exports && promises.push(exports.ready);
-            promises.push(outputs.ready);
+            types && promises.push(types.outputs.ready);
         });
         await Promise.all(promises);
     }

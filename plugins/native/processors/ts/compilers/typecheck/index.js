@@ -1,12 +1,23 @@
 const {ProcessorCompiler} = require('beyond/plugins/sdk');
 const Outputs = require('./outputs');
+const executeProgram = require('./program');
 
 module.exports = class extends ProcessorCompiler {
     get hash() {
         return this.processor.hash;
     }
 
-    _build() {
+    #previous;
+    get previous() {
+        return this.#previous;
+    }
+
+    async _compile(request) {
+        const {previous, buildInfo, outputs} = await executeProgram(this, request);
+        if (this.cancelled(request)) return;
+
+        this.#previous = previous;
+
         return new Outputs();
     }
 }
