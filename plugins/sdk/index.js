@@ -9,7 +9,8 @@ exports.ProcessorsSet = require('./processors/set');
 exports.Processor = require('./processors/processor');
 exports.ProcessorCode = require('./processors/code');
 exports.ProcessorScriptOutput = require('./processors/code-outputs/script');
-exports.ProcessorIMOutput = require('./processors/code-outputs/im');
+exports.NamespaceJS = require('./processors/code-outputs/ns-js');
+exports.NamespaceTypes = require('./processors/code-outputs/ns-types');
 exports.ProcessorCompiler = require('./processors/compiler');
 
 exports.Sources = require('./processors/sources');

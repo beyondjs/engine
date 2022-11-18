@@ -20,7 +20,7 @@ module.exports = class {
     }
 
     constructor(source, message, line, character) {
-        source && this.hydrate({source, message, line, character});
+        source && this.#set({source, message, line, character});
     }
 
     toJSON() {
@@ -28,10 +28,14 @@ module.exports = class {
         return {file, message, line, character};
     }
 
-    hydrate({source, message, line, character}) {
+    #set({source, message, line, character}) {
         this.#source = source;
         this.#message = message;
         this.#line = line;
         this.#character = character;
+    }
+
+    hydrate(cached) {
+        this.#set(cached);
     }
 }

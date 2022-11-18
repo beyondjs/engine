@@ -14,8 +14,10 @@ module.exports = async function (compiler, request) {
     if (compiler.cancelled(request)) return;
 
     const rootNames = (() => {
-        const extensions = []; // [...this.#sources.extensions.keys()].map(file => `${file}.ts`);
-        return [...files.keys(), ...extensions];
+        const rootNames = [];
+        files.forEach(file => rootNames.push(file.file));
+        // extensions.forEach(file => `${file.file}.ts`);
+        return rootNames;
     })();
 
     const {host, emitted, cachedModules} = (() => {

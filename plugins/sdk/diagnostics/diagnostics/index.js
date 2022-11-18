@@ -36,16 +36,11 @@ module.exports = class {
         return !invalid;
     }
 
-    constructor() {
-        if (arguments.length) throw new Error('Invalid parameters');
-    }
-
     // Set and hydrate as two different methods just because the interface could change in the future
     hydrate(cached) {
         this.set(cached);
     }
 
-    // This method is used by the tsc compiler
     set(data) {
         this.#general = data.general;
         this.#files = new Map(data.files);

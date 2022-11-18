@@ -1,6 +1,6 @@
-module.exports = function (compiler, sources, updated, diagnostics, emitted, diagnosed) {
-    const {processor} = compiler.packager;
-
-    require('./diagnostics')(processor, sources, diagnostics, diagnosed);
-    require('./files')(compiler, sources, updated, emitted, diagnostics);
+module.exports = class extends Map {
+    constructor(compiler, diagnostics, emitted) {
+        super();
+        console.log('typescript output:', compiler, diagnostics, emitted);
+    }
 }

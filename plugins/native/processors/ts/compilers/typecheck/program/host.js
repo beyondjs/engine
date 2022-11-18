@@ -1,95 +1,73 @@
 const ts = require('typescript');
-const {sep} = require('path');
+const {sep, join} = require('path');
 
-const sourcesCached = new Map();
+const cachedSources = new Map();
 
 exports.createHost = compiler => {
     'use strict';
 
-    const {tsconfig} = compiler.processor.sources;
-    const {path} = compiler.processor;
-    const {previous, declarations} = compiler;
+    const {previous} = compiler;
+    const {tsconfig, files} = compiler.processor.sources;
 
     const emitted = new Map();
-    const cachedModules = previous ? previous.cachedModules : new Map();
+    const cachedSources = previous ? previous.cachedSources : new Map();
 
     const host = ts.createIncrementalCompilerHost(tsconfig.content, ts.sys);
     const {getSourceFile, readFile, fileExists} = host;
 
     host.fileExists = function (file) {
-        const {is} = getBeyondSource(file);
-        if (is) return true;
-
         return fileExists(file);
     }
 
     host.getSourceFile = function (file, languageVersion) {
-        const cache = sourcesCached;
-
         const done = (hash) => {
             hash = hash ? hash : 0;
-            if (cache.has(file) && cache.get(file).hash === hash) return cache.get(file).source;
+            if (cachedSources.has(file) && cachedSources.get(file).hash === hash) {
+                return cachedSources.get(file).source;
+            }
 
             const source = getSourceFile(file, languageVersion);
-            cache.set(file, {source, hash});
+            cachedSources.set(file, {source, hash});
             return source;
         }
 
-        const {is, source, declaration} = getBeyondSource(file);
-        return done(is === 'bundle.declaration' ? declaration.hash : source?.hash);
+        if (files.has(file)) return done(files.get(file).hash);
     }
 
-    const getBeyondSource = (resource) => {
-        const file = sep === '/' ? resource : resource.replace(/\//g, sep);
-
-        // Check if it is an internal module of the bundle being compiled
-        const {files, extensions} = compiler.program.sources;
-        if (files.has(file)) {
-            const source = files.get(file);
-            return {is: 'file', source};
-        }
-
-        // Check if it is a beyond bundle or transversal
-        let module = resource.endsWith('.d.ts') && resource.substr(0, resource.length - 5); // Remove the .dts extension
-        if (module && declarations.has(module)) {
-            const declaration = declarations.get(module);
-            const {kind} = declaration.dependency;
-
-            if (['bundle', 'transversal'].includes(kind)) return {is: 'bundle.declaration', declaration};
-        }
-
-        // Remove the .ts extname to check if it is a file of a processor extension (ex: .svelte.ts => .svelte)
-        module = !file.endsWith('.d.ts') && file.endsWith('.ts') && file.substr(0, file.length - 3);
-        if (module && extensions.has(module)) {
-            const source = extensions.get(module);
-            return {is: 'extension', source};
-        }
-
-        return {};
-    }
-
+    /**
+     * Return the content of the file being required
+     * @param file {string} The absolute path to the file
+     * @return {*}
+     */
     host.readFile = file => {
         if (file.endsWith('tsconfig.tsbuildinfo')) return previous?.tsBuildInfo;
 
-        const {is, source, declaration} = getBeyondSource(file);
-        if (is) return is === 'bundle.declaration' ? declaration.value : source.content;
+        if (files.has(file)) return files.get(file).content;
 
-        // Let typescript to look for the file
         return readFile(file);
     }
 
-    host.resolveModuleNames = function (modules, container) {
-        const cache = cachedModules;
+    /**
+     * Module resolution
+     * @param modules string[] The modules being required
+     * @param parent string The file that imports the module
+     * @return {string[]}
+     */
+    host.resolveModuleNames = function (modules, parent) {
+        console.log('resolveModuleNames', modules, parent);
         const output = [];
 
         const push = (module, resolved) => {
-            !module.startsWith('.') && cache.set(module, resolved);
+            !module.startsWith('.') && cachedSources.set(module, resolved);
             output.push(resolved ? {resolvedFileName: resolved} : undefined);
         }
 
+        /**
+         * Iterate to resolve the modules
+         */
         modules.forEach(module => {
             // Check if module was already resolved
-            if (cache.has(module)) return push(module, cache.get(module));
+            if (cachedSources.has(module)) return push(module, cachedSources.get(module));
 
             // The beyond context
             if (module === 'beyond_context') return push(module, `${module}.ts`);
@@ -105,7 +83,7 @@ exports.createHost = compiler => {
 
             const resolved = (() => {
                 // Let typescript solve the dependency
-                const {resolvedModule} = ts.resolveModuleName(module, container, options.value, host);
+                const {resolvedModule} = ts.resolveModuleName(module, parent, options.value, host);
                 return resolvedModule?.resolvedFileName;
             })();
 
@@ -114,12 +92,15 @@ exports.createHost = compiler => {
         return output;
     }
 
-    host.getCurrentDirectory = () => path;
+    host.getCurrentDirectory = function () {
+        return compiler.processor.path;
+    }
 
     host.writeFile = function (file, content) {
+        console.log('writeFile', file);
         file = sep === '/' ? file : file.replace(/\//g, sep);
         emitted.set(file, content);
     }
 
-    return {host, emitted, cachedModules};
+    return {host, emitted, cachedSources};
 }

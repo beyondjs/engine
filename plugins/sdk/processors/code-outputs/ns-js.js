@@ -4,7 +4,7 @@ const crc32 = require('beyond/utils/crc32');
 const {sep} = require('path');
 const mformat = require('beyond/mformat');
 
-class ProcessorIMOutput extends File {
+class NamespaceJS extends File {
     #code;
     get code() {
         return this.#code;
@@ -52,7 +52,7 @@ class ProcessorIMOutput extends File {
     constructor(file, code, map, diagnostics) {
         super();
         const hash = crc32(code);
-        file && this.hydrate({file, code, map, diagnostics, hash});
+        file && this.#set({file, code, map, diagnostics, hash});
     }
 
     toJSON() {
@@ -61,20 +61,24 @@ class ProcessorIMOutput extends File {
         return Object.assign({file, code, map, diagnostics, hash});
     }
 
-    hydrate(cached) {
-        super.hydrate(cached.file);
+    #set(data) {
+        super.hydrate(data.file);
 
-        this.#specifier = ProcessorIMOutput.specifier(this);
-        this.#code = cached.code;
-        this.#map = cached.map;
-        this.#hash = cached.hash;
+        this.#specifier = NamespaceJS.specifier(this);
+        this.#code = data.code;
+        this.#map = data.map;
+        this.#hash = data.hash;
 
-        this.#diagnostics = cached.diagnostics.map(cached => {
+        this.#diagnostics = data.diagnostics.map(data => {
             const diagnostic = new Diagnostic();
-            diagnostic.hydrate(cached);
+            diagnostic.hydrate(data);
             return diagnostic;
         });
     }
+
+    hydrate(cached) {
+        this.#set(cached);
+    }
 }
 
-module.exports = ProcessorIMOutput;
+module.exports = NamespaceJS;

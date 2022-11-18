@@ -1,4 +1,4 @@
-const {ProcessorIMOutput} = require('beyond/plugins/sdk');
+const {NamespaceJS} = require('beyond/plugins/sdk');
 
 module.exports = class extends Map {
     toJSON() {
@@ -7,7 +7,7 @@ module.exports = class extends Map {
 
     hydrate(cached) {
         cached.forEach(([key, value]) => {
-            const output = new ProcessorIMOutput();
+            const output = new NamespaceJS();
             output.hydrate(value);
             this.set(key, output);
         });

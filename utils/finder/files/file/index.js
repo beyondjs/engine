@@ -41,10 +41,10 @@ module.exports = class {
     }
 
     constructor(root, file) {
-        root && this.hydrate({root, file});
+        root && this.#set({root, file});
     }
 
-    hydrate({root, file}) {
+    #set({root, file}) {
         if (typeof root !== 'string' || typeof file !== 'string' || !root || !file) {
             throw new Error('Parameters "root" and "file" are both required');
         }
@@ -59,6 +59,10 @@ module.exports = class {
         this.#root = root;
         this.#file = file;
         this.#relative = new (require('./relative'))(root, file);
+    }
+
+    hydrate(cached) {
+        return this.#set(cached);
     }
 
     toJSON() {

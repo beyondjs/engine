@@ -2,6 +2,7 @@ const ConfigurableFinder = require('../configurable');
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
 const WatchersClient = require('beyond/utils/watchers/client');
 const ItemBase = require('./item');
+const {isAbsolute} = require('path');
 
 class FinderCollection extends DynamicProcessor(Map) {
     get dp() {
@@ -91,6 +92,8 @@ class FinderCollection extends DynamicProcessor(Map) {
     has(file) {
         if (!this.path) return false;
         if (super.has(file)) return super.has(file);
+
+        if (isAbsolute(file) && file.substr(0, this.path.length) !== this.path) return false;
         const key = this.getKey(this.#finder._getFileObject(file));
         return super.has(key);
     }
@@ -103,6 +106,8 @@ class FinderCollection extends DynamicProcessor(Map) {
     get(file) {
         if (!this.path) return;
         if (super.has(file)) return super.get(file);
+
+        if (isAbsolute(file) && file.substr(0, this.path.length) !== this.path) return false;
         const key = this.getKey(this.#finder._getFileObject(file));
         return super.get(key);
     }

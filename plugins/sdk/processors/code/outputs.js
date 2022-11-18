@@ -1,7 +1,8 @@
 const Reprocessor = require('beyond/utils/reprocessor');
 const {ProcessorCodeCache} = require('beyond/stores');
 const ScriptOutput = require('../code-outputs/script');
-const IMOutput = require('../code-outputs/im')
+const NamespaceJS = require('../code-outputs/ns-js');
+const NamespaceTypes = require('../code-outputs/ns-types');
 
 module.exports = class extends Reprocessor {
     #code;
@@ -80,7 +81,7 @@ module.exports = class extends Reprocessor {
             if (values.script && !(values.script instanceof ScriptOutput)) throw new Error(message);
             if (values.ims && !(values.ims instanceof Map)) throw new Error(message);
             values.ims?.forEach(im => {
-                if (!(im instanceof IMOutput)) throw new Error(message);
+                if (!(im instanceof NamespaceJS) && !(im instanceof NamespaceTypes)) throw new Error(message);
             })
         })();
 

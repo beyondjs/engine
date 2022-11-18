@@ -1,4 +1,4 @@
-const {ProcessorIMOutput} = require('beyond/plugins/sdk');
+const {NamespaceJS} = require('beyond/plugins/sdk');
 
 module.exports = class {
     #imSpecifier;
@@ -36,7 +36,7 @@ module.exports = class {
     }
 
     constructor(source, sourceExport) {
-        this.#imSpecifier = ProcessorIMOutput.specifier(source);
+        this.#imSpecifier = NamespaceJS.specifier(source);
 
         const {name, from, kind, line, character} = sourceExport;
         this.#name = name;
