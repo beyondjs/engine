@@ -1,7 +1,5 @@
 const ts = require('typescript');
-const {sep, join} = require('path');
-
-const cachedSources = new Map();
+const {sep} = require('path');
 
 exports.createHost = compiler => {
     'use strict';
@@ -97,7 +95,6 @@ exports.createHost = compiler => {
     }
 
     host.writeFile = function (file, content) {
-        console.log('writeFile', file);
         file = sep === '/' ? file : file.replace(/\//g, sep);
         emitted.set(file, content);
     }

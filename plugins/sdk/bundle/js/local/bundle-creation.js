@@ -1,12 +1,12 @@
-module.exports = function (conditional, local, imports, sourcemap) {
-    const {pexport} = conditional;
-    const vspecifier = pexport.specifier.vspecifier;
+module.exports = function (targetedExport, local, imports, sourcemap) {
+    const {packageExport} = targetedExport;
+    const vspecifier = packageExport.specifier.vspecifier;
     const {hmr} = local;
 
     /**
      * In transversals, the bundle is created by the transversal itself
      */
-    const {transversal} = conditional.plugin;
+    const {transversal} = targetedExport.plugin;
     if (transversal && !hmr) return;
 
     /**

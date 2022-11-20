@@ -1,8 +1,10 @@
 const Reprocessor = require('beyond/utils/reprocessor');
 const {ProcessorCodeCache} = require('beyond/stores');
 const ScriptOutput = require('../code-outputs/script');
+const StylesOutput = require('../code-outputs/styles');
 const NamespaceJS = require('../code-outputs/ns-js');
 const NamespaceTypes = require('../code-outputs/ns-types');
+const Diagnostics = require('../../diagnostics/diagnostics');
 
 module.exports = class extends Reprocessor {
     #code;
@@ -14,6 +16,11 @@ module.exports = class extends Reprocessor {
     #cache;
     #loaded = false;
 
+    #diagnostics;
+    get diagnostics() {
+        return this.#diagnostics;
+    }
+
     #ims;
     get ims() {
         return this.#ims;
@@ -22,6 +29,11 @@ module.exports = class extends Reprocessor {
     #script;
     get script() {
         return this.#script;
+    }
+
+    #styles;
+    get styles() {
+        return this.#styles;
     }
 
     #hash;
@@ -77,15 +89,32 @@ module.exports = class extends Reprocessor {
          */
         (() => {
             const message = 'Invalid returned data from outputs generation';
-            if (typeof values !== 'object') throw new Error(message);
-            if (values.script && !(values.script instanceof ScriptOutput)) throw new Error(message);
-            if (values.ims && !(values.ims instanceof Map)) throw new Error(message);
+            if (typeof values !== 'object') {
+                throw new Error(message);
+            }
+            if (!values.diagnostics) {
+                throw new Error(`${message}: diagnostics not set`);
+            }
+
+            if (values.script && !(values.script instanceof ScriptOutput)) {
+                throw new Error(`${message}: Invalid script output`);
+            }
+            if (values.styles && !(values.styles instanceof StylesOutput)) {
+                throw new Error(`${message}: Invalid styles output`);
+            }
+            if (values.ims && !(values.ims instanceof Map)) {
+                throw new Error(`${message}: internal modules must be a Map object`);
+            }
             values.ims?.forEach(im => {
-                if (!(im instanceof NamespaceJS) && !(im instanceof NamespaceTypes)) throw new Error(message);
-            })
+                if (!(im instanceof NamespaceJS) && !(im instanceof NamespaceTypes)) {
+                    throw new Error(`${message}: An invalid internal module was found`);
+                }
+            });
         })();
 
+        this.#diagnostics = values.diagnostics;
         this.#script = values.script;
+        this.#styles = values.styles;
 
         this.#ims = new Map();
         values.ims?.forEach((im, key) => this.#ims.set(key, im));
@@ -94,19 +123,24 @@ module.exports = class extends Reprocessor {
     }
 
     clear() {
-        this.#script = void 0;
+        this.#diagnostics = this.#script = this.#styles = void 0;
         this.#ims?.delete();
     }
 
     hydrate(cached) {
+        this.#diagnostics = new Diagnostics();
+        this.#diagnostics.hydrate(cached.diagnostics);
+
         this.#script = cached.script;
+        this.#styles = cached.styles;
+
         const ims = this.#ims = new Map(cached.ims);
         ims.forEach((im, key) => ims.set(key, im));
     }
 
     toJSON() {
-        const script = this.#script;
+        const {script, styles} = this;
         const ims = [...this.#ims];
-        return {script, ims};
+        return {script, ims, styles};
     }
 }

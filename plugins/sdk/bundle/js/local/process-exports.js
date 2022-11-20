@@ -1,6 +1,6 @@
 const tab = '    ';
 
-module.exports = function (conditional, transversal, local, sourcemap) {
+module.exports = function (targetedExport, transversal, local, sourcemap) {
     const {hmr} = local;
 
     // scripts.module:
@@ -11,7 +11,7 @@ module.exports = function (conditional, transversal, local, sourcemap) {
     const declaration = hmr ? void 0 : new Set();
 
     let counter = 0;
-    conditional.processors.forEach(({js}) => js?.exports?.forEach(bundleExport => {
+    targetedExport.processors.forEach(({js}) => js?.exports?.forEach(bundleExport => {
         const {imSpecifier, name, from, kind} = bundleExport;
         if (kind !== 'export') return;
 
@@ -51,7 +51,7 @@ module.exports = function (conditional, transversal, local, sourcemap) {
      */
     (() => {
         const excludes = ['@beyond-js/local/bundle'];
-        const specifier = conditional.pexport.specifier.value;
+        const specifier = targetedExport.packageExport.specifier.value;
         if (excludes.includes(specifier)) return;
 
         sourcemap.concat('export const hmr = new (function () {\n' +

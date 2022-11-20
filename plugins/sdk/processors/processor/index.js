@@ -19,20 +19,20 @@ module.exports = class extends DynamicProcessor() {
         return this.#specs;
     }
 
-    get conditional() {
-        return this.#container.conditional;
+    get targetedExport() {
+        return this.#container.targetedExport;
     }
 
     get plugin() {
-        return this.conditional.plugin;
+        return this.targetedExport.plugin;
     }
 
     get watcher() {
-        return this.conditional.watcher;
+        return this.targetedExport.watcher;
     }
 
     get module() {
-        return this.conditional.pexport.module;
+        return this.targetedExport.packageExport.module;
     }
 
     get hash() {

@@ -1,7 +1,30 @@
 module.exports = class {
     #source;
+    /**
+     * The source object when the diagnostic is about a file
+     * @return {*}
+     */
     get source() {
         return this.#source;
+    }
+
+    #specifier;
+    /**
+     * The specifier of the dependency when the diagnostic of about a dependency
+     * @return {string}
+     */
+    get specifier() {
+        return this.#specifier;
+    }
+
+    #code;
+    get code() {
+        return this.#code;
+    }
+
+    #category;
+    get category() {
+        return this.#category;
     }
 
     #message;
@@ -9,14 +32,19 @@ module.exports = class {
         return this.#message;
     }
 
-    #line;
-    get line() {
-        return this.#line;
+    #start;
+    get start() {
+        return this.#start;
     }
 
-    #character;
-    get character() {
-        return this.#character;
+    #end;
+    get end() {
+        return this.#end;
+    }
+
+    #relatedInformation;
+    get relatedInformation() {
+        return this.#relatedInformation;
     }
 
     constructor(source, message, line, character) {
@@ -31,8 +59,6 @@ module.exports = class {
     #set({source, message, line, character}) {
         this.#source = source;
         this.#message = message;
-        this.#line = line;
-        this.#character = character;
     }
 
     hydrate(cached) {

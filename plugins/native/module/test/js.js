@@ -1,8 +1,8 @@
-const {ConditionalCode} = require('beyond/plugins/sdk');
+const {TargetedExportResource} = require('beyond/plugins/sdk');
 
-module.exports = class extends ConditionalCode {
-    constructor(conditional) {
-        super(conditional, {cache: true});
+module.exports = class extends TargetedExportResource {
+    constructor(targetedExport) {
+        super(targetedExport, {cache: true});
     }
 
     get resource() {

@@ -9,12 +9,24 @@ const {Diagnostic} = require('beyond/plugins/sdk');
  * @return {{code?: string, map?: *, diagnostics: Diagnostic[]}}
  */
 module.exports = function (source, tsconfig) {
+    const compilerOptions = (() => {
+        const compilerOptions = tsconfig.content?.compilerOptions ?? {};
+        return Object.assign({}, compilerOptions, {
+            module: ts.ModuleKind.ESNext,
+            target: ts.ScriptTarget.ESNext,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+            sourceMap: true,
+            inlineSources: false,
+            // noEmitOnError: true
+        });
+    })();
+
     let transpiled;
     try {
         transpiled = ts.transpileModule(source.content, {
-            compilerOptions: tsconfig.content.compilerOptions,
             fileName: source.file,
-            reportDiagnostics: true
+            reportDiagnostics: true,
+            compilerOptions
         });
     }
     catch (exc) {

@@ -27,7 +27,18 @@ module.exports = async function (compiler, request) {
         return {host, emitted, cachedModules};
     })();
 
-    const options = tsconfig.content;
+    const options = (() => {
+        const compilerOptions = tsconfig.content?.compilerOptions ?? {};
+        return Object.assign({}, compilerOptions, {
+            emitDeclarationOnly: true,
+            declarationMap: true,
+            incremental: true,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+            inlineSources: false
+            // noEmitOnError: true
+        });
+    })();
+
     const program = compiler.previous ?
         ts.createEmitAndSemanticDiagnosticsBuilderProgram(rootNames, options, host, compiler.previous?.program) :
         ts.createIncrementalProgram({rootNames, options, host});

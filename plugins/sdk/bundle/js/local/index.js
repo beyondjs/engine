@@ -5,8 +5,8 @@ const processScripts = require('./process-scripts')
 const processIMs = require('./process-ims')
 const processExports = require('./process-exports');
 
-module.exports = function (conditional, local) {
-    const {processors, plugin} = conditional;
+module.exports = function (targetedExport, local) {
+    const {processors, plugin} = targetedExport;
     const {transversal} = plugin;
     const imports = new Imports(processors);
     const sourcemap = new SourceMap();
@@ -19,22 +19,22 @@ module.exports = function (conditional, local) {
     /**
      * The creation of the bundle object that controls the execution in development environment
      */
-    bundleCreation(conditional, local, imports, sourcemap);
+    bundleCreation(targetedExport, local, imports, sourcemap);
 
     /**
      * Process the scripts exposed by the processors
      */
-    processScripts(conditional, sourcemap);
+    processScripts(targetedExport, sourcemap);
 
     /**
      * Process the internal modules exposed by the processors
      */
-    processIMs(conditional, transversal, local, sourcemap);
+    processIMs(targetedExport, transversal, local, sourcemap);
 
     /**
      * Process the exports of the bundle
      */
-    processExports(conditional, transversal, local, sourcemap);
+    processExports(targetedExport, transversal, local, sourcemap);
 
     /**
      * Only required for .jsx legacy processor support

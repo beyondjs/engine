@@ -9,25 +9,25 @@ module.exports = class extends DynamicProcessor(Map) {
         return 'processors-set';
     }
 
-    #conditional;
-    get conditional() {
-        return this.#conditional;
+    #targetedExport;
+    get targetedExport() {
+        return this.#targetedExport;
     }
 
-    constructor(conditional) {
+    constructor(targetedExport) {
         super();
-        this.#conditional = conditional;
+        this.#targetedExport = targetedExport;
 
         super.setup(new Map([
             ['registry', {child: registry.processors}],
-            ['config', {child: conditional.config}]
+            ['config', {child: targetedExport.config}]
         ]));
     }
 
     _process() {
         // The config
         // Check how to validate configuration
-        const {value: config, valid} = this.#conditional.config;
+        const {value: config, valid} = this.#targetedExport.config;
 
         let changed = false;
         const updated = new Map();

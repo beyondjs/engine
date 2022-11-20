@@ -15,14 +15,14 @@ module.exports = class extends DynamicProcessor() {
 
     constructor(bundle) {
         super();
-        this.#config = bundle.pexport.config;
+        this.#config = bundle.packageExport.config;
     }
 
     _process() {
         const {value: original} = this.#config;
 
         // Properties of the configuration that are reserved, and are not configuration of the processors
-        const reserved = ['imports', 'subpath', 'path'];
+        const reserved = ['imports', 'platforms',  'subpath', 'path'];
         const value = {};
         reserved.forEach(property => original.hasOwnProperty(property) && (value[property] = original[property]));
         value.processors = new Map(

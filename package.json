@@ -65,7 +65,6 @@
     "./packages": "./core/packages/index.js",
     "./applications": "./applications/index.js",
     "./package": "./core/package/index.js",
-    "./extensible-objects": "./extensible-objects/index.js",
     "./dependencies": "./core/dependencies/index.js",
     "./mformat": "./utils/mformat/index.js",
     "./stores": "./stores/index.js",

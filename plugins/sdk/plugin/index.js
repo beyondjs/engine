@@ -1,6 +1,6 @@
 const ipc = require('beyond/utils/ipc');
 const Properties = require('./properties');
-const Exports = require('./exports');
+const PackageExports = require('./package-exports');
 const equal = require('beyond/utils/equal');
 
 module.exports = class {
@@ -19,15 +19,15 @@ module.exports = class {
         return this.#properties;
     }
 
-    #exports = new Map();
-    get exports() {
-        return this.#exports;
+    #packageExports = new Map();
+    get packageExports() {
+        return this.#packageExports;
     }
 
     _notify() {
         ipc.notify('data-notification', {
             type: 'record/update',
-            table: 'plugins-exports'
+            table: 'plugins-packageExports'
         });
     }
 
@@ -40,12 +40,12 @@ module.exports = class {
         this.#module = module;
         this.#id = `${module.id}//${name}`;
 
-        const subpaths = config => this._subpaths(config);
-        const conditional = (pexport, platform) => this._conditional(pexport, platform);
-        const creator = {subpaths, conditional};
+        const defineSubpaths = config => this._defineSubpaths(config);
+        const createTargetedExport = (packageExport, platform) => this._createTargetedExport(packageExport, platform);
+        const creator = {defineSubpaths, createTargetedExport};
 
         this.#properties = new Properties(this);
-        this.#exports = new Exports(this, creator);
+        this.#packageExports = new PackageExports(this, creator);
     }
 
     #config;
@@ -60,11 +60,11 @@ module.exports = class {
         if (equal(this.#config, config)) return;
 
         this.#properties.configure(config);
-        this.#exports.configure(config);
+        this.#packageExports.configure(config);
     }
 
     /**
-     * Set the subpaths exported by the plugin
+     * Define the subpaths exported by the plugin
      *
      * This method is actually a method of the Export class,
      * but it is here to simplify plugin implementation by avoiding having to create an Export class.
@@ -72,29 +72,29 @@ module.exports = class {
      * @param config {*} The plugin configuration
      * @return {Map<string, *>} Return the map of subpaths with its configurations
      */
-    _subpaths(config) {
+    _defineSubpaths(config) {
         return new Map([[this.#properties.subpath, config]]);
     }
 
     /**
-     * Creates a conditional according of the required platform
+     * Creates a targeted export according of the required platform
      *
      * This method is actually a method of the Export class,
      * but it is here to simplify plugin implementation by avoiding having to create an Export class.
      *
-     * @param pexport {*}
+     * @param packageExport {*}
      * @param platform {string}
      * @private
      */
-    _conditional(pexport, platform) {
-        void pexport;
+    _createTargetedExport(packageExport, platform) {
+        void packageExport;
         void platform;
         throw new Error('This method must be overridden by the plugin implementation');
     }
 
     destroy() {
         super.destroy();
-        this.#exports.destroy();
+        this.#packageExports.destroy();
         this.#properties.destroy();
     }
 }

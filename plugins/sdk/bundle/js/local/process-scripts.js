@@ -1,8 +1,8 @@
 /**
  * Process the processors scripts
  */
-module.exports = function (conditional, sourcemap) {
-    conditional.processors.forEach(processor => {
+module.exports = function (targetedExport, sourcemap) {
+    targetedExport.processors.forEach(processor => {
         if (!processor.js?.outputs.script) return;
         const {script} = processor.js.outputs;
 

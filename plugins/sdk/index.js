@@ -2,13 +2,15 @@ exports.Dependency = require('./dependencies/dependency');
 
 exports.Plugin = require('./plugin');
 
-exports.Conditional = require('./conditional/conditional');
-exports.ConditionalCode = require('./conditional/code');
+exports.TargetedExport = require('./targeted-export/targeted-export');
+exports.TargetedExportResourceStandard = require('./targeted-export/targeted-export-resource/standard');
+exports.TargetedExportResource = require('./targeted-export/targeted-export-resource/plugins');
 
 exports.ProcessorsSet = require('./processors/set');
 exports.Processor = require('./processors/processor');
 exports.ProcessorCode = require('./processors/code');
 exports.ProcessorScriptOutput = require('./processors/code-outputs/script');
+exports.ProcessorStylesOutput = require('./processors/code-outputs/styles');
 exports.NamespaceJS = require('./processors/code-outputs/ns-js');
 exports.NamespaceTypes = require('./processors/code-outputs/ns-types');
 exports.ProcessorCompiler = require('./processors/compiler');
@@ -17,12 +19,12 @@ exports.Sources = require('./processors/sources');
 exports.SourcesFile = require('./processors/sources/file');
 exports.SourcesHashes = require('./processors/sources/hashes');
 
-exports.Diagnostics = require('./diagnostics/diagnostics');
-exports.Diagnostic = require('./diagnostics/diagnostic');
-
 exports.BundleJS = require('./bundle/js');
 exports.BundleTypes = require('./bundle/types');
 exports.SourceMap = (require('./sourcemap'));
+
+exports.Diagnostics = require('./diagnostics/diagnostics');
+exports.Diagnostic = require('./diagnostics/diagnostic');
 
 // exports.BundleCodeBase = require('./bundle-code/base');
 // exports.BundleJsCode = (require('./bundle-code/js'));

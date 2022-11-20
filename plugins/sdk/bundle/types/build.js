@@ -1,4 +1,4 @@
-module.exports = async function (conditional, local) {
+module.exports = async function (targetedExport, local) {
     let code = '';
 
     const compiler = this.compiler;

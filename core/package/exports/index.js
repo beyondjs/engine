@@ -1,5 +1,5 @@
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const StandardExports = require('./standard');
+const StandardExports = require('./standard-exports');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -34,9 +34,10 @@ module.exports = class extends DynamicProcessor(Map) {
 
     _process() {
         this.clear();
-        this.#standard.forEach((pexport, subpath) => this.set(subpath, pexport));
+        this.#standard.forEach((packageExport, subpath) => this.set(subpath, packageExport));
         this.#modules?.forEach(({plugins}) => {
-            plugins.forEach(plugin => plugin.exports.forEach((plugin, subpath) => this.set(subpath, plugin)));
+            plugins.forEach(plugin =>
+                plugin.packageExports.forEach((packageExport, subpath) => this.set(subpath, packageExport)));
         });
     }
 

@@ -1,11 +1,11 @@
-const {ConditionalCode} = require('beyond/plugins/sdk');
+const {TargetedExportResource} = require('beyond/plugins/sdk');
 const build = require('./build');
 
-module.exports = class extends ConditionalCode {
-    constructor(conditional) {
-        super(conditional, {preprocessor: true, cache: true});
+module.exports = class extends TargetedExportResource {
+    constructor(targetedExport) {
+        super(targetedExport, {preprocessor: true, cache: true});
 
-        const {processors} = conditional;
+        const {processors} = targetedExport;
         super.setup(new Map([['processors', {child: processors}]]));
     }
 
@@ -18,13 +18,13 @@ module.exports = class extends ConditionalCode {
     }
 
     _prepared(require) {
-        const {pexport, processors} = this.conditional;
-        require(pexport.specifier);
+        const {packageExport, processors} = this.targetedExport;
+        require(packageExport.specifier);
         processors.forEach(({js}) => js && require(js));
     }
 
     async _preprocess() {
-        const {processors} = this.conditional;
+        const {processors} = this.targetedExport;
 
         const promises = [];
         processors.forEach(({js: {outputs, dependencies, exports}}) => {
@@ -36,6 +36,6 @@ module.exports = class extends ConditionalCode {
     }
 
     async _build(local) {
-        return await build(this.conditional, local);
+        return await build(this.targetedExport, local);
     }
 }

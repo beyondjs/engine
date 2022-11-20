@@ -1,6 +1,6 @@
 const header = require('./header');
 
-module.exports = function (conditional, transversal, local, sourcemap) {
+module.exports = function (targetedExport, transversal, local, sourcemap) {
     const {hmr} = local;
 
     function processIM({hash, cjs, specifier}) {
@@ -22,5 +22,5 @@ module.exports = function (conditional, transversal, local, sourcemap) {
     /**
      * Process the IMs
      */
-    conditional.processors.forEach(({js}) => js?.outputs.ims?.forEach(im => processIM(im)));
+    targetedExport.processors.forEach(({js}) => js?.outputs.ims?.forEach(im => processIM(im)));
 }

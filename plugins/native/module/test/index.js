@@ -1,12 +1,12 @@
 const {Plugin} = require('beyond/plugins/sdk');
-const Conditional = require('./conditional');
+const TargetedExport = require('./targeted-export');
 
 module.exports = class extends Plugin {
     static get name() {
         return 'test';
     }
 
-    _conditional(pexport, platform) {
-        return new Conditional(pexport, platform);
+    _createTargetedExport(packageExport, platform) {
+        return new TargetedExport(packageExport, platform);
     }
 }

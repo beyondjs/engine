@@ -1,8 +1,8 @@
 const BuilderPlugin = require('./plugin');
 const {sep} = require('path');
 
-module.exports = async function (conditional) {
-    const plugin = new BuilderPlugin(conditional.processors);
+module.exports = async function (targetedExport) {
+    const plugin = new BuilderPlugin(targetedExport.processors);
 
     let build;
     try {

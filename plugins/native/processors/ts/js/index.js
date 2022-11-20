@@ -1,4 +1,4 @@
-const {ProcessorCode} = require('beyond/plugins/sdk');
+const {ProcessorCode, Diagnostics} = require('beyond/plugins/sdk');
 const Analyzer = require('./analyzer');
 const Dependencies = require('./dependencies');
 const Exports = require('./exports');
@@ -41,6 +41,7 @@ module.exports = class extends ProcessorCode {
         if (this.cancelled(request)) return;
 
         const ims = compiler.outputs.data;
-        return {ims};
+        const diagnostics = new Diagnostics();
+        return {diagnostics, ims};
     }
 }
