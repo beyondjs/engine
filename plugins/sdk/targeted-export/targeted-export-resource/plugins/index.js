@@ -1,4 +1,4 @@
-const {TargetedExportedResource} = require('../standard');
+const TargetedExportedResource = require('../standard');
 
 /**
  * The configuration is immutable in the TargetedExportedResource that is used by the standard export.

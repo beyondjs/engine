@@ -54,12 +54,13 @@ module.exports = async function (url) {
         contentType: 'text/plain'
     };
 
-    const types = qs.has('types');
-    if (types) return await processTypes(specifier, targetedExport);
-
     const local = qs.has('hmr') ? {hmr: qs.get('hmr')} : {};
     const format = qs.has('format') ? qs.get('format') : 'esm';
     const minify = qs.has('min');
     const map = qs.has('map');
+    const types = qs.has('types');
+
+    if (types) return await processTypes(specifier, targetedExport, {map});
+
     return await processJs(specifier, targetedExport, local, {format, minify, map});
 }

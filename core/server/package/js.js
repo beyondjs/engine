@@ -2,34 +2,21 @@ const mformat = require('beyond/mformat');
 
 const cache = new Map();
 
-module.exports = async function (specifier, condition, local, specs) {
-    const {js} = condition;
-
-    await js.outputs.ready;
-    if (!js.outputs.valid) {
-        let content = `Errors found processing "${specifier.specifier}" module:\n`;
-        js.outputs.errors.forEach(error => (content += `-> ${error}\n`));
-        return {content, statusCode: 500, contentType: 'text/plain'};
-    }
-
-    const resource = await js.outputs.build(local);
-    if (!resource.valid) {
-        let content = `Error building "${specifier.specifier}" module:\n`;
-        resource.errors.forEach(error => (content += `-> ${error}\n`));
-        return {content, statusCode: 500, contentType: 'text/plain'};
-    }
-
-    const key = (() => {
+module.exports = async function (specifier, targetedExport, local, specs) {
+    const cacheKey = (() => {
         const {format, minify, map} = specs;
-        return `${condition.id}//` + (map ? 'map' : `${format}/${minify}`);
+        return `${targetedExport.id}//` + (map ? 'map' : `${format}/${minify}`);
     })();
-
-    if (cache.has(key)) return cache.get(key);
+    if (cache.has(cacheKey)) return cache.get(cacheKey);
 
     const done = output => {
-        cache.set(key, output);
+        cache.set(cacheKey, output);
         return output;
     }
+
+    const {js} = targetedExport;
+    await js.outputs.ready;
+    const resource = await js.outputs.build(local);
 
     /**
      * Transform to the requested format if not esm

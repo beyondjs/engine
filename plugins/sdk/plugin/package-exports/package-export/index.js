@@ -65,6 +65,6 @@ module.exports = class {
     }
 
     destroy() {
-        this.#this.#targetedExports.forEach(targetedExport => targetedExport.destroy());
+        this.#targetedExports.forEach(targetedExport => targetedExport.destroy());
     }
 }
