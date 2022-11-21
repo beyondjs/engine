@@ -1,4 +1,4 @@
-const {ProcessorCode, Diagnostics} = require('beyond/plugins/sdk');
+const {ProcessorCode, Diagnostics, ProcessorStylesOutput} = require('beyond/plugins/sdk');
 
 module.exports = class extends ProcessorCode {
     get resource() {
@@ -17,6 +17,7 @@ module.exports = class extends ProcessorCode {
         void request;
 
         const diagnostics = new Diagnostics();
-        return {diagnostics, styles: `#body: {color: 'blue'}`};
+        const styles = new ProcessorStylesOutput({code: `#body: {color: 'blue'}`});
+        return {diagnostics, styles};
     }
 }

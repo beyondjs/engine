@@ -2,6 +2,7 @@ const packages = require('beyond/packages');
 const SpecifierParser = require('beyond/utils/specifier-parser');
 const processJs = require('./js');
 const processTypes = require('./types');
+const processCss = require('./css');
 
 module.exports = async function (url) {
     const specifier = new SpecifierParser(url.pathname.slice(1));
@@ -59,8 +60,10 @@ module.exports = async function (url) {
     const minify = qs.has('min');
     const map = qs.has('map');
     const types = qs.has('types');
+    const css = qs.has('css');
 
     if (types) return await processTypes(specifier, targetedExport, {map});
+    if (css) return await processCss(specifier, targetedExport, {map});
 
     return await processJs(specifier, targetedExport, local, {format, minify, map});
 }

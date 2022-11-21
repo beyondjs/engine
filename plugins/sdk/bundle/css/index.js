@@ -27,7 +27,7 @@ module.exports = class extends TargetedExportResource {
         const {processors} = this.targetedExport;
 
         const promises = [];
-        processors.forEach(({css: {outputs}}) => promises.push(outputs.ready));
+        processors.forEach(({css}) => css && promises.push(css.outputs.ready));
         await Promise.all(promises);
     }
 

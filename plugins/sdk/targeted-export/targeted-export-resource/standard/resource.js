@@ -9,7 +9,11 @@ module.exports = class {
         return this.#map;
     }
 
-    constructor({code, map}) {
+    constructor(values) {
+        values && this.#set(values);
+    }
+
+    #set({code, map}) {
         this.#code = code;
         this.#map = map;
     }
@@ -17,5 +21,9 @@ module.exports = class {
     toJSON() {
         const {code, map} = this;
         return {code, map};
+    }
+
+    hydrate(cached) {
+        this.#set(cached);
     }
 }

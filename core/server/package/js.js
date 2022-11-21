@@ -15,8 +15,21 @@ module.exports = async function (specifier, targetedExport, local, specs) {
     }
 
     const {js} = targetedExport;
+    if (!js) {
+        return {
+            content: `Subpath "${specifier.subpath}" does not export javascript code`,
+            statusCode: 404, contentType: 'text/plain'
+        };
+    }
+
     await js.outputs.ready;
     const resource = await js.outputs.build(local);
+    if (resource.code === void 0) {
+        return {
+            content: `Subpath "${specifier.subpath}" does not export javascript code`,
+            statusCode: 404, contentType: 'text/plain'
+        };
+    }
 
     /**
      * Transform to the requested format if not esm
@@ -33,8 +46,9 @@ module.exports = async function (specifier, targetedExport, local, specs) {
         return done({content, statusCode: 500, contentType: 'text/plain'});
     }
 
+    const content = specs.map ? JSON.stringify(map) : code;
     const output = specs.map ?
-        {content: map, statusCode: 200, contentType: 'application/javascript'} :
-        {content: code, statusCode: 200, contentType: 'application/javascript'};
+        {content, statusCode: 200, contentType: 'application/json'} :
+        {content, statusCode: 200, contentType: 'application/javascript'};
     return done(output);
 }

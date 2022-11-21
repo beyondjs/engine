@@ -3,9 +3,10 @@ const {processors: registry} = require('beyond/plugins/registry');
 
 module.exports = class extends DynamicProcessor() {
     get dp() {
-        return 'bundle.code.config';
+        return 'targeted-export.code.config';
     }
 
+    #targetedExport;
     #config;
 
     #value;
@@ -13,16 +14,17 @@ module.exports = class extends DynamicProcessor() {
         return this.#value;
     }
 
-    constructor(bundle) {
+    constructor(targetedExport) {
         super();
-        this.#config = bundle.packageExport.config;
+        this.#targetedExport = targetedExport;
+        this.#config = targetedExport.packageExport.config;
     }
 
     _process() {
         const {value: original} = this.#config;
 
         // Properties of the configuration that are reserved, and are not configuration of the processors
-        const reserved = ['imports', 'platforms',  'subpath', 'path'];
+        const reserved = ['imports', 'platforms', 'subpath', 'path'];
         const value = {};
         reserved.forEach(property => original.hasOwnProperty(property) && (value[property] = original[property]));
         value.processors = new Map(

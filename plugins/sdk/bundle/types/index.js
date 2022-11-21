@@ -28,6 +28,7 @@ module.exports = class extends TargetedExportResource {
 
         const promises = [];
         processors.forEach(({js, types}) => {
+            if (!types) return;
             const {dependencies, exports} = js;
 
             dependencies && promises.push(dependencies.ready);
@@ -37,8 +38,8 @@ module.exports = class extends TargetedExportResource {
         await Promise.all(promises);
     }
 
-    async _build(local) {
+    async _build() {
         return {code: 'The typescript declaration'};
-        return await build(this.targetedExport, local);
+        return await build(this.targetedExport);
     }
 }

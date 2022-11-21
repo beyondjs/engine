@@ -48,10 +48,10 @@ module.exports = class {
     async build(hmr) {
         if (this.#resources.has(hmr)) return this.#resources.get(hmr);
 
-        const values = await this.#build(hmr);
-        if (typeof values !== 'object') throw new Error('Invalid returned data from outputs generation');
+        const build = await this.#build(hmr);
+        if (build && typeof build !== 'object') throw new Error('Invalid returned data from outputs generation');
 
-        const resource = new Resource(values);
+        const resource = new Resource({code: build?.code, map: build?.map});
         this.#resources.set(hmr, resource);
 
         if (hmr) {

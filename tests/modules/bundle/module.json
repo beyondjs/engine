@@ -3,5 +3,8 @@
   "subpath": "bundle",
   "ts": {
     "files": "*"
+  },
+  "sass": {
+    "files": "*"
   }
 }

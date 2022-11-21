@@ -10,11 +10,25 @@ module.exports = async function (specifier, targetedExport, specs) {
     }
 
     const {types} = targetedExport;
+    if (!types) {
+        return {
+            content: `Subpath "${specifier.subpath}" does not export types`,
+            statusCode: 404, contentType: 'text/plain'
+        };
+    }
+
     await types.outputs.ready;
     const resource = await types.outputs.build();
+    if (resource.code === void 0) {
+        return {
+            content: `Subpath "${specifier.subpath}" does not export types`,
+            statusCode: 404, contentType: 'text/plain'
+        };
+    }
 
+    const content = specs.map ? JSON.stringify(resource.map) : resource.code;
     const output = specs.map ?
-        {content: resource.map, statusCode: 200, contentType: 'text/prs.typescript'} :
-        {content: resource.code, statusCode: 200, contentType: 'text/prs.typescript'};
+        {content, statusCode: 200, contentType: 'application/json'} :
+        {content, statusCode: 200, contentType: 'text/prs.typescript'};
     return done(output);
 }

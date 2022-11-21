@@ -11,9 +11,15 @@ async function process(resource, response, specs) {
         statusCode = statusCode ? statusCode : 200;
 
         let {content, file, encoding, contentType} = resource;
-        if (content && !contentType) throw new Error('Content type must be specified');
-        if (file && content) throw new Error('Properties file and content cannot be set both at the same time');
-        if (!file && !content) throw new Error('Property file of content must be specified');
+        if (content !== void 0 && !contentType) {
+            throw new Error('Content type must be specified');
+        }
+        if (file && content !== void 0) {
+            throw new Error('Properties "file" and "content" cannot be set both at the same time');
+        }
+        if (!file && content === void 0) {
+            throw new Error('Either the "file" property or the "content" property must be specified');
+        }
 
         if (file) {
             if (!(await fs.exists(file))) {

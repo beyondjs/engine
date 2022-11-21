@@ -20,6 +20,7 @@ exports.SourcesFile = require('./processors/sources/file');
 exports.SourcesHashes = require('./processors/sources/hashes');
 
 exports.BundleJS = require('./bundle/js');
+exports.BundleCSS = require('./bundle/css');
 exports.BundleTypes = require('./bundle/types');
 exports.SourceMap = (require('./sourcemap'));
 
