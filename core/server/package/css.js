@@ -1,3 +1,5 @@
+const CleanCSS = require('clean-css');
+
 const cache = new Map();
 
 module.exports = async function (specifier, targetedExport, specs) {
@@ -29,13 +31,25 @@ module.exports = async function (specifier, targetedExport, specs) {
         };
     }
 
-    /**
-     * Transform to the requested format if not esm
-     */
-    const {minify} = specs;
-    // TODO: minify css
+    const {code, map, errors, warnings} = (() => {
+        if (!specs.minify) return {code: resource.code, map: resource.map};
 
-    const content = specs.map ? JSON.stringify(resource.map) : resource.code;
+        const cleaned = (new CleanCSS()).minify(resource.code, resource.map);
+        const {errors, warnings} = cleaned;
+
+        if (errors.length) return {errors, warnings};
+
+        let {styles: code, map} = cleaned;
+        return {code, map, warnings};
+    })();
+
+    if (errors?.length) {
+        let content = `Error minifying stylesheet:\n`;
+        errors.forEach(error => (content += `-> ${error}\n`));
+        return done({content, statusCode: 500, contentType: 'text/plain'});
+    }
+
+    const content = specs.map ? JSON.stringify(map) : code;
     const output = specs.map ?
         {content, statusCode: 200, contentType: 'application/json'} :
         {content, statusCode: 200, contentType: 'text/css'};

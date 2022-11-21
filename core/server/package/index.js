@@ -63,7 +63,7 @@ module.exports = async function (url) {
     const css = qs.has('css');
 
     if (types) return await processTypes(specifier, targetedExport, {map});
-    if (css) return await processCss(specifier, targetedExport, {map});
+    if (css) return await processCss(specifier, targetedExport, {minify, map});
 
     return await processJs(specifier, targetedExport, local, {format, minify, map});
 }
