@@ -24,6 +24,12 @@ module.exports = async function (specifier, targetedExport, specs) {
 
     await css.outputs.ready;
     const resource = await css.outputs.build();
+    if (!resource.diagnostics.valid) {
+        return {
+            content: `Subpath "${specifier.subpath}" has been processed with errors`,
+            statusCode: 500, contentType: 'text/plain'
+        };
+    }
     if (resource.code === void 0) {
         return {
             content: `Subpath "${specifier.subpath}" does not export a stylesheet`,

@@ -1,20 +1,18 @@
+const Message = require('./message');
+const Position = require('./position');
+
 module.exports = class {
-    #source;
+    #kind;
     /**
-     * The source object when the diagnostic is about a file
-     * @return {*}
+     * Can be 'error' or 'warning'
      */
-    get source() {
-        return this.#source;
+    get kind() {
+        return this.#kind;
     }
 
-    #specifier;
-    /**
-     * The specifier of the dependency when the diagnostic of about a dependency
-     * @return {string}
-     */
-    get specifier() {
-        return this.#specifier;
+    #file;
+    get file() {
+        return this.#file;
     }
 
     #code;
@@ -32,6 +30,11 @@ module.exports = class {
         return this.#message;
     }
 
+    #position;
+    get position() {
+        return this.#position;
+    }
+
     #start;
     get start() {
         return this.#start;
@@ -47,18 +50,29 @@ module.exports = class {
         return this.#relatedInformation;
     }
 
-    constructor(source, message, line, character) {
-        source && this.#set({source, message, line, character});
+    constructor(values) {
+        values && this.#set(values);
     }
 
     toJSON() {
-        const {file, message, line, character} = this;
-        return {file, message, line, character};
+        const {kind, file, code, category, relatedInformation} = this;
+        const position = this.#position?.toJSON();
+        const start = this.#start?.toJSON();
+        const end = this.#end?.toJSON();
+        const message = this.#message?.toJSON();
+        return {kind, file, code, category, message, position, start, end, relatedInformation};
     }
 
-    #set({source, message, line, character}) {
-        this.#source = source;
-        this.#message = message;
+    #set({kind, file, code, category, message, position, start, end, relatedInformation}) {
+        this.#kind = kind;
+        this.#file = file;
+        this.#code = code;
+        this.#category = category;
+        this.#position = position ? new Position(position) : void 0;
+        this.#start = start ? new Position(start) : void 0;
+        this.#end = end ? new Position(end) : void 0;
+        this.#message = message ? new Message(message) : void 0;
+        this.#relatedInformation = relatedInformation;
     }
 
     hydrate(cached) {

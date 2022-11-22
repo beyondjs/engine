@@ -92,10 +92,9 @@ module.exports = class extends Reprocessor {
             if (typeof values !== 'object') {
                 throw new Error(message);
             }
-            if (!values.diagnostics) {
-                throw new Error(`${message}: diagnostics not set`);
+            if (!values.diagnostics || !(values.diagnostics instanceof Diagnostics)) {
+                throw new Error(`${message}: diagnostics is invalid or not set`);
             }
-
             if (values.script && !(values.script instanceof ScriptOutput)) {
                 throw new Error(`${message}: Invalid script output`);
             }
@@ -107,7 +106,7 @@ module.exports = class extends Reprocessor {
             }
             values.ims?.forEach(im => {
                 if (!(im instanceof NamespaceJS) && !(im instanceof NamespaceTypes)) {
-                    throw new Error(`${message}: An invalid internal module was found`);
+                    throw new Error(`${message}: Invalid internal modules were found`);
                 }
             });
         })();
@@ -115,10 +114,7 @@ module.exports = class extends Reprocessor {
         this.#diagnostics = values.diagnostics;
         this.#script = values.script;
         this.#styles = values.styles;
-
-        this.#ims = new Map();
-        values.ims?.forEach((im, key) => this.#ims.set(key, im));
-
+        this.#ims = values.ims;
         this.#hash = this.#code.hash;
     }
 
@@ -128,19 +124,20 @@ module.exports = class extends Reprocessor {
     }
 
     hydrate(cached) {
-        this.#diagnostics = new Diagnostics();
-        this.#diagnostics.hydrate(cached.diagnostics);
-
-        this.#script = cached.script;
-        this.#styles = cached.styles;
+        this.#diagnostics = new Diagnostics(cached.diagnostics);
+        this.#script = cached.script ? new ScriptOutput(cached.script) : void 0;
+        this.#styles = cached.styles ? new StylesOutput(cached.styles) : void 0;
 
         const ims = this.#ims = new Map(cached.ims);
-        ims.forEach((im, key) => ims.set(key, im));
+        ims.forEach((im, key) => {
+            im = this.#code.resource === 'types' ? new NamespaceTypes(im) : new NamespaceJS(im);
+            this.#ims.set(key, im);
+        });
     }
 
     toJSON() {
-        const {script, styles} = this;
+        const {diagnostics, script, styles} = this;
         const ims = [...this.#ims];
-        return {script, ims, styles};
+        return {diagnostics, script, ims, styles};
     }
 }

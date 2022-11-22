@@ -1,5 +1,6 @@
-const {TargetedExportResource} = require('beyond/plugins/sdk');
-const build = require('./build');
+const TargetedExportResource = require('../../targeted-export/targeted-export-resource/plugins');
+const BundleDiagnostics = require('../diagnostics/diagnostics');
+const buildCSS = require('./build');
 
 module.exports = class extends TargetedExportResource {
     constructor(targetedExport) {
@@ -10,7 +11,7 @@ module.exports = class extends TargetedExportResource {
     }
 
     get resource() {
-        return 'js';
+        return 'css';
     }
 
     get hash() {
@@ -20,25 +21,22 @@ module.exports = class extends TargetedExportResource {
     _prepared(require) {
         const {packageExport, processors} = this.targetedExport;
         require(packageExport.specifier);
-        processors.forEach(({js}) => js && require(js));
+        processors.forEach(({css}) => css && require(css));
     }
 
     async _preprocess() {
         const {processors} = this.targetedExport;
 
         const promises = [];
-        processors.forEach(({js}) => {
-            if (!js) return;
-
-            const {outputs, dependencies, exports} = js;
-            dependencies && promises.push(dependencies.ready);
-            exports && promises.push(exports.ready);
-            promises.push(outputs.ready);
-        });
+        processors.forEach(({css}) => css && promises.push(css.outputs.ready));
         await Promise.all(promises);
     }
 
-    async _build(local) {
-        return await build(this.targetedExport, local);
+    async _build() {
+        const diagnostics = new BundleDiagnostics('css', this.targetedExport.processors);
+        if (!diagnostics.valid) return {diagnostics};
+
+        const build = await buildCSS(this.targetedExport);
+        return {build, diagnostics};
     }
 }

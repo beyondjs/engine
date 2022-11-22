@@ -19,9 +19,11 @@ exports.Sources = require('./processors/sources');
 exports.SourcesFile = require('./processors/sources/file');
 exports.SourcesHashes = require('./processors/sources/hashes');
 
-exports.BundleJS = require('./bundle/js');
-exports.BundleCSS = require('./bundle/css');
-exports.BundleTypes = require('./bundle/types');
+exports.BundleDiagnostics = require('./bundle/diagnostics/diagnostics');
+exports.BundleDiagnostic = require('./bundle/diagnostics/diagnostic');
+exports.BundleJS = require('./bundle/code-js');
+exports.BundleCSS = require('./bundle/code-css');
+exports.BundleTypes = require('./bundle/code-types');
 exports.SourceMap = (require('./sourcemap'));
 
 exports.Diagnostics = require('./diagnostics/diagnostics');

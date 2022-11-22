@@ -9,8 +9,8 @@ module.exports = class {
         return this.#column;
     }
 
-    constructor(line, column) {
-        line && this.#set({line, column});
+    constructor(values) {
+        values && this.#set(values);
     }
 
     #set({line, column}) {

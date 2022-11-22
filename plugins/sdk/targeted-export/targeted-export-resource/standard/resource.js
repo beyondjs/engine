@@ -1,4 +1,9 @@
 module.exports = class {
+    #diagnostics;
+    get diagnostics() {
+        return this.#diagnostics;
+    }
+
     #code;
     get code() {
         return this.#code;
@@ -13,14 +18,15 @@ module.exports = class {
         values && this.#set(values);
     }
 
-    #set({code, map}) {
+    #set({diagnostics, code, map}) {
+        this.#diagnostics = diagnostics;
         this.#code = code;
         this.#map = map;
     }
 
     toJSON() {
-        const {code, map} = this;
-        return {code, map};
+        const {diagnostics, code, map} = this;
+        return {diagnostics, code, map};
     }
 
     hydrate(cached) {

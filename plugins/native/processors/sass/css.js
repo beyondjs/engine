@@ -26,8 +26,20 @@ module.exports = class extends ProcessorCode {
             result = sass.compileString(file.content, options);
         }
         catch (exc) {
-            const errors = [{message: exc.message}];
-            return {errors};
+            const diagnostic = new Diagnostic({
+                kind: 'error',
+                file: file.file,
+                message: {text: exc.sassMessage},
+                start: {
+                    line: exc.span.start.line,
+                    column: exc.span.start.column
+                },
+                end: {
+                    line: exc.span.end.line,
+                    column: exc.span.end.column
+                }
+            });
+            return {diagnostic};
         }
 
         const {css, sourceMap: map} = result;
@@ -42,12 +54,13 @@ module.exports = class extends ProcessorCode {
 
         const {files} = this.processor.sources;
         files.forEach(file => {
-            const {code, map, errors} = this._compileFile(file);
-            sourcemap.concat(code, null, map);
+            const {code, map, diagnostic} = this._compileFile(file);
+            diagnostic && diagnostics.push(diagnostic);
+            diagnostics.valid && sourcemap.concat(code, null, map);
         });
 
         const {code, map} = sourcemap;
-        const styles = new ProcessorStylesOutput({code, map});
+        const styles = diagnostics.valid ? new ProcessorStylesOutput({code, map}) : void 0;
         return {diagnostics, styles};
     }
 }

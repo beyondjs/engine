@@ -1,5 +1,6 @@
-const {TargetedExportResource} = require('beyond/plugins/sdk');
-const build = require('./build');
+const TargetedExportResource = require('../../targeted-export/targeted-export-resource/plugins');
+const BundleDiagnostics = require('../diagnostics/diagnostics');
+const buildTypes = require('./build');
 
 module.exports = class extends TargetedExportResource {
     constructor(targetedExport) {
@@ -40,6 +41,11 @@ module.exports = class extends TargetedExportResource {
 
     async _build() {
         return {code: 'The typescript declaration'};
-        return await build(this.targetedExport);
+
+        const diagnostics = new BundleDiagnostics('types', this.targetedExport.processors);
+        if (!diagnostics.valid) return {diagnostics};
+
+        const build = await buildTypes(this.targetedExport);
+        return {build, diagnostics};
     }
 }

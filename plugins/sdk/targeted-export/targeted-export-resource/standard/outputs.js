@@ -51,7 +51,7 @@ module.exports = class {
         const build = await this.#build(hmr);
         if (build && typeof build !== 'object') throw new Error('Invalid returned data from outputs generation');
 
-        const resource = new Resource({code: build?.code, map: build?.map});
+        const resource = new Resource({code: build?.code, map: build?.map, diagnostics: build?.diagnostics});
         this.#resources.set(hmr, resource);
 
         if (hmr) {
