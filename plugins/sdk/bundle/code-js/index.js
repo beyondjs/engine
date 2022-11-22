@@ -43,7 +43,7 @@ module.exports = class extends TargetedExportResource {
         const diagnostics = new BundleDiagnostics('js', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
 
-        const build = await buildJS(this.targetedExport, local);
-        return {build, diagnostics};
+        const {code, map} = await buildJS(this.targetedExport, local);
+        return {code, map, diagnostics};
     }
 }

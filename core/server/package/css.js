@@ -9,9 +9,9 @@ module.exports = async function (specifier, targetedExport, specs) {
     })();
     if (cache.has(cacheKey)) return cache.get(cacheKey);
 
-    const done = output => {
-        cache.set(cacheKey, output);
-        return output;
+    const done = response => {
+        cache.set(cacheKey, response);
+        return response;
     }
 
     const {css} = targetedExport;
@@ -23,14 +23,14 @@ module.exports = async function (specifier, targetedExport, specs) {
     }
 
     await css.outputs.ready;
-    const resource = await css.outputs.build();
-    if (!resource.diagnostics.valid) {
+    const output = await css.outputs.build();
+    if (!output.diagnostics.valid) {
         return {
             content: `Subpath "${specifier.subpath}" has been processed with errors`,
             statusCode: 500, contentType: 'text/plain'
         };
     }
-    if (resource.code === void 0) {
+    if (output.code === void 0) {
         return {
             content: `Subpath "${specifier.subpath}" does not export a stylesheet`,
             statusCode: 404, contentType: 'text/plain'
@@ -38,9 +38,9 @@ module.exports = async function (specifier, targetedExport, specs) {
     }
 
     const {code, map, errors, warnings} = (() => {
-        if (!specs.minify) return {code: resource.code, map: resource.map};
+        if (!specs.minify) return {code: output.code, map: output.map};
 
-        const cleaned = (new CleanCSS()).minify(resource.code, resource.map);
+        const cleaned = (new CleanCSS()).minify(output.code, output.map);
         const {errors, warnings} = cleaned;
 
         if (errors.length) return {errors, warnings};
@@ -56,8 +56,8 @@ module.exports = async function (specifier, targetedExport, specs) {
     }
 
     const content = specs.map ? JSON.stringify(map) : code;
-    const output = specs.map ?
+    const response = specs.map ?
         {content, statusCode: 200, contentType: 'application/json'} :
         {content, statusCode: 200, contentType: 'text/css'};
-    return done(output);
+    return done(response);
 }

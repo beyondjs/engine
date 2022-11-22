@@ -40,12 +40,12 @@ module.exports = class extends TargetedExportResource {
     }
 
     async _build() {
-        return {code: 'The typescript declaration'};
-
         const diagnostics = new BundleDiagnostics('types', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
 
-        const build = await buildTypes(this.targetedExport);
-        return {build, diagnostics};
+        return {code: 'The typescript declaration', diagnostics};
+
+        const {code, map} = await buildTypes(this.targetedExport);
+        return {code, map, diagnostics};
     }
 }

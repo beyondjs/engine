@@ -36,7 +36,7 @@ module.exports = class extends TargetedExportResource {
         const diagnostics = new BundleDiagnostics('css', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
 
-        const build = await buildCSS(this.targetedExport);
-        return {build, diagnostics};
+        const {code, map} = await buildCSS(this.targetedExport);
+        return {code, map, diagnostics};
     }
 }

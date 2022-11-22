@@ -9,9 +9,9 @@ module.exports = async function (specifier, targetedExport, local, specs) {
     })();
     if (cache.has(cacheKey)) return cache.get(cacheKey);
 
-    const done = output => {
-        cache.set(cacheKey, output);
-        return output;
+    const done = response => {
+        cache.set(cacheKey, response);
+        return response;
     }
 
     const {js} = targetedExport;
@@ -23,8 +23,14 @@ module.exports = async function (specifier, targetedExport, local, specs) {
     }
 
     await js.outputs.ready;
-    const resource = await js.outputs.build(local);
-    if (resource.code === void 0) {
+    const output = await js.outputs.build(local);
+    if (!output.diagnostics.valid) {
+        return {
+            content: `Subpath "${specifier.subpath}" has been processed with errors`,
+            statusCode: 500, contentType: 'text/plain'
+        };
+    }
+    if (output.code === void 0) {
         return {
             content: `Subpath "${specifier.subpath}" does not export javascript code`,
             statusCode: 404, contentType: 'text/plain'
@@ -39,7 +45,7 @@ module.exports = async function (specifier, targetedExport, local, specs) {
         return done({content: `Format "${format}" is not a valid option`, statusCode: 404, contentType: 'text/plain'});
     }
 
-    const {code, map, errors} = mformat({format, minify, code: resource.code, map: resource.map});
+    const {code, map, errors} = mformat({format, minify, code: output.code, map: output.map});
     if (errors?.length) {
         let content = `Error transforming module to "${format}" format:\n`;
         errors.forEach(error => (content += `-> ${error}\n`));
@@ -47,8 +53,8 @@ module.exports = async function (specifier, targetedExport, local, specs) {
     }
 
     const content = specs.map ? JSON.stringify(map) : code;
-    const output = specs.map ?
+    const response = specs.map ?
         {content, statusCode: 200, contentType: 'application/json'} :
         {content, statusCode: 200, contentType: 'application/javascript'};
-    return done(output);
+    return done(response);
 }
