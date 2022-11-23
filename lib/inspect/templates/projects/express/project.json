@@ -1,9 +1,8 @@
 {
-  "name": "node-app",
+  "name": "express-project",
   "version": "0.0.1",
-  "title": "Node JS Basic Application",
-  "description": "Node JS Basic application",
-  "node": {},
+  "title": "Express Basic Project",
+  "description": "Express Basic project",
   "languages": {
     "default": "en",
     "supported": [

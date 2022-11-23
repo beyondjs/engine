@@ -11,7 +11,5 @@
   },
   "modules": {
     "path": "./modules"
-  },
-  "deployment": {
   }
 }

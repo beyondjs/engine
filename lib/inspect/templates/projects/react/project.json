@@ -1,5 +1,5 @@
 {
-  "name": "react-first-app",
+  "name": "react-project",
   "version": "0.0.1",
   "layout": "main-layout",
   "template": "template/template.json",
@@ -12,7 +12,5 @@
   },
   "modules": {
     "path": "./modules"
-  },
-  "deployment": {
   }
 }

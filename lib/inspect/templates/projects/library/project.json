@@ -1,5 +1,5 @@
 {
-  "name": "empty-app",
+  "name": "library-project",
   "version": "0.0.1",
   "languages": {
     "default": "en",
@@ -10,7 +10,5 @@
   },
   "modules": {
     "path": "./modules"
-  },
-  "deployment": {
   }
 }

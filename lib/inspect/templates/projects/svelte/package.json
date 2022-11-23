@@ -8,6 +8,6 @@
     "@beyond-js/svelte-widgets": "^0.1.0"
   },
   "devDependencies": {
-    "@beyond-js/backend": "^0.1.0"
+    "@beyond-js/local": "^0.1.0"
   }
 }

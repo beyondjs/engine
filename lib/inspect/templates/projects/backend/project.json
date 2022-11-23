@@ -1,8 +1,8 @@
 {
-  "name": "node-app",
+  "name": "backend-project",
   "version": "0.0.1",
-  "title": "Node JS Basic Application",
-  "description": "Node JS Basic application",
+  "title": "Backend Basic Application",
+  "description": "Backend Basic application",
   "languages": {
     "default": "en",
     "supported": [

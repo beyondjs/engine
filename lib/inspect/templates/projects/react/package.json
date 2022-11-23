@@ -5,10 +5,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@beyond-js/widgets": "^0.1.0",
-    "@beyond-js/react-widgets": "^18.20.1"
+    "@beyond-js/react-widgets": "^18.20.2"
   },
   "devDependencies": {
-    "@beyond-js/backend": "^0.1.0"
+    "@beyond-js/local": "^0.1.0"
   }
 }
