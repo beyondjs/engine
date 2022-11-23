@@ -6,6 +6,7 @@
   "license": "ISC",
   "dependencies": {
     "@beyond-js/backend": "^0.1.0",
-    "@beyond-js/react-widgets": "^18.20.2"
+    "@beyond-js/react-widgets": "^18.20.2",
+    "socket.io-client": "^4.5.3"
   }
 }

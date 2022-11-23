@@ -1,1 +1,1 @@
-console.log('Welcome to my first node application made with BeyondJS');
+console.log('Welcome to the first node project made with BeyondJS');
