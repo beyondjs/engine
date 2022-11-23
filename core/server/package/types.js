@@ -19,7 +19,7 @@ module.exports = async function (specifier, targetedExport, specs) {
 
     await types.outputs.ready;
     const output = await types.outputs.build();
-    if (!output.diagnostics.valid) {
+    if (output.diagnostics && !output.diagnostics.valid) {
         return {
             content: `Subpath "${specifier.subpath}" has been processed with errors`,
             statusCode: 500, contentType: 'text/plain'

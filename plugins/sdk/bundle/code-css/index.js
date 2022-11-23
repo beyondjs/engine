@@ -33,6 +33,10 @@ module.exports = class extends TargetedExportResource {
     }
 
     async _build() {
+        let count = 0;
+        this.targetedExport.processors.forEach(({css}) => css?.outputs.styles !== void 0 && count++);
+        if (!count) return;
+
         const diagnostics = new BundleDiagnostics('css', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
 

@@ -40,10 +40,12 @@ module.exports = class extends TargetedExportResource {
     }
 
     async _build() {
+        let count = 0;
+        this.targetedExport.processors.forEach(({types}) => types?.outputs.ims?.size !== void 0 && count++);
+        if (!count) return;
+
         const diagnostics = new BundleDiagnostics('types', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
-
-        return {code: 'The typescript declaration', diagnostics};
 
         const {code, map} = await buildTypes(this.targetedExport);
         return {code, map, diagnostics};

@@ -14,8 +14,7 @@ module.exports = class extends ProcessorCode {
         await compiler.outputs.ready;
         if (this.cancelled(request)) return;
 
-        const diagnostics = new Diagnostics();
-        const ims = compiler.outputs.data;
+        const {diagnostics, ims} = compiler.outputs.data;
         return {diagnostics, ims};
     }
 }

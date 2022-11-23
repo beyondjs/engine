@@ -1,7 +1,11 @@
-const {File} = require('beyond/utils/finder');
 const crc32 = require('beyond/utils/crc32');
 
-module.exports = class extends File {
+class NamespaceTypes {
+    #specifier;
+    get specifier() {
+        return this.#specifier;
+    }
+
     #code;
     get code() {
         return this.#code;
@@ -17,21 +21,30 @@ module.exports = class extends File {
         return this.#hash;
     }
 
-    constructor(file, code, map) {
-        super();
-        const hash = crc32(code);
-        file && this.#set({file, code, map, hash});
+    #name;
+    get name() {
+        return this.#name;
+    }
+
+    static name(specifier) {
+        return `./${specifier}`;
+    }
+
+    constructor(values) {
+        if (!values) return;
+
+        const hash = crc32(values.code);
+        this.#set(Object.assign({hash}, values));
     }
 
     toJSON() {
-        const file = super.toJSON();
-        const {code, map, hash} = this;
-        return Object.assign({file, code, map, hash});
+        const {specifier, code, map, hash} = this;
+        return Object.assign({specifier, code, map, hash});
     }
 
     #set(data) {
-        super.hydrate(data.file);
-
+        this.#name = NamespaceTypes.name(this);
+        this.#specifier = data.specifier;
         this.#code = data.code;
         this.#map = data.map;
         this.#hash = data.hash;
@@ -41,3 +54,5 @@ module.exports = class extends File {
         this.#set(cached);
     }
 }
+
+module.exports = NamespaceTypes;

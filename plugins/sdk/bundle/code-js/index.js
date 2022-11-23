@@ -40,6 +40,13 @@ module.exports = class extends TargetedExportResource {
     }
 
     async _build(local) {
+        let count = 0;
+        this.targetedExport.processors.forEach(({js}) => {
+            js?.outputs.script !== void 0 && count++;
+            js?.outputs.ims?.size !== void 0 && count++;
+        });
+        if (!count) return;
+
         const diagnostics = new BundleDiagnostics('js', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
 

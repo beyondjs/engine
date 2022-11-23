@@ -24,7 +24,7 @@ module.exports = async function (specifier, targetedExport, local, specs) {
 
     await js.outputs.ready;
     const output = await js.outputs.build(local);
-    if (!output.diagnostics.valid) {
+    if (output.diagnostics && !output.diagnostics.valid) {
         return {
             content: `Subpath "${specifier.subpath}" has been processed with errors`,
             statusCode: 500, contentType: 'text/plain'

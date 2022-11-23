@@ -1,5 +1,6 @@
 const {createHost} = require('./host');
-const Outputs = require('./outputs');
+const Diagnostics = require('./diagnostics');
+const InternalModules = require('./ims');
 const ts = require('typescript');
 
 module.exports = async function (compiler, request) {
@@ -35,7 +36,6 @@ module.exports = async function (compiler, request) {
             incremental: true,
             moduleResolution: ts.ModuleResolutionKind.NodeJs,
             inlineSources: false
-            // noEmitOnError: true
         });
     })();
 
@@ -43,16 +43,21 @@ module.exports = async function (compiler, request) {
         ts.createEmitAndSemanticDiagnosticsBuilderProgram(rootNames, options, host, compiler.previous?.program) :
         ts.createIncrementalProgram({rootNames, options, host});
 
-    let diagnostics = [
-        ...program.getConfigFileParsingDiagnostics(),
-        ...program.getSyntacticDiagnostics(),
-        ...program.getOptionsDiagnostics(),
-        ...program.getSemanticDiagnostics()
-    ];
+    const diagnostics = (() => {
+        let diagnostics = [
+            ...program.getConfigFileParsingDiagnostics(),
+            ...program.getSyntacticDiagnostics(),
+            ...program.getOptionsDiagnostics(),
+            ...program.getSemanticDiagnostics()
+        ];
 
-    const result = program.emit();
-    diagnostics = result.diagnostics.concat(diagnostics);
-    const outputs = new Outputs(compiler, diagnostics, emitted);
+        const result = program.emit();
+        diagnostics = result.diagnostics.concat(diagnostics);
+
+        return new Diagnostics(diagnostics);
+    })();
+
+    const ims = diagnostics.valid ? new InternalModules(compiler.processor, emitted) : void 0;
 
     // Return the tsBuildInfo to be saved into cache
     // If the compiler does not generate changes, because there was no change in processing,
@@ -62,6 +67,6 @@ module.exports = async function (compiler, request) {
         return file?.[1];
     })();
 
-    const previous = {program, host, emitted, buildInfo, cachedModules};
-    return {previous};
+    const previous = {program, host, buildInfo, cachedModules};
+    return {previous, diagnostics, ims};
 }

@@ -1,10 +1,13 @@
-const {File} = require('beyond/utils/finder');
-const {Diagnostic} = require('../../diagnostics/diagnostic');
 const crc32 = require('beyond/utils/crc32');
-const {sep} = require('path');
+const {sep, extname} = require('path');
 const mformat = require('beyond/mformat');
 
-class NamespaceJS extends File {
+class NamespaceJS {
+    #specifier;
+    get specifier() {
+        return this.#specifier;
+    }
+
     #code;
     get code() {
         return this.#code;
@@ -31,49 +34,38 @@ class NamespaceJS extends File {
         return this.#hash;
     }
 
-    #diagnostics;
-    get diagnostics() {
-        return this.#diagnostics;
+    #name;
+    get name() {
+        return this.#name;
     }
 
-    #specifier;
-    get specifier() {
-        return this.#specifier;
-    }
+    static name(specifier) {
+        const ext = extname(specifier);
+        const normalized = sep === '/' ? specifier : specifier.replace(/\\/g, `/`);
 
-    static specifier(file) {
-        const {relative, extname} = file;
-        const normalized = sep === '/' ? relative.file : relative.file.replace(/\\/g, `/`);
-
-        const resource = normalized.slice(0, normalized.length - extname.length);
+        const resource = normalized.slice(0, normalized.length - ext.length);
         return `./${resource}`;
     }
 
-    constructor(file, code, map, diagnostics) {
-        super();
-        const hash = crc32(code);
-        file && this.#set({file, code, map, diagnostics, hash});
+    constructor(values) {
+        if (!values) return;
+
+        const hash = crc32(values.code);
+        this.#set(Object.assign({hash}, values));
     }
 
     toJSON() {
-        const file = super.toJSON();
-        const {code, map, diagnostics, hash} = this;
-        return Object.assign({file, code, map, diagnostics, hash});
+        const {specifier, code, map, cjs, hash} = this;
+        return Object.assign({specifier, code, map, cjs, hash});
     }
 
     #set(data) {
-        super.hydrate(data.file);
-
-        this.#specifier = NamespaceJS.specifier(this);
+        this.#name = NamespaceJS.name(this);
+        this.#specifier = data.specifier;
         this.#code = data.code;
         this.#map = data.map;
         this.#hash = data.hash;
-
-        this.#diagnostics = data.diagnostics.map(data => {
-            const diagnostic = new Diagnostic();
-            diagnostic.hydrate(data);
-            return diagnostic;
-        });
+        this.#cjs = data.cjs;
     }
 
     hydrate(cached) {

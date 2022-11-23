@@ -1,5 +1,4 @@
 const {ProcessorCompiler} = require('beyond/plugins/sdk');
-const Outputs = require('./outputs');
 const executeProgram = require('./program');
 
 module.exports = class extends ProcessorCompiler {
@@ -13,11 +12,11 @@ module.exports = class extends ProcessorCompiler {
     }
 
     async _compile(request) {
-        const {previous, buildInfo, outputs} = await executeProgram(this, request);
+        const {previous, buildInfo, ims, diagnostics} = await executeProgram(this, request);
         if (this.cancelled(request)) return;
 
         this.#previous = previous;
 
-        return new Outputs();
+        return {ims, diagnostics};
     }
 }

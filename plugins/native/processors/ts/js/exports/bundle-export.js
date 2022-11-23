@@ -36,7 +36,7 @@ module.exports = class {
     }
 
     constructor(source, sourceExport) {
-        this.#imSpecifier = NamespaceJS.specifier(source);
+        this.#imSpecifier = NamespaceJS.name(source.relative.file);
 
         const {name, from, kind, line, character} = sourceExport;
         this.#name = name;
