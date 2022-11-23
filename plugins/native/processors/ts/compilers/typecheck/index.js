@@ -12,11 +12,10 @@ module.exports = class extends ProcessorCompiler {
     }
 
     async _compile(request) {
-        const {previous, buildInfo, ims, diagnostics} = await executeProgram(this, request);
+        const {previous, ims, diagnostics} = await executeProgram(this, request);
         if (this.cancelled(request)) return;
 
         this.#previous = previous;
-
         return {ims, diagnostics};
     }
 }

@@ -39,8 +39,9 @@ module.exports = class extends Map {
         });
 
         ims.forEach(({code, map}, specifier) => {
+            map = JSON.parse(map);
             const namespace = new NamespaceTypes({specifier, code, map});
-            ims.set(specifier, namespace)
+            this.set(specifier, namespace)
         });
     }
 }
