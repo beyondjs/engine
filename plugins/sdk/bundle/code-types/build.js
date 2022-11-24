@@ -1,67 +1,78 @@
 const SourceMap = require('../../sourcemap');
 const {transformAsync: transform} = require('@babel/core');
-const babelPlugin = require('./babel-plugin');
+const createBabelPlugin = require('./babel-plugin');
+const t = require('@babel/types');
+const generate = require('@babel/generator').default;
 
 module.exports = async function (targetedExport) {
     const sourcemap = new SourceMap();
+    const nsNames = new Map();
 
-    const sources = new Map();
-    for (const processor of targetedExport.processors.values()) {
-        const {types, path} = processor;
+    /**
+     * To collect the dependencies and exports of all namespaces
+     */
+    const metadata = {dependencies: new Map(), exports: new Map()};
+
+    for (const {types} of targetedExport.processors.values()) {
         if (!types?.outputs.ims?.size) continue;
 
-        for (const {code, map} of types.outputs.ims.values()) {
+        for (const {specifier, code, map} of types.outputs.ims.values()) {
+            const nsName = `__ns_${nsNames.size}`;
+            nsNames.set(specifier, nsName);
+
             try {
                 const cwd = require.resolve('beyond');
+                const dependencies = new Map();
+                const exports = new Set();
+                const plugin = createBabelPlugin({dependencies, exports});
 
                 const transformed = await transform(code, {
                     cwd,
                     sourceType: 'module',
                     inputSourceMap: map,
-                    sourceMaps: true,
+                    ast: true,
+                    code: false,
+                    sourceMaps: false,
                     plugins: [
-                        ['@babel/plugin-syntax-typescript', {dts: true, isTSX: true}],
-                        babelPlugin
+                        ['@babel/plugin-syntax-typescript', {dts: true}],
+                        plugin
                     ]
                 });
-                console.log('Original code:', code);
-                console.log('Original map:', map);
-                console.log('Transformed code:', transformed.code);
-                console.log('Transformed map:', transformed.map);
+
+                exports.forEach(name => {
+                    const names = metadata.exports.has(specifier) ? metadata.exports.get(specifier) : new Set();
+                    names.add(name);
+                    metadata.exports.set(specifier, names);
+                });
+
+                const identifier = t.identifier(nsName);
+                const body = t.TSModuleBlock(transformed.ast.program.body);
+                const namespace = t.tsModuleDeclaration(identifier, body);
+                const output = generate(namespace, {sourceMaps: true}, {
+                    'henry.ts': code
+                });
+
+                sourcemap.concat(`// ${specifier}`);
+                sourcemap.concat(output.code, null, output.map);
+                sourcemap.concat('\n');
             }
             catch (exc) {
-                console.log('ERROR FOUND!!');
                 console.log(exc.stack);
             }
         }
     }
 
-    // const imports = new (require('./transform'))(compiler, tsSources, compiler.files);
-    // require('./namespaces')(compiler, tsSources);
-    //
-    // let output = '';
-    // imports.dependencies.forEach((name, module) => {
-    //     output += `import * as ${name} from '${module}';\n`;
-    // });
-    // imports.dependencies.size ? (output += '\n') : null;
-    //
-    // const printer = ts.createPrinter();
-    // tsSources.forEach((source, file) => {
-    //     const code = printer.printFile(source);
-    //     if (!code) return;
-    //
-    //     output += `// FILE: ${file}\n`;
-    //     output += code;
-    //     output += '\n';
-    // });
-
+    /**
+     * Process the exports
+     */
+    targetedExport.processors.forEach(({types}) => types?.outputs.ims?.forEach(({specifier}) => {
+        const nsName = nsNames.get(specifier);
+        const exportedNames = metadata.exports.get(specifier);
+        exportedNames.forEach(name => {
+            sourcemap.concat(`export import ${name} = ${nsName}.${name};`);
+        });
+    }));
 
     const {code, map} = sourcemap;
     return {code, map};
-
-    // let code = '';
-    // const compiler = this.compiler;
-    // code += require('./modules')(compiler);
-    // code += require('./exports')(compiler);
-    // return code;
 }
