@@ -4,74 +4,56 @@ const createBabelPlugin = require('./babel-plugin');
 const t = require('@babel/types');
 const generate = require('@babel/generator').default;
 
-module.exports = async function (targetedExport) {
+module.exports = async function ({ims, dependencies, exports}) {
     const sourcemap = new SourceMap();
     const nsNames = new Map();
 
     /**
      * To collect the dependencies and exports of all namespaces
      */
-    const metadata = {dependencies: new Map(), exports: new Map()};
+    for (const {specifier, code, map} of ims) {
+        const nsName = `__ns_${nsNames.size}`;
+        nsNames.set(specifier, nsName);
 
-    for (const {types} of targetedExport.processors.values()) {
-        if (!types?.outputs.ims?.size) continue;
+        try {
+            const cwd = require.resolve('beyond');
+            const plugin = createBabelPlugin();
 
-        for (const {specifier, code, map} of types.outputs.ims.values()) {
-            const nsName = `__ns_${nsNames.size}`;
-            nsNames.set(specifier, nsName);
+            const transformed = await transform(code, {
+                cwd,
+                sourceType: 'module',
+                inputSourceMap: map,
+                ast: true,
+                code: false,
+                sourceMaps: false,
+                plugins: [
+                    ['@babel/plugin-syntax-typescript', {dts: true}],
+                    plugin
+                ]
+            });
 
-            try {
-                const cwd = require.resolve('beyond');
-                const dependencies = new Map();
-                const exports = new Set();
-                const plugin = createBabelPlugin({dependencies, exports});
+            const identifier = t.identifier(nsName);
+            const body = t.TSModuleBlock(transformed.ast.program.body);
+            const namespace = t.tsModuleDeclaration(identifier, body);
+            namespace.declare = true;
 
-                const transformed = await transform(code, {
-                    cwd,
-                    sourceType: 'module',
-                    inputSourceMap: map,
-                    ast: true,
-                    code: false,
-                    sourceMaps: false,
-                    plugins: [
-                        ['@babel/plugin-syntax-typescript', {dts: true}],
-                        plugin
-                    ]
-                });
+            const sources = {};
+            sources[specifier] = code;
+            const output = generate(namespace, {sourceMaps: true}, sources);
 
-                exports.forEach(name => {
-                    const names = metadata.exports.has(specifier) ? metadata.exports.get(specifier) : new Set();
-                    names.add(name);
-                    metadata.exports.set(specifier, names);
-                });
-
-                const identifier = t.identifier(nsName);
-                const body = t.TSModuleBlock(transformed.ast.program.body);
-                const namespace = t.tsModuleDeclaration(identifier, body);
-                const output = generate(namespace, {sourceMaps: true}, {
-                    'henry.ts': code
-                });
-
-                sourcemap.concat(`// ${specifier}`);
-                sourcemap.concat(output.code, null, output.map);
-                sourcemap.concat('\n');
-            }
-            catch (exc) {
-                console.log(exc.stack);
-            }
+            sourcemap.concat(`// ${specifier}`);
+            sourcemap.concat(output.code, null, output.map);
+            sourcemap.concat('\n');
+        }
+        catch (exc) {
+            console.log(exc.stack);
         }
     }
 
-    /**
-     * Process the exports
-     */
-    targetedExport.processors.forEach(({types}) => types?.outputs.ims?.forEach(({specifier}) => {
-        const nsName = nsNames.get(specifier);
-        const exportedNames = metadata.exports.get(specifier);
-        exportedNames.forEach(name => {
-            sourcemap.concat(`export import ${name} = ${nsName}.${name};`);
-        });
-    }));
+    exports?.forEach(({imSpecifier, name, from}) => {
+        const nsName = nsNames.get(imSpecifier);
+        sourcemap.concat(`export import ${name} = ${nsName}.${from};`);
+    });
 
     const {code, map} = sourcemap;
     return {code, map};

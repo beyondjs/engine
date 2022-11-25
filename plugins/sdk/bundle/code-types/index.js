@@ -24,7 +24,7 @@ module.exports = class extends TargetedExportResource {
         processors.forEach(({types}) => types && require(types));
     }
 
-    async _preprocess() {
+    async _preprocess(request) {
         const {processors} = this.targetedExport;
 
         const promises = [];
@@ -37,6 +37,21 @@ module.exports = class extends TargetedExportResource {
             types && promises.push(types.outputs.ready);
         });
         await Promise.all(promises);
+        if (this.cancelled(request)) return;
+
+        /**
+         * The output to be used as the data input of the _build method
+         */
+        const output = {ims: [], dependencies: [], exports: []};
+        processors.forEach(({js, types}) => {
+            if (!types) return;
+            const {dependencies, exports} = js;
+
+            types.outputs.ims?.forEach(im => output.ims.push(im));
+            dependencies.forEach(dependency => output.dependencies.push(dependency));
+            exports.forEach(_export => output.exports.push(_export));
+        });
+        return {...output};
     }
 
     async _build() {
@@ -47,7 +62,8 @@ module.exports = class extends TargetedExportResource {
         const diagnostics = new BundleDiagnostics('types', this.targetedExport.processors);
         if (!diagnostics.valid) return {diagnostics};
 
-        const {code, map} = await buildTypes(this.targetedExport);
+        const {ims, dependencies, exports} = this.preprocessor.data;
+        const {code, map} = await buildTypes({ims, dependencies, exports});
         return {code, map, diagnostics};
     }
 }
