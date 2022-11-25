@@ -29,6 +29,7 @@ module.exports = class extends TargetedExport {
 
     constructor(...params) {
         super(...params);
+
         this.#config = new Config(this);
         this.#processors = new ProcessorsSet(this);
         this.#js = new BundleJS(this);

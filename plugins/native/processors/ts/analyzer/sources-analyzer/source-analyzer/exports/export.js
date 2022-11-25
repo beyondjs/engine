@@ -7,10 +7,6 @@ module.exports = class {
         return this.#name;
     }
 
-    get from() {
-        return this.#name;
-    }
-
     #node;
     get node() {
         return this.#node;

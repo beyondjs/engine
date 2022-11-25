@@ -35,6 +35,10 @@ module.exports = class extends DynamicProcessor() {
         return this.targetedExport.packageExport.module;
     }
 
+    get pkg() {
+        return this.targetedExport.packageExport.module.pkg;
+    }
+
     get hash() {
         throw new Error('Property .hash must be overridden');
     }

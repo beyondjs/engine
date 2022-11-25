@@ -67,9 +67,6 @@ exports.createHost = compiler => {
             // Check if module was already resolved
             if (cachedSources.has(module)) return push(module, cachedSources.get(module));
 
-            // The beyond context
-            if (module === 'beyond_context') return push(module, `${module}.ts`);
-
             // Check if it is a bundle of a BeyondJS local module
             if (declarations.has(module)) {
                 const declaration = declarations.get(module);

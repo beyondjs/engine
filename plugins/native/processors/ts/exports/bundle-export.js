@@ -11,11 +11,6 @@ module.exports = class {
         return this.#name;
     }
 
-    #from;
-    get from() {
-        return this.#from;
-    }
-
     #kind;
     /**
      * The kind of export
@@ -38,9 +33,8 @@ module.exports = class {
     constructor(source, sourceExport) {
         this.#imSpecifier = NamespaceJS.name(source.relative.file);
 
-        const {name, from, kind, line, character} = sourceExport;
+        const {name, kind, line, character} = sourceExport;
         this.#name = name;
-        this.#from = from;
         this.#kind = kind;
         this.#line = line;
         this.#character = character;

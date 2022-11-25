@@ -28,9 +28,8 @@ module.exports = class extends TargetedExportResource {
         const {processors} = this.targetedExport;
 
         const promises = [];
-        processors.forEach(({js, types}) => {
+        processors.forEach(({dependencies, exports, types}) => {
             if (!types) return;
-            const {dependencies, exports} = js;
 
             dependencies && promises.push(dependencies.ready);
             exports && promises.push(exports.ready);
@@ -43,9 +42,8 @@ module.exports = class extends TargetedExportResource {
          * The output to be used as the data input of the _build method
          */
         const output = {ims: [], dependencies: [], exports: []};
-        processors.forEach(({js, types}) => {
+        processors.forEach(({dependencies, exports, types}) => {
             if (!types) return;
-            const {dependencies, exports} = js;
 
             types.outputs.ims?.forEach(im => output.ims.push(im));
             dependencies.forEach(dependency => output.dependencies.push(dependency));

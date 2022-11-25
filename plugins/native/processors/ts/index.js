@@ -1,5 +1,8 @@
 const {Processor} = require('beyond/plugins/sdk');
 const Sources = require('./sources');
+const Analyzer = require('./analyzer');
+const Dependencies = require('./dependencies');
+const Exports = require('./exports');
 const Compilers = require('./compilers');
 const JS = require('./js');
 const Types = require('./types');
@@ -27,6 +30,21 @@ module.exports = class extends Processor {
         return 0;
     }
 
+    #analyzer;
+    get analyzer() {
+        return this.#analyzer;
+    }
+
+    #dependencies;
+    get dependencies() {
+        return this.#dependencies;
+    }
+
+    #exports;
+    get exports() {
+        return this.#exports;
+    }
+
     #compilers;
     get compilers() {
         return this.#compilers;
@@ -46,6 +64,9 @@ module.exports = class extends Processor {
         super(bundle, processors, {});
 
         this.#sources = new Sources(this, {hashes: false});
+        this.#analyzer = new Analyzer(this.#sources);
+        this.#dependencies = new Dependencies(this.#analyzer);
+        this.#exports = new Exports(this.#analyzer);
         this.#compilers = new Compilers(this);
         this.#js = new JS(this);
         this.#types = new Types(this);

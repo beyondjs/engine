@@ -1,6 +1,13 @@
 const t = require('@babel/types');
 
-module.exports = () => () => ({
+/**
+ * Babel plugin
+ *
+ * @param info {{default: string}} Collected information required by the builder. Actually the name of the
+ * variable exported from the namespace as the default export
+ * @return {function(): {visitor: *}}
+ */
+module.exports = (info) => () => ({
     visitor: {
         VariableDeclaration(path) {
             path.node.declare && (path.node.declare = false);
@@ -29,28 +36,18 @@ module.exports = () => () => ({
         ExportDeclaration: function (path) {
             const {node} = path;
 
+            console.log(node);
+
             /**
              * Modifier declare cannot be used in an already ambient context
              * @type {boolean}
              */
-            node.declaration.declare = false;
-            console.log(node);
+            node.declaration && (node.declaration.declare = false);
 
-            // if (t.isExportNamedDeclaration(node)) {
-            //     node.declaration?.declarations.forEach(declaration => {
-            //         const {name} = declaration.id;
-            //         exports.add(name);
-            //     });
-            // }
-            // else if (t.isExportDefaultDeclaration(node)) {
-            //     const name = node.declaration.name;
-            //     const declaration = t.variableDeclaration('const',
-            //         [t.variableDeclarator(t.identifier('__default'), t.identifier(name))]);
-            //     const replace = t.exportNamedDeclaration(declaration);
-            //
-            //     path.replaceWith(replace);
-            //     exports.add('__default');
-            // }
+            if (t.isExportDefaultDeclaration(node)) {
+                info.default = node.declaration.name;
+                path.remove();
+            }
         }
     }
 });

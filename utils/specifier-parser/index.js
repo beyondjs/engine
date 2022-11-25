@@ -9,6 +9,11 @@ module.exports = class {
         return this.#pkg;
     }
 
+    #vpkg;
+    get vpkg() {
+        return this.#vpkg;
+    }
+
     #version;
     get version() {
         return this.#version;
@@ -17,11 +22,6 @@ module.exports = class {
     #subpath;
     get subpath() {
         return this.#subpath;
-    }
-
-    #language;
-    get language() {
-        return this.#language;
     }
 
     #valid;
@@ -45,6 +45,8 @@ module.exports = class {
 
         this.#pkg = scope ? `${scope}/${name}` : name;
         this.#version = version;
+        this.#vpkg = version ? `${this.#pkg}@${version}` : void 0;
         this.#subpath = split.length ? `./${split.join('/')}` : '.';
+        this.#valid = true;
     }
 }

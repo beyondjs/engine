@@ -9,6 +9,13 @@ module.exports = async function ({ims, dependencies, exports}) {
     const nsNames = new Map();
 
     /**
+     * To collect information about the name of the variable exported from the namespace as the default export
+     * required since the name "default" cannot be used as it is a reserved name
+     * @type {{default: string}}
+     */
+    const info = {};
+
+    /**
      * To collect the dependencies and exports of all namespaces
      */
     for (const {specifier, code, map} of ims) {
@@ -17,8 +24,7 @@ module.exports = async function ({ims, dependencies, exports}) {
 
         try {
             const cwd = require.resolve('beyond');
-            const plugin = createBabelPlugin();
-
+            const plugin = createBabelPlugin(info);
             const transformed = await transform(code, {
                 cwd,
                 sourceType: 'module',
@@ -50,9 +56,11 @@ module.exports = async function ({ims, dependencies, exports}) {
         }
     }
 
-    exports?.forEach(({imSpecifier, name, from}) => {
+    exports?.forEach(({imSpecifier, name}) => {
         const nsName = nsNames.get(imSpecifier);
-        sourcemap.concat(`export import ${name} = ${nsName}.${from};`);
+        name === 'default' ?
+            sourcemap.concat(`export default ${nsName}.${info.default};`) :
+            sourcemap.concat(`export import ${name} = ${nsName}.${name};`);
     });
 
     const {code, map} = sourcemap;

@@ -208,8 +208,10 @@ module.exports = (Base = Nothing) => class extends Base {
         const prepared = this.__prepared;
         const changed = this.#children.update();
         if (changed) {
-            // The processor became invalid while preparing, so call preprocess again
-            // In this case __prepared is called again until all children is properly set
+            /**
+             * The processor became invalid while preparing, so call preprocess again
+             * In this case __prepared is called again until all children is properly set
+             */
             this.#preprocess();
             return;
         }
