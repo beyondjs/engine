@@ -36,8 +36,6 @@ module.exports = (info) => () => ({
         ExportDeclaration: function (path) {
             const {node} = path;
 
-            console.log(node);
-
             /**
              * Modifier declare cannot be used in an already ambient context
              * @type {boolean}

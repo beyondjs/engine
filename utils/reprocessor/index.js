@@ -19,6 +19,9 @@ module.exports = class {
     }
 
     #request;
+    get request() {
+        return this.#request;
+    }
 
     cancelled(request) {
         return this.#request !== request;

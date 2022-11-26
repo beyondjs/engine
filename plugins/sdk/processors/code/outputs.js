@@ -118,9 +118,10 @@ module.exports = class extends Reprocessor {
         this.#hash = this.#code.hash;
     }
 
-    clear() {
+    invalidate() {
         this.#diagnostics = this.#script = this.#styles = void 0;
         this.#ims?.delete();
+        super.invalidate();
     }
 
     hydrate(cached) {

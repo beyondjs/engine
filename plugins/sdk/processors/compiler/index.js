@@ -63,7 +63,7 @@ module.exports = class extends DynamicProcessor() {
     }
 
     _process() {
-        !this.#outputs.updated && this.#outputs.clear();
+        !this.#outputs.updated && this.#outputs.invalidate();
         return !this.#outputs.updated;
     }
 }

@@ -1,4 +1,4 @@
-const log = {disabled: false, identifiers: false};
+const log = {disabled: true, identifiers: false};
 
 /**
  * For development debugging
@@ -13,7 +13,7 @@ module.exports = function (dp, child) {
 
     // if (dp.dp === 'ts.compiler' &&
     //     dp.id === 'application//3591173269//companies/svelte//widget//ts//3026370387//.') pass++;
-    if (dp.dp === 'ts.processorCompiler') pass++;
+    // if (dp.dp === 'ts.processorCompiler') pass++;
 
     if (!pass) return;
 

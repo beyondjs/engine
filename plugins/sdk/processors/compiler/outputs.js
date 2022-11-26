@@ -69,8 +69,9 @@ module.exports = class extends Reprocessor {
         this.#cache?.save();
     }
 
-    clear() {
+    invalidate() {
         this.#data = void 0;
+        super.invalidate();
     }
 
     hydrate(cached) {

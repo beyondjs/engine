@@ -17,7 +17,10 @@ module.exports = class extends ProcessorCompiler {
         return this.#previous;
     }
 
+    #dependencies = new Map();
+
     _prepared(require) {
+        this.#dependencies.clear();
         const {dependencies} = this.processor;
         if (!require(dependencies) || !require(packages)) return false;
 
@@ -42,15 +45,24 @@ module.exports = class extends ProcessorCompiler {
 
             const {types} = targetedExport;
             if (!require(types)) return false;
-            console.log(`The types of "${specifier}"`, types);
+            this.#dependencies.set(specifier, types);
         });
 
         recursive(dependencies);
     }
 
     async _compile(request) {
-        const {dependencies} = this.processor;
-        console.log('dependencies:', dependencies);
+        const dependencies = this.#dependencies;
+
+        const promises = [];
+        dependencies.forEach(({outputs}) => promises.push(outputs.ready));
+        await Promise.all(promises);
+        if (this.cancelled(request)) return;
+
+        promises.length = 0;
+        dependencies.forEach(({outputs}) => promises.push(outputs.build().ready));
+        await Promise.all(promises);
+        if (this.cancelled(request)) return;
 
         const {previous, ims, diagnostics} = await executeProgram(this, request);
         if (this.cancelled(request)) return;
