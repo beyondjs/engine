@@ -1,5 +1,7 @@
 const ts = require('typescript');
-const {sep} = require('path');
+const {join, sep} = require('path');
+const ModuleContainer = require('./module-container');
+const SpecifierParser = require('beyond/utils/specifier-parser');
 
 exports.createHost = compiler => {
     'use strict';
@@ -29,7 +31,7 @@ exports.createHost = compiler => {
             return source;
         }
 
-        if (files.has(file)) return done(files.get(file).hash);
+        return files.has(file) ? done(files.get(file).hash) : done(0);
     }
 
     /**
@@ -39,7 +41,6 @@ exports.createHost = compiler => {
      */
     host.readFile = file => {
         if (file.endsWith('tsconfig.tsbuildinfo')) return previous?.tsBuildInfo;
-
         if (files.has(file)) return files.get(file).content;
 
         return readFile(file);
@@ -48,42 +49,32 @@ exports.createHost = compiler => {
     /**
      * Module resolution
      * @param modules string[] The modules being required
-     * @param parent string The file that imports the module
+     * @param parent string The file that imports the modules
      * @return {string[]}
      */
     host.resolveModuleNames = function (modules, parent) {
-        console.log('resolveModuleNames', modules, parent);
-        const output = [];
+        const push = (resolved) => {
+            output.push(resolved ? {resolvedFileName: resolved} : void 0);
+        }
 
-        const push = (module, resolved) => {
-            !module.startsWith('.') && cachedSources.set(module, resolved);
-            output.push(resolved ? {resolvedFileName: resolved} : undefined);
+        const resolveRelativeSpecifier = module => {
+            void module;
+            push();
+        }
+
+        const resolveNonRelativeSpecifier = module => {
+            const specifier = new SpecifierParser(module);
+            const container = new ModuleContainer(compiler, parent);
+            const path = join(process.cwd(), '.beyond/types', container.pkg.vname, `${specifier.subpath}.d.ts`);
+            push(path);
         }
 
         /**
          * Iterate to resolve the modules
          */
-        modules.forEach(module => {
-            // Check if module was already resolved
-            if (cachedSources.has(module)) return push(module, cachedSources.get(module));
-
-            // Check if it is a bundle of a BeyondJS local module
-            if (declarations.has(module)) {
-                const declaration = declarations.get(module);
-
-                // Check if it is a dependency to a bundle of a local BeyondJS module
-                const {kind} = declaration.dependency;
-                if (['bundle', 'transversal'].includes(kind)) return push(module, `${module}.d.ts`);
-            }
-
-            const resolved = (() => {
-                // Let typescript solve the dependency
-                const {resolvedModule} = ts.resolveModuleName(module, parent, options.value, host);
-                return resolvedModule?.resolvedFileName;
-            })();
-
-            return push(module, resolved);
-        });
+        const output = [];
+        modules.forEach(module => module.startsWith('.') ?
+            resolveRelativeSpecifier(module) : resolveNonRelativeSpecifier(module));
         return output;
     }
 
