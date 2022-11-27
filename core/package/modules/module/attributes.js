@@ -108,7 +108,7 @@ module.exports = class extends DynamicProcessor() {
         })();
 
         values.specifier = `${this.pkg.name}/${values.subpath}`;
-        values.vspecifier = `${this.pkg.name}@${this.pkg.version}/${values.subpath}`;
+        values.vspecifier = `${this.pkg.vname}/${values.subpath}`;
 
         /**
          * Just for the legacies 'page' and 'layout' bundles.

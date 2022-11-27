@@ -91,11 +91,11 @@ module.exports = class extends DynamicProcessor() {
                 /**
                  * Check if the dependency is an internal package
                  */
-                const vspecifier = `${name}@${version}`;
-                pkg = this.#packages.find({vspecifier});
+                const vname = `${name}@${version}`;
+                pkg = this.#packages.find({vname});
                 if (pkg) {
                     if (!pkg.valid) {
-                        done({error: `Package ${vspecifier} has reported errors`});
+                        done({error: `Package ${vname} has reported errors`});
                         continue;
                     }
 

@@ -1,6 +1,7 @@
 const TargetedExportResource = require('../../targeted-export/targeted-export-resource/plugins');
 const BundleDiagnostics = require('../diagnostics/diagnostics');
-const buildTypes = require('./build');
+const build = require('./build');
+const save = require('./save');
 
 module.exports = class extends TargetedExportResource {
     constructor(targetedExport) {
@@ -61,7 +62,9 @@ module.exports = class extends TargetedExportResource {
         if (!diagnostics.valid) return {diagnostics};
 
         const {ims, dependencies, exports} = this.preprocessor.data;
-        const {code, map} = await buildTypes({ims, dependencies, exports});
+        const {code, map} = await build({ims, dependencies, exports});
+        save(this.targetedExport, code, map, diagnostics);
+
         return {code, map, diagnostics};
     }
 }

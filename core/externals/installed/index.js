@@ -24,16 +24,16 @@ module.exports = new class extends DynamicProcessor(Map) {
         const warnings = this.#warnings = [];
         await fs.mkdir(this.#path, {recursive: true});
 
-        const process = async vspecifier => {
-            const path = join(this.#path, vspecifier);
+        const process = async vname => {
+            const path = join(this.#path, vname);
             const pkgjson = join(path, 'package.json');
             if (!(await fs.exists(pkgjson))) return;
 
-            const reader = new PackageReader(path, vspecifier);
+            const reader = new PackageReader(path, vname);
             await reader.process();
             reader.error ?
-                `Package "${vspecifier}" couldn't be processed: ${reader.error}` :
-                this.set(vspecifier, reader);
+                `Package "${vname}" couldn't be processed: ${reader.error}` :
+                this.set(vname, reader);
         }
 
         const promises = [];

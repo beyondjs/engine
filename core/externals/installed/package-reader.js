@@ -7,9 +7,9 @@ module.exports = class {
         return this.#path;
     }
 
-    #vspecifier;
-    get vspecifier() {
-        return this.#vspecifier;
+    #vname;
+    get vname() {
+        return this.#vname;
     }
 
     #json;
@@ -22,9 +22,9 @@ module.exports = class {
         return this.#error;
     }
 
-    constructor(path, vspecifier) {
+    constructor(path, vname) {
         this.#path = path;
-        this.#vspecifier = vspecifier;
+        this.#vname = vname;
     }
 
     async process() {

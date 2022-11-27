@@ -21,7 +21,7 @@ module.exports = class {
     #list;
     /**
      * The flat list of packages required by the dependency tree
-     * @return {Map<vspecifier, {version, dependencies}>}
+     * @return {Map<vname, {version, dependencies}>}
      */
     get list() {
         return this.#list;
@@ -36,13 +36,13 @@ module.exports = class {
 
         const recursive = dependencies => dependencies.forEach(({error, dependencies, version, vpackage}, name) => {
             const specifier = name;
-            const vspecifier = `${name}@${version}`;
+            const vname = `${name}@${version}`;
             if (error) {
-                errors.set(vspecifier, {error});
+                errors.set(vname, {error});
                 return;
             }
 
-            !list.has(vspecifier) && list.set(vspecifier, {specifier, version, dependencies});
+            !list.has(vname) && list.set(vname, {specifier, version, dependencies});
             dependencies && recursive(dependencies);
         });
         recursive(tree);

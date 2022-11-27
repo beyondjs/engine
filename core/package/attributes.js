@@ -28,11 +28,7 @@ module.exports = class extends DynamicProcessor() {
         return this.#values.version;
     }
 
-    get specifier() {
-        return this.#values.name;
-    }
-
-    get vspecifier() {
+    get vname() {
         return `${this.#values.name}@${this.#values.version}`;
     }
 

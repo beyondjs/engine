@@ -47,7 +47,7 @@ module.exports = new class extends DynamicProcessor(Map) {
         this.#internals.forEach(pkg => set(pkg));
 
         this.clear();
-        changed = changed || [...this.keys()].reduce((vspecifier, prev) => prev || !updated.has(vspecifier), false);
+        changed = changed || [...this.keys()].reduce((vname, prev) => prev || !updated.has(vname), false);
         updated.forEach((value, key) => this.set(key, value));
 
         return changed;
@@ -55,10 +55,10 @@ module.exports = new class extends DynamicProcessor(Map) {
 
     find(specs) {
         if (!specs) throw new Error('Invalid parameters, specification is undefined');
-        if (!specs.vspecifier && !specs.name) throw  new Error('Invalid parameters');
+        if (!specs.vname && !specs.name) throw  new Error('Invalid parameters');
 
-        if (specs.vspecifier) {
-            return [...this.values()].find(({vspecifier}) => vspecifier === specs.vspecifier);
+        if (specs.vname) {
+            return [...this.values()].find(({vname}) => vname === specs.vname);
         }
         else if (specs.name) {
             const packages = [...this.values()].filter(({name}) => name === specs.name);

@@ -110,7 +110,7 @@ module.exports = class {
             return;
         }
 
-        const vspecifier = (() => {
+        const vname = (() => {
             const pkg = this.#pkg, version = this.#version;
             return `${pkg}@${version}`;
         })();
@@ -120,14 +120,14 @@ module.exports = class {
             await this.#fetch();
             const {file: source, dir: target} = this.target;
 
-            console.log(`Extracting package "${vspecifier}" ...`);
+            console.log(`Extracting package "${vname}" ...`);
             await require('./extract')(source, target);
-            console.log(`Package "${vspecifier}" was extracted`);
+            console.log(`Package "${vname}" was extracted`);
 
             promise.resolve();
         }
         catch (exc) {
-            console.log(`Error extracting package "${vspecifier}": ${exc.message}`);
+            console.log(`Error extracting package "${vname}": ${exc.message}`);
             promise.reject(exc);
         }
 

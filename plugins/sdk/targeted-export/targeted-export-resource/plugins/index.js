@@ -1,11 +1,11 @@
-const TargetedExportedResource = require('../standard');
+const TargetedExportedResourceStandard = require('../standard');
 
 /**
  * The configuration is immutable in the TargetedExportedResource that is used by the standard export.
  * This is the TargetedExportedResource object that must be used by the plugins,
  * whose configuration is done in the module.json file.
  */
-module.exports = class extends TargetedExportedResource {
+module.exports = class extends TargetedExportedResourceStandard {
     get plugin() {
         return this.target.plugin;
     }

@@ -55,8 +55,8 @@ module.exports = class {
         this.#pkg = this.#targetedExport.pkg;
         this.#subpath = this.#targetedExport.packageExport.subpath;
 
-        this.#specifier = this.#pkg.specifier;
-        this.#vspecifier = this.#pkg.vspecifier;
+        this.#specifier = this.#pkg.name;
+        this.#vspecifier = this.#pkg.vname;
         this.#namespace = `beyond:${this.#vspecifier}`;
     }
 
@@ -105,9 +105,9 @@ module.exports = class {
         // Do not import at the beginning of the file to avoid cyclical import
         const packages = require('beyond/packages');
 
-        const vspecifier = namespace.slice('beyond:'.length);
-        const pkg = packages.find({vspecifier});
-        if (!pkg) throw new Error(`Package "${vspecifier}" not found`);
+        const vname = namespace.slice('beyond:'.length);
+        const pkg = packages.find({vname});
+        if (!pkg) throw new Error(`Package "${vname}" not found`);
 
         /**
          * The absolute path of the file that resolves the node being imported/required

@@ -7,7 +7,7 @@ module.exports = class extends PackageBase {
 
     #json;
 
-    get vspecifier() {
+    get vname() {
         const {name, version} = this.#json;
         return `${name}@${version}`;
     }

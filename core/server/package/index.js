@@ -14,8 +14,8 @@ module.exports = async function (url) {
     await packages.ready;
     await Promise.all([...packages.values()].map(pkg => pkg.ready));
 
-    const vpkg = `${specifier.pkg}@${specifier.version}`;
-    const pkg = packages.find({vspecifier: vpkg});
+    const vname = `${specifier.pkg}@${specifier.version}`;
+    const pkg = packages.find({vname});
     if (!pkg) {
         const versions = packages.find({name: specifier.pkg});
         if (!versions.size) return;

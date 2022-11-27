@@ -67,7 +67,7 @@ module.exports = class {
          * Check if it is a self package specifier
          */
         if (requiring.pkg === plugin.pkg.name) {
-            this.#vspecifier = plugin.pkg.vspecifier;
+            this.#vspecifier = plugin.pkg.vname;
             return;
         }
 
@@ -75,7 +75,7 @@ module.exports = class {
          * Get the version of the package of the specifier being required according to the dependencies tree
          */
         const version = (() => {
-            const dependencies = importer.vspecifier === plugin.pkg.vspecifier ?
+            const dependencies = importer.vspecifier === plugin.pkg.vname ?
                 plugin.pkg.dependencies :
                 plugin.pkg.dependencies.list.get(importer.vspecifier);
 

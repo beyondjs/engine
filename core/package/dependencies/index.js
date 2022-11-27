@@ -76,8 +76,8 @@ module.exports = class extends DynamicProcessor(Map) {
         this.#tree.forEach((value, specifier) => this.set(specifier, value));
 
         let installed = true;
-        [...this.#tree.list.keys()].forEach(vspecifier => {
-            const dependency = this.#packages.find({vspecifier});
+        [...this.#tree.list.keys()].forEach(vname => {
+            const dependency = this.#packages.find({vname});
             installed = installed && !!dependency;
         });
 

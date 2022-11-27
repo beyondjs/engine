@@ -19,7 +19,7 @@ module.exports = {
         packages.setup(config.get('packages'), {watchers: false});
         await packages.ready;
 
-        const pkg = packages.find({vspecifier: argv.name});
+        const pkg = packages.find({vname: argv.name});
         if (!pkg) {
             console.log(`Package name "${argv.name}" is invalid, or package not found`);
             return;
