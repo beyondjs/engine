@@ -10,10 +10,16 @@ const args = (() => {
     return args;
 })();
 
-const inspect = (() => {
+const workspace = (() => {
     if (!args.has('workspace')) return;
     const workspace = parseInt(args.get('workspace'));
     return Number.isInteger(workspace) ? workspace : void 0;
 })();
 
-new (require('beyond'))({inspect});
+const repository = (() => {
+    if (!args.has('repository')) return 8080;
+    const repository = parseInt(args.get('repository'));
+    return Number.isInteger(repository) ? repository : void 0;
+})();
+
+new (require('beyond'))(new Map(Object.entries({workspace, repository})));
