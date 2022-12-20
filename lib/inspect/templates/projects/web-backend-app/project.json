@@ -22,21 +22,18 @@
         "platform": "web",
         "environment": "development",
         "backend": "backend",
-        "port": 1234,
         "ports": {
-          "bundles": 8080,
-          "http": 8081,
-          "inspect": 8082
-        },
-        "default": true
+          "bundles": 6520
+        }
       },
       {
         "name": "backend",
         "platform": "backend",
         "environment": "development",
-        "port": 5678,
         "ports": {
-          "inspect": 8083
+          "bundles": 6521,
+          "http": 6522,
+          "inspect": 6523
         }
       }
     ]

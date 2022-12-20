@@ -13,5 +13,15 @@
     "path": "./modules"
   },
   "deployment": {
+    "distributions": [
+      {
+        "name": "web",
+        "platform": "web",
+        "environment": "development",
+        "ports": {
+          "bundles": 6540
+        }
+      }
+    ]
   }
 }
