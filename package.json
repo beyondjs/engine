@@ -88,7 +88,6 @@
     "colors": "1.4.0",
     "concat-with-sourcemaps": "^1.1.0",
     "convert-source-map": "^1.7.0",
-    "esbuild": "^0.16.7",
     "formidable": "^1.2.2",
     "html-minifier": "^4.0.0",
     "json-format": "^1.0.1",
