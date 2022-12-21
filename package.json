@@ -109,7 +109,17 @@
     "vue": "^3.2.37",
     "yargs": "^17.5.1",
     "uimport": "^1.2.2",
+    "@beyond-js/uimport": "0.0.1",
     "@beyond-js/bee": "^0.0.4",
-    "@beyond-js/ports": "^0.0.1"
+    "@beyond-js/ports": "^0.0.1",
+    "@beyond-js/finder": "^0.0.4",
+    "@beyond-js/dynamic-processor": "^0.0.2",
+    "@beyond-js/config": "^0.0.2",
+    "@beyond-js/fs": "^0.0.1",
+    "@beyond-js/ipc": "^0.0.2",
+    "@beyond-js/equal": "^0.0.1",
+    "@beyond-js/md5": "^0.0.1",
+    "@beyond-js/crc32": "^0.0.1",
+    "@beyond-js/watchers": "^0.0.4"
   }
 }
