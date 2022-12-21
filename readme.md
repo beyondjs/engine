@@ -1,95 +1,77 @@
 # Welcome to `BeyondJS`
 
-## The Full Stack Universal Typescript Framework
+<div style="text-align:center">
 
-> A universal web technologies development environment
-> for cross platform projects,
-> over a community-scale modular basis design.
+![BeyondJS The universal meta-framework](https://beyondjs.com/images/beyond-logo.png)
 
-With `BeyondJS` it is possible to create: web applications, websites, mobile applications, micro-frontends, node js
-applications, npm packages, microservices, under the same base code.
+<h3>The meta-framework for universal packages</h3>
 
-[Learn more](https://beyondjs.com/docs/intro)
+Please, follow the documentation at [beyondjs.com](https://beyondjs.com)
 
-## Hybrid rendering (Jamstack, static and SSR)
+</div>
+<dl>
+  <dt>&nbsp;</dt>
+</dl>
+<p>
+  <a aria-label="License MIT" href="https://opensource.org/licenses/MIT">
+    <img  src="https://img.shields.io/static/v1?style=for-the-badge&label=License&message=MIT&color=red">
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/beyond">
+    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.0.11&color=#dcdcdc">
+  </a>
+  
+  <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+  [![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=for-the-badge)](#contributors)
+  <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-Ready for hybrid static, SSR, CSR or [Jamstack architecture](https://jamstack.org/), with the possibility of using them
-together through [micro frontends](https://micro-frontends.org/).
+</p>
+<dl>
+  <dt>&nbsp;</dt>
+</dl>
 
-[Learn more](https://beyondjs.com/docs/rendering)
 
-## View Frameworks
+# Getting started
 
-Different view frameworks working together.
-> Natively supported: [React](https://reactjs.org/), [Vue](https://vuejs.org/) and [Svelte](https://svelte.dev/).
-> Prepared to include others.
-
-[Learn more](https://beyondjs.com/docs/widgets)
-
-# Install
-
-You can install `BeyondJS` in two ways:
-
-> @beyond-js/create-project
-
-To begin with, the easiest way to start a project in BeyondJS is through the beyond-first-project.
-
-```shell
-npx @beyond-js/create-project --name [@my-scope/name] --type [type] [--container folderName]
-```
-
-Listed below are the flags that can be selected when installing beyond-first-project:
-
-- name: This allows you to define the scope and naming of the project. Projects follow the NPM standard. Read more about
-  it [here](https://docs.npmjs.com/cli/v8/using-npm/scope).
-- type: This allows you to define the type of project to create (this is optional), if not, a web-type project will be
-  set by default. Accepted values ​​are:
-  - web
-  - node
-  - backend
-  - library
-  - web-backend
-- container: This allows you to specify if you want to add a project container folder. `BeyondJS` supports the ability
-  to handle multiple projects simultaneously.
-
-## Global installation
-
-Install `BeyondJS` and start programming with zero configuration.
-
-> npm install -g beyond
+## Global instalation
 
 ```shell
-# Once BeyondJS is installed in your computer...
-# Run BeyondJS in an empty folder to start developing projects
-mkdir your_workspace
-cd your_workspace
-beyond
+npm i --location=global beyond
 ```
 
-# Create your first project
+## Install and create specific project type
 
-> [Follow the tutorial](https://beyondjs.com/docs/tutorial/start)
+```shell
+npx @beyond-js/create-project --name [@my-scope/name] [--type type] [--container folderName]
+```
 
-# Summary features
+### Parameters
 
-Below, we list some of the most relevant features of `BeyondJS`.
+-   **--name**: Package name, follows the [NPM standard](https://docs.npmjs.com/cli/v9/using-npm/scope) and can contain a @scope.
+-   **--type**: Accept the next values:
+    -   `web`: Ready to start a web project that can be distributed on the internet or as a mobile application.
+    -   `node`: Ready to distribute as a project to run in a node environment.
+    -   `Backend`: Node project that makes available interfaces that could be consumed in real-time with web socket from another node project or a client project.
+    -   `Library`: Ideal for creating projects intended to be distributed as NPM packages.
+    -   `web-backend`: Generates a web project with a backend distribution.
+-   **--container**: you can use it if you want to create your project in a new folder
 
-- Universal deployment: Same code, any environment.
-- Modular and on-demand: The code only loads once, when required.
-- Dashboard: a powerful control panel for developers.
-- Modular development. No packagers required.
-- Modular dependency tree: BeyondJS works under a different paradigm than the one used by packagers like webpack.
-- Unique development ecosystem between Backend and Frontend.
-- Real Time ready with web sockets support.
-- Automatic integration with view frameworks: React, Vue, Svelte natively supported.
-- Smarter Typescript: transpiling and type checking in parallel, for better productivity and performance.
-- Automatic modular HMR for the frontend and the backend.
-- Hybrid rendering: Jamstack + SSR + static + CSR.
-- Projects ready to publish to NPM.
-- Execution environment for services managed by BeyondJS.
-- Multilanguage managed through bundles.
-- Templating: module overwriting of styles sheets and texts.
+For more, please follow our documentation at [beyondjs.com](https://beyondjs.com/docs/quick-start).
 
-# Get in touch
+### Contributing
 
-> For additional questions, contact us at [hello@beyondjs.com](mailto:hello@beyondjs.com). 
+We are looking for developers who want to help us test the project in all environments. If you work in a javascript environment and you like the idea of using universal javascript like we do, feel free to download it, try it and contact us.
+
+### Semver
+
+BeyondJS is following [Semantic Versioning 2.0](https://semver.org/)
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
