@@ -38,7 +38,7 @@ npm i --location=global beyond
 npx @beyond-js/create-project --name [@my-scope/name] [--type type] [--container folderName]
 ```
 
-### Parameters
+### Parameters:
 
 -   **--name**: Package name, follows the [NPM standard](https://docs.npmjs.com/cli/v9/using-npm/scope) and can contain a @scope.
 -   **--type**: Accept the next values:
@@ -57,7 +57,7 @@ We are looking for developers who want to help us test the project in all enviro
 
 # Semver
 
-BeyondJS is following [Semantic Versioning 2.0](https://semver.org/)
+BeyondJS is following [Semantic Versioning 2.0](https://semver.org/).
 
 # Contributors
 
