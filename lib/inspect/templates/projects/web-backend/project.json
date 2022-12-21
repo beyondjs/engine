@@ -22,12 +22,19 @@
         "platform": "web",
         "environment": "development",
         "backend": "backend",
-        "default": true
+        "ports": {
+          "bundles": 6510
+        }
       },
       {
         "name": "backend",
         "platform": "backend",
-        "environment": "development"
+        "environment": "development",
+        "ports": {
+          "bundles": 6511,
+          "http": 6512,
+          "inspect": 6513
+        }
       }
     ]
   }
