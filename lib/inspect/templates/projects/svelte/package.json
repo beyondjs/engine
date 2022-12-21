@@ -5,10 +5,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@beyond-js/svelte-widgets": "^0.1.0",
+    "@beyond-js/svelte-widgets": "^0.1.1",
     "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
-    "@beyond-js/local": "^0.1.0"
+    "@beyond-js/local": "^0.1.1"
   }
 }
