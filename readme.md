@@ -1,13 +1,8 @@
-# Welcome to `BeyondJS`
-
-<div style="text-align:center">
+<div align="center">
 
 ![BeyondJS The universal meta-framework](https://beyondjs.com/images/beyond-logo.png)
 
 <h3>The meta-framework for universal packages</h3>
-
-Please, follow the documentation at [beyondjs.com](https://beyondjs.com)
-
 </div>
 <dl>
   <dt>&nbsp;</dt>
