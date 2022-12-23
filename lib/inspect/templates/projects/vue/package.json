@@ -9,6 +9,6 @@
     "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
-    "@beyond-js/local": "^0.1.1"
+    "@beyond-js/local": "^0.1.2"
   }
 }

@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
-    "@beyond-js/local": "^0.1.1"
+    "@beyond-js/local": "^0.1.2"
   }
 }
