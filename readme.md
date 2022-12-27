@@ -53,19 +53,30 @@ For more, please follow our documentation at [beyondjs.com](https://beyondjs.com
 
 # Colaborate with us
 
-We are looking for developers who want to help us test the project in all environments. If you work in a javascript environment and you like the idea of using universal javascript like we do, feel free to download it, try it and contact us.
+We are looking for developers who want to help us test the project in all environments. If you work in a javascript
+environment and you like the idea of using universal javascript like we do, feel free to download it, try it and contact
+us.
 
 # Semver
 
 BeyondJS is following [Semantic Versioning 2.0](https://semver.org/).
 
-# Contributors
+[//]: # (# Contributors)
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
+[//]: # ()
 
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+[//]: # (<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->)
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+[//]: # (<!-- prettier-ignore-start -->)
+
+[//]: # (<!-- markdownlint-disable -->)
+
+[//]: # ()
+
+[//]: # (<!-- markdownlint-restore -->)
+
+[//]: # (<!-- prettier-ignore-end -->)
+
+[//]: # ()
+
+[//]: # (<!-- ALL-CONTRIBUTORS-LIST:END -->)

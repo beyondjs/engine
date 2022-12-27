@@ -3,7 +3,7 @@
   "description": "The Full Stack Universal Typescript Framework",
   "author": "BeyondJS",
   "email": "hello@beyondjs.com",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "license": "MIT",
   "repository": "https://github.com/beyondjs/engine",
   "files": [
@@ -78,7 +78,7 @@
     "@babel/preset-env": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@babel/traverse": "^7.18.6",
-    "@beyond-js/bee": "^0.0.4",
+    "@beyond-js/bee": "^0.0.5",
     "@mdx-js/mdx": "^2.1.5",
     "@types/mdx": "^2.0.3",
     "@types/node": "^18.11.11",
@@ -105,9 +105,9 @@
     "source-map": "^0.7.4",
     "sqlite3": "^5.0.8",
     "svelte": "^3.49.0",
-    "typescript": "^4.8.3",
+    "typescript": "4.7.4",
     "uglify-js": "^3.16.2",
-    "uimport": "^1.2.2",
+    "uimport": "^1.2.3",
     "vue": "^3.2.37",
     "yargs": "^17.5.1"
   }
