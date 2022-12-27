@@ -12,5 +12,19 @@
   },
   "modules": {
     "path": "modules"
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "backend",
+        "platform": "backend",
+        "environment": "development",
+        "ports": {
+          "bundles": 6580,
+          "http": 6581,
+          "inspect": 6582
+        }
+      }
+    ]
   }
 }
