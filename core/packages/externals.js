@@ -1,6 +1,5 @@
 const {installed: externals} = require('beyond/externals');
 const DynamicProcessor = require('beyond/utils/dynamic-processor');
-const {External: ExternalPackage} = require('beyond/package');
 
 module.exports = class extends DynamicProcessor(Map) {
     get dp() {
@@ -13,6 +12,10 @@ module.exports = class extends DynamicProcessor(Map) {
     }
 
     _process() {
+        // Do not move to the beginning of the file to avoid cyclical reference
+        // To reproduce the cyclical reference: request 'beyond/package'
+        const {External: ExternalPackage} = require('beyond/package');
+
         const updated = new Map();
         externals.forEach(vpackage => {
             const {path, vspecifier, json} = vpackage;

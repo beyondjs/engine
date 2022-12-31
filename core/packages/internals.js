@@ -1,6 +1,5 @@
 const ipc = require('beyond/utils/ipc');
 const {ConfigCollection} = require('beyond/utils/config');
-const {Internal: InternalPackage} = require('beyond/package');
 
 module.exports = class extends ConfigCollection {
     get dp() {
@@ -28,6 +27,9 @@ module.exports = class extends ConfigCollection {
     }
 
     _createItem(config) {
+        // Do not move to the beginning of the file to avoid cyclical reference
+        // To reproduce the cyclical reference: request 'beyond/package'
+        const {Internal: InternalPackage} = require('beyond/package');
         return new InternalPackage(config, this.#specs);
     }
 

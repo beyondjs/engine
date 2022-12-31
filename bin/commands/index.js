@@ -1,5 +1,5 @@
 module.exports = [
-    require('./run'),
+    require('./run/run'),
     require('./dependencies/list'),
     require('./dependencies/install'),
     require('./applications/list'),
