@@ -18,7 +18,7 @@ const specs = {pkg: '@beyond-playground/counter-rendering@1.0.0'};
         applications.items.forEach(application => promises.push(application.ready));
         await Promise.all(promises);
 
-        let json;
+        let json = void 0;
         const internals = new Map();
         applications.items.forEach(application => {
             if (!application.valid) return;
