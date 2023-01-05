@@ -5,12 +5,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@beyond-js/kernel": "^0.2.0",
-    "@beyond-js/backend": "^0.1.2",
-    "@beyond-js/react-widgets": "~18.20.4",
+    "@beyond-js/kernel": "~0.2.0",
+    "@beyond-js/backend": "~0.1.2",
+    "@beyond-js/react-18-widgets": "~0.0.1",
     "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
-    "@beyond-js/local": "^0.1.2"
+    "@beyond-js/local": "~0.1.2"
   }
 }
