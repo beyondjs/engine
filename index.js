@@ -11,7 +11,7 @@ const args = (() => {
 })();
 
 const workspace = (() => {
-    if (!args.has('workspace')) return;
+    if (!args.has('workspace')) return 4000;
     const workspace = parseInt(args.get('workspace'));
     return Number.isInteger(workspace) ? workspace : void 0;
 })();

@@ -109,7 +109,7 @@
     "vue": "^3.2.37",
     "yargs": "^17.5.1",
     "uimport": "^1.2.2",
-    "@beyond-js/uimport": "^0.0.7",
+    "@beyond-js/uimport": "^0.0.10",
     "@beyond-js/bee": "^0.0.4",
     "@beyond-js/ports": "^0.0.1",
     "@beyond-js/finder": "^0.0.4",
