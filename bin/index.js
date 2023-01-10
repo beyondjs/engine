@@ -12,11 +12,11 @@ module.exports = new class {
         const usage = 'Usage: $0 <command> [options]';
 
         const yargs = require('yargs')
-            .scriptName('uimport')
+            .scriptName('beyond')
             .version(version)
             .usage(usage)
 
-        commands.forEach(({command, description, options, positionals, handler}) => {
+        void commands.forEach(({command, description, options, positionals, handler}) => {
             yargs.command(
                 command,
                 description,
@@ -29,7 +29,7 @@ module.exports = new class {
         });
 
         void yargs.help()
-            .demandCommand(1, 'You have to specify a command to run uimport')
+            .demandCommand(1, 'You have to specify a command to run beyond')
             .argv;
 
     }
