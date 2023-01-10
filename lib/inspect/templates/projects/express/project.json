@@ -16,17 +16,8 @@
   "deployment": {
     "distributions": [
       {
-        "name": "web",
-        "platform": "web",
-        "environment": "development",
-        "backend": "backend",
-        "ports": {
-          "bundles": 6570
-        }
-      },
-      {
-        "name": "backend",
-        "platform": "backend",
+        "name": "node",
+        "platform": "node",
         "environment": "development",
         "ports": {
           "bundles": 6571,
