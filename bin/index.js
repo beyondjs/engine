@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-const uimport = require('@beyond-js/uimport');
-uimport.initialise();
-
 const commands = require('./commands');
 
 const {version} = require('../package.json');
