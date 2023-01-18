@@ -8,5 +8,8 @@
     "@beyond-js/kernel": "~0.1.7",
     "@beyond-js/backend": "~0.1.2",
     "socket.io-client": "^4.5.4"
+  },
+  "devDependencies": {
+    "@beyond-js/local": "~0.1.2"
   }
 }

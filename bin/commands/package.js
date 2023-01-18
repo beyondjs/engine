@@ -38,19 +38,20 @@ module.exports = () => {
         }
     ];
     require('inquirer').prompt(fields).then(async specs => {
-        const regexp = /(@[\w-]+\/[\w-.]+)|[\w-.]+/;
+        let {specifier} = specs;
+        const withScope = specifier.startsWith('@') && !/@[\w-]+\/[\w-.]+/.test(specifier);
 
-        if (!regexp.test(specs.specifier)) {
-            console.log(`The project identifier must have the following structure: "@scope/package-name" or "package-name"`);
+        if (withScope || !/[\w-.]+/.test(specifier)) {
+            console.log(`The project identifier must have the following structure:
+             "@scope/package-name" or "package-name"`);
             return;
         }
 
-        const {specifier} = specs;
         delete specs.specifier;
         if (!specifier.includes("@")) specs.name = specifier;
         else {
-            const [scope, name] = specifier.split("/");
-            specs.scope = scope.replace("@", "");
+            const [scope, name] = specifier.split('/');
+            specs.scope = scope.replace('@', '');
             specs.name = name;
         }
 
