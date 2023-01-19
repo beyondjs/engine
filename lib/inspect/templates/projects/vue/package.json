@@ -5,9 +5,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@beyond-js/kernel": "~0.1.5",
+    "@beyond-js/kernel": "~0.1.7",
     "@beyond-js/vue-widgets": "^0.1.1",
-    "socket.io-client": "^4.5.3"
+    "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
     "@beyond-js/local": "~0.1.2"
