@@ -33,7 +33,7 @@ module.exports = () => {
             type: 'confirm',
             name: 'npm',
             prefix: '',
-            message: 'Do you want to install your package dependencies?'.cyan,
+            message: 'Do you want to install the package dependencies?'.cyan,
             default: false
         }
     ];
@@ -42,8 +42,8 @@ module.exports = () => {
         const withScope = specifier.startsWith('@') && !/@[\w-]+\/[\w-.]+/.test(specifier);
 
         if (withScope || !/[\w-.]+/.test(specifier)) {
-            console.log(`The project identifier must have the following structure:
-             "@scope/package-name" or "package-name"`);
+            console.log(`The package identifier must have the following structure: 
+            "@scope/package-name" or "package-name"`);
             return;
         }
 
@@ -58,8 +58,8 @@ module.exports = () => {
         specs.cwd = resolve(process.cwd());
         const {project} = service.builder;
 
-        console.log('Building your package...');
-        specs.npm && console.log('Installing your package dependencies...');
+        console.log('Building package...');
+        specs.npm && console.log('Installing the package dependencies...');
         await project.create(specs);
         console.log(`Package "${specifier}"`, `created`.green, `at:`, join(specs.cwd, specs.name));
     });

@@ -6,12 +6,6 @@ module.exports = () => {
     const fields = [
         {
             type: 'input',
-            name: 'container',
-            prefix: '',
-            message: 'Name of the package to which the module belongs:'.cyan
-        },
-        {
-            type: 'input',
             name: 'name',
             prefix: '',
             message: 'Package subpath:'.cyan
@@ -63,14 +57,14 @@ module.exports = () => {
         }
     ];
     require('inquirer').prompt(fields).then(async specs => {
-        specs.cwd = join(resolve(process.cwd()), specs.container);
+        specs.cwd = resolve(process.cwd());
 
         specs.bundles = [specs.bundles];
         specs.processors = ['ts'];
         specs.styles && specs.processors.push('sass');
 
         const {modules} = service.builder;
-        console.log('Building your module...');
+        console.log('Building module...');
 
         const response = await modules.create(specs);
         if (response.error) {
