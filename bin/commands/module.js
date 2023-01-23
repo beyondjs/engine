@@ -1,5 +1,5 @@
 require('colors');
-const {join, resolve} = require('path');
+const {resolve} = require('path');
 const service = new (require('beyond/inspect-service'))();
 
 module.exports = () => {
@@ -8,7 +8,10 @@ module.exports = () => {
             type: 'input',
             name: 'name',
             prefix: '',
-            message: 'Package subpath:'.cyan
+            message: 'Package subpath:'.cyan,
+            validate(value) {
+                return value.length ? true : 'It cannot be empty. Please enter it correctly...';
+            }
         },
         {
             type: 'list',
@@ -24,6 +27,12 @@ module.exports = () => {
             message: 'Web component name:'.cyan,
             when(answers) {
                 return ['page', 'widget', 'layout'].includes(answers.bundles);
+            },
+            validate(value) {
+                if (!value) return 'It cannot be empty. Please enter it correctly...';
+
+                const error = 'The web component name must be has the next structure: "web-component"';
+                return !value.match(/[a-z]+-[a-z]+/g) ? error : true;
             }
         },
         {
@@ -33,6 +42,9 @@ module.exports = () => {
             message: 'Page URL:'.cyan,
             when(answers) {
                 return answers.bundles === 'page';
+            },
+            validate(value) {
+                return value.length ? true : 'It cannot be empty. Please enter it correctly...';
             }
         },
         {
