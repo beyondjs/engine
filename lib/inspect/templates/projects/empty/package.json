@@ -1,9 +1,20 @@
 {
-  "name": "$[scope]$[name]",
+  "name": "empty-app",
   "version": "0.0.1",
   "description": "",
   "author": "",
   "license": "ISC",
+  "template": "template/template.json",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "./modules"
+  },
   "dependencies": {
     "@beyond-js/kernel": "~0.1.7",
     "socket.io-client": "^4.5.4"

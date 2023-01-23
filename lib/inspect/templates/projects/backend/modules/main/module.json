@@ -1,5 +1,5 @@
 {
-  "name": "welcome",
+  "name": "main",
   "bundle": "start",
   "files": "*"
 }
