@@ -1,9 +1,32 @@
 {
-  "name": "$[scope]$[name]",
+  "name": "vue-first-app",
   "version": "0.0.1",
   "description": "",
   "author": "",
   "license": "ISC",
+  "template": "template/template.json",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "./modules"
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "web",
+        "platform": "web",
+        "environment": "development",
+        "ports": {
+          "bundles": 6550
+        }
+      }
+    ]
+  },
   "dependencies": {
     "@beyond-js/kernel": "~0.1.7",
     "@beyond-js/vue-widgets": "^0.1.1",

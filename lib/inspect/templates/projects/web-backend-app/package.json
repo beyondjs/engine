@@ -1,9 +1,45 @@
 {
-  "name": "$[scope]$[name]",
+  "name": "web-backend-app",
   "version": "0.0.1",
-  "description": "",
+  "title": "Basic Web-Backend Application",
+  "description": "Basic Web Backend application",
   "author": "",
   "license": "ISC",
+  "template": "template/template.json",
+  "layout": "main-layout",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "modules"
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "web",
+        "platform": "web",
+        "environment": "development",
+        "backend": "backend",
+        "ports": {
+          "bundles": 6520
+        }
+      },
+      {
+        "name": "backend",
+        "platform": "backend",
+        "environment": "development",
+        "ports": {
+          "bundles": 6521,
+          "http": 6522,
+          "inspect": 6523
+        }
+      }
+    ]
+  },
   "dependencies": {
     "@beyond-js/kernel": "~0.1.7",
     "@beyond-js/backend": "~0.1.2",

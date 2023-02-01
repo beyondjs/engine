@@ -1,9 +1,32 @@
 {
-  "name": "$[scope]$[name]",
+  "name": "node-app",
   "version": "0.0.1",
-  "description": "",
+  "title": "Node JS Basic Application",
+  "description": "Node JS Basic application",
   "author": "",
   "license": "ISC",
+  "languages": {
+    "default": "en",
+    "supported": [
+      "en",
+      "es"
+    ]
+  },
+  "modules": {
+    "path": "modules"
+  },
+  "deployment": {
+    "distributions": [
+      {
+        "name": "node",
+        "platform": "node",
+        "environment": "development",
+        "ports": {
+          "bundles": 6560
+        }
+      }
+    ]
+  },
   "dependencies": {
     "@beyond-js/kernel": "~0.1.7",
     "socket.io-client": "^4.5.4"

@@ -1,20 +1,17 @@
 require('colors');
-const {join, resolve} = require('path');
+const {resolve} = require('path');
 const service = new (require('beyond/inspect-service'))();
 
 module.exports = () => {
     const fields = [
         {
             type: 'input',
-            name: 'container',
-            prefix: '',
-            message: 'Name of the package to which the module belongs:'.cyan
-        },
-        {
-            type: 'input',
             name: 'name',
             prefix: '',
-            message: 'Package subpath:'.cyan
+            message: 'Package subpath:'.cyan,
+            validate(value) {
+                return value.length ? true : 'It cannot be empty. Please enter it correctly...';
+            }
         },
         {
             type: 'list',
@@ -30,6 +27,12 @@ module.exports = () => {
             message: 'Web component name:'.cyan,
             when(answers) {
                 return ['page', 'widget', 'layout'].includes(answers.bundles);
+            },
+            validate(value) {
+                if (!value) return 'It cannot be empty. Please enter it correctly...';
+
+                const error = 'The web component name must be has the next structure: "web-component"';
+                return !value.match(/[a-z]+-[a-z]+/g) ? error : true;
             }
         },
         {
@@ -39,6 +42,9 @@ module.exports = () => {
             message: 'Page URL:'.cyan,
             when(answers) {
                 return answers.bundles === 'page';
+            },
+            validate(value) {
+                return value.length ? true : 'It cannot be empty. Please enter it correctly...';
             }
         },
         {
@@ -63,14 +69,14 @@ module.exports = () => {
         }
     ];
     require('inquirer').prompt(fields).then(async specs => {
-        specs.cwd = join(resolve(process.cwd()), specs.container);
+        specs.cwd = resolve(process.cwd());
 
         specs.bundles = [specs.bundles];
         specs.processors = ['ts'];
         specs.styles && specs.processors.push('sass');
 
         const {modules} = service.builder;
-        console.log('Building your module...');
+        console.log('Building module...');
 
         const response = await modules.create(specs);
         if (response.error) {
