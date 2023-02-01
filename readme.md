@@ -35,18 +35,24 @@ npm i --location=global beyond
 ## Install and create specific project type
 
 ```shell
-npx @beyond-js/create-project --name [@my-scope/name] [--type type] [--container folderName]
+npx @beyond-js/create-package
 ```
+
+The final command is interactive, allowing you to select the type of project you wish to create from the following options:
 
 ### Parameters:
 
--   **--name**: Package name, follows the [NPM standard](https://docs.npmjs.com/cli/v9/using-npm/scope) and can contain a @scope.
--   **--type**: Accept the next values:
     -   `web`: Ready to start a web project that can be distributed on the internet or as a mobile application.
+        Here you can select between use
+        - React
+        - Svelte
+        - Node
+        - Integrate another render engine library.
     -   `node`: Ready to distribute as a project to run in a node environment.
     -   `Backend`: Node project that makes available interfaces that could be consumed in real-time with web socket from another node project or a client project.
     -   `Library`: Ideal for creating projects intended to be distributed as NPM packages.
     -   `web-backend`: Generates a web project with a backend distribution.
+
 -   **--container**: you can use it if you want to create your project in a new folder
 
 For more, please follow our documentation at [beyondjs.com](https://beyondjs.com/docs/quick-start).
@@ -61,22 +67,13 @@ us.
 
 BeyondJS is following [Semantic Versioning 2.0](https://semver.org/).
 
-[//]: # (# Contributors)
-
-[//]: # ()
-
-[//]: # (<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->)
-
-[//]: # (<!-- prettier-ignore-start -->)
-
-[//]: # (<!-- markdownlint-disable -->)
-
-[//]: # ()
-
-[//]: # (<!-- markdownlint-restore -->)
-
-[//]: # (<!-- prettier-ignore-end -->)
-
-[//]: # ()
-
-[//]: # (<!-- ALL-CONTRIBUTORS-LIST:END -->)
+[//]: # "# Contributors"
+[//]: #
+[//]: # "<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->"
+[//]: # "<!-- prettier-ignore-start -->"
+[//]: # "<!-- markdownlint-disable -->"
+[//]: #
+[//]: # "<!-- markdownlint-restore -->"
+[//]: # "<!-- prettier-ignore-end -->"
+[//]: #
+[//]: # "<!-- ALL-CONTRIBUTORS-LIST:END -->"
