@@ -1,10 +1,11 @@
+require('colors');
 require('../../lib/global');
 const {ports} = global.utils;
 
 const start = argv => {
     const done = ({error, params}) => {
         if (error) {
-            console.log('Cannot run BeyondJS: '.red, error);
+            console.log('Cannot run BeyondJS:'.red, error);
             return;
         }
 
@@ -17,7 +18,7 @@ const start = argv => {
         ports.check(workspace)
             .then(ok => ok ?
                         done({params: {inspect: workspace}}) :
-                        done({error: `Workspace port ${workspace} is already in use`})
+                        done({error: `Workspace port ${workspace} is already in use, add --workspace [value] to define a specific port`})
             )
             .catch(exc => done(exc.message));
     }
