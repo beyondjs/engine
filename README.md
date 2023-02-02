@@ -40,22 +40,21 @@ npx @beyond-js/create-package
 
 The final command is interactive, allowing you to select the type of project you wish to create from the following options:
 
-For more information go to [@beyond-js/create-package](https://www.npmjs.com/package/@beyond-js/create-package)
-
-    -   `web`: Ready to start a web project that can be distributed on the internet or as a mobile application.
+    -   web: Ready to start a web project that can be distributed on the internet or as a mobile application.
         Here you can select between use
         - React
         - Svelte
         - Node
         - Integrate another render engine library.
-    -   `node`: Ready to distribute as a project to run in a node environment.
-    -   `Backend`: Node project that makes available interfaces that could be consumed in real-time with web socket from another node project or a client project.
-    -   `Library`: Ideal for creating projects intended to be distributed as NPM packages.
-    -   `web-backend`: Generates a web project with a backend distribution.
+    -   node: Ready to distribute as a project to run in a node environment.
+    -   backend: Node project that makes available interfaces that could be consumed in real-time with web socket from another node project or a client project.
+    -   library: Ideal for creating projects intended to be distributed as NPM packages.
+    -   web-backend: Generates a web project with a backend distribution.
 
--   **--container**: you can use it if you want to create your project in a new folder
+- **--container**: you can use it if you want to create your project in a new folder
 
-For more, please follow our documentation at [beyondjs.com](https://beyondjs.com/docs/quick-start).
+For more information go to [@beyond-js/create-package](https://www.npmjs.com/package/@beyond-js/create-package)
+
 You can also go to our documentation site to see the [quick start](https://beyondjs.com/docs/quick-start).
 
 # Colaborate with us
