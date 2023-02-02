@@ -22,7 +22,8 @@
         "platform": "node",
         "environment": "development",
         "ports": {
-          "bundles": 6560
+          "bundles": 6560,
+          "inspect": 6561
         }
       }
     ]

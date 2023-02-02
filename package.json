@@ -1,6 +1,6 @@
 {
   "name": "beyond",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "author": "BeyondJS",
   "description": "The Full Stack Universal Typescript Framework",
   "email": "hello@beyondjs.com",
@@ -69,7 +69,7 @@
   "dependencies": {
     "@beyond-js/specifier-parser": "^0.0.3",
     "@beyond-js/fs": "^0.0.1",
-    "@beyond-js/bee": "^0.0.5",
+    "@beyond-js/bee": "^0.0.6",
     "@babel/core": "^7.18.6",
     "@babel/generator": "^7.18.7",
     "@babel/parser": "^7.18.6",
@@ -109,7 +109,7 @@
     "svelte": "^3.49.0",
     "typescript": "4.7.4",
     "uglify-js": "^3.16.2",
-    "uimport": "^1.2.6",
+    "uimport": "^1.2.7",
     "vue": "^3.2.37",
     "yargs": "^17.5.1",
     "inquirer": "^8.2.5"

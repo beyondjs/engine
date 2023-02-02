@@ -32,30 +32,21 @@
 npm i --location=global beyond
 ```
 
-## Install and create specific project type
+## Install and create beyondJS package
 
 ```shell
-npx @beyond-js/create-project --name [@my-scope/name] [--type type] [--container folderName]
+npx @beyond-js/create-package
 ```
 
-### Parameters:
+For more information go to [@beyond-js/create-package](https://www.npmjs.com/package/@beyond-js/create-package)
 
--   **--name**: Package name, follows the [NPM standard](https://docs.npmjs.com/cli/v9/using-npm/scope) and can contain a @scope.
--   **--type**: Accept the next values:
-    -   `web`: Ready to start a web project that can be distributed on the internet or as a mobile application.
-    -   `node`: Ready to distribute as a project to run in a node environment.
-    -   `Backend`: Node project that makes available interfaces that could be consumed in real-time with web socket from another node project or a client project.
-    -   `Library`: Ideal for creating projects intended to be distributed as NPM packages.
-    -   `web-backend`: Generates a web project with a backend distribution.
--   **--container**: you can use it if you want to create your project in a new folder
-
-For more, please follow our documentation at [beyondjs.com](https://beyondjs.com/docs/quick-start).
+You can also go to our documentation site to see the [quick start](https://beyondjs.com/docs/quick-start).
 
 # Colaborate with us
 
 We are looking for developers who want to help us test the project in all environments. If you work in a javascript
-environment and you like the idea of using universal javascript like we do, feel free to download it, try it and contact
-us.
+environment, and you like the idea of using universal javascript like we do, feel free to download it, try it and
+contact us.
 
 # Semver
 

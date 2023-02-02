@@ -58,6 +58,9 @@ module.exports = () => {
             name: 'styles',
             prefix: '',
             message: 'Styles?'.cyan,
+            when(answers) {
+                return answers.bundles !== 'bridge' && answers.bundles !== 'start';
+            },
             default: false
         },
         {
