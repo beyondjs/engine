@@ -29,7 +29,7 @@
 ## Global instalation
 
 ```shell
-npm i --location=global beyond
+npm i -g beyond
 ```
 
 ## Install and create beyondJS package
