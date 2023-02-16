@@ -2,7 +2,14 @@ require('colors');
 const {resolve} = require('path');
 const service = new (require('beyond/inspect-service'))();
 
-module.exports = () => {
+module.exports = async () => {
+    const {project} = service.builder;
+    const response = await project.validate({cwd: resolve(process.cwd())});
+    if (response.error) {
+        console.log(`${response.error}`.red);
+        return;
+    }
+
     const fields = [
         {
             type: 'input',
@@ -59,7 +66,8 @@ module.exports = () => {
             prefix: '',
             message: 'Styles?'.cyan,
             when(answers) {
-                return answers.bundles !== 'bridge' && answers.bundles !== 'start';
+                const bundles = ['bridge', 'ts', 'start'];
+                return !bundles.includes(answers.bundles);
             },
             default: false
         },
@@ -68,6 +76,10 @@ module.exports = () => {
             name: 'multilanguage',
             prefix: '',
             message: 'Multilanguage?'.cyan,
+            when(answers) {
+                const bundles = ['bridge', 'ts', 'start'];
+                return !bundles.includes(answers.bundles);
+            },
             default: false
         }
     ];
