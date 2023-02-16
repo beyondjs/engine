@@ -10,7 +10,13 @@ module.exports = () => {
             prefix: '',
             message: 'Package specifier:'.cyan,
             validate(value) {
-                return value.length ? true : 'Specifier cannot be empty. Please enter it correctly...';
+                if (!value.length) return 'Specifier cannot be empty. Please enter it correctly...';
+
+                const withScope = value.startsWith('@') && !/@[\w-]+\/[\w-.]+/.test(value);
+                if (withScope || !/[\w-.]+/.test(value)) {
+                    return `The package identifier must have the following structure: "@scope/package-name" or "package-name"`;
+                }
+                return true;
             }
         },
         {
@@ -62,20 +68,7 @@ module.exports = () => {
     ];
     require('inquirer').prompt(fields).then(async specs => {
         let {specifier} = specs;
-        const withScope = specifier.startsWith('@') && !/@[\w-]+\/[\w-.]+/.test(specifier);
-        if (withScope || !/[\w-.]+/.test(specifier)) {
-            console.log(`The package identifier must have the following structure: 
-            "@scope/package-name" or "package-name"`);
-            return;
-        }
-
-        if (!specifier.includes("@")) specs.name = specifier;
-        else {
-            const [scope, name] = specifier.split('/');
-            specs.scope = scope.replace('@', '');
-            specs.name = name;
-        }
-
+        specs.name = specifier;
         specs.cwd = resolve(process.cwd());
 
         // Validate the different types of packages according to the user's selection
