@@ -13,12 +13,12 @@ const start = argv => {
         new (require('beyond'))(params);
     }
 
-    const {workspace} = argv;
-    if (workspace) {
-        ports.check(workspace)
+    const {inspector} = argv;
+    if (inspector) {
+        ports.check(inspector)
             .then(ok => ok ?
-                        done({params: {inspect: workspace}}) :
-                        done({error: `Workspace port ${workspace} is already in use, add --workspace [value] to define a specific port`})
+                        done({params: {inspect: inspector}}) :
+                        done({error: `Inspector port ${inspector} is already in use, add --inspector [value] to define a specific port`})
             )
             .catch(exc => done(exc.message));
     }
@@ -28,14 +28,14 @@ const start = argv => {
 }
 
 module.exports = {
-    command: 'run [workspace]',
+    command: 'run [inspector]',
     description: 'Run the BeyondJS packages engine and server',
     options: [{
-        name: 'workspace',
+        name: 'inspector',
         type: 'number',
         default: 4000,
         optional: true,
-        describe: 'The port on which the http workspace will work'
+        describe: 'The port on which the http inspector will work'
     }],
     handler: start
 }
