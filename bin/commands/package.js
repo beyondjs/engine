@@ -79,7 +79,8 @@ module.exports = () => {
         console.log('Building package...');
         specs.npm && console.log('Installing the package dependencies...');
         const {project} = service.builder;
-        await project.create(specs);
-        console.log(`Package "${specifier}"`, `created`.green, `at:`, join(specs.cwd, specs.name));
+        const response = await project.create(specs);
+        !response.status && console.log(`Package "${specifier}"`, `not created. `.red, `Error: ${response.error}`);
+        response.status && console.log(`Package "${specifier}"`, `created`.green, `at:`, join(specs.cwd, specs.name));
     });
 }

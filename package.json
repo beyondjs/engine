@@ -113,6 +113,7 @@
     "uimport": "^1.2.7",
     "vue": "^3.2.37",
     "yargs": "^17.5.1",
-    "inquirer": "^8.2.5"
+    "inquirer": "^8.2.5",
+    "global-dirs": "^3.0.1"
   }
 }
