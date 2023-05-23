@@ -89,6 +89,9 @@ module.exports = async () => {
         specs.bundles = [specs.bundles];
         specs.processors = ['ts'];
         specs.styles && specs.processors.push('sass');
+        if (specs.route && !specs.route.startsWith('/')) {
+            specs.route = `/${specs.route}`;
+        }
 
         const {modules} = service.builder;
         console.log('Building module...');
