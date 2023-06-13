@@ -5,6 +5,10 @@ const processTypes = require('./types');
 const processCss = require('./css');
 
 module.exports = async function (url) {
+    if (url.pathname === '/') {
+        return {content: 'Package name must be set', statusCode: 404, contentType: 'text/plain'};
+    }
+
     const specifier = new SpecifierParser(url.pathname.slice(1));
     if (!specifier.pkg) return;
     if (!specifier.version) {
