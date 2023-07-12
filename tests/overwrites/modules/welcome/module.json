@@ -1,6 +1,6 @@
 {
-  "bundle": "code",
-  "sass": {
-    "files": "*"
-  }
+	"bundle": "code",
+	"sass": {
+		"files": "*"
+	}
 }

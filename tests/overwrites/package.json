@@ -1,19 +1,23 @@
 {
-  "name": "@beyond-js/overwrites-test",
-  "version": "0.0.1",
-  "modules": {
-    "path": "./modules"
-  },
-  "deployment": {
-    "distributions": [
-      {
-        "name": "web",
-        "platform": "web",
-        "environment": "development",
-        "ports": {
-          "bundles": 8080
-        }
-      }
-    ]
-  }
+	"name": "@beyond-js/overwrites-test",
+	"version": "0.0.1",
+	"modules": {
+		"path": "./modules"
+	},
+	"dependencies": {
+		"@beyond-js/kernel": "^0.1.9",
+		"@beyond-js/widgets": "0.1.4"
+	},
+	"deployment": {
+		"distributions": [
+			{
+				"name": "web",
+				"platform": "web",
+				"environment": "development",
+				"ports": {
+					"bundles": 8080
+				}
+			}
+		]
+	}
 }
