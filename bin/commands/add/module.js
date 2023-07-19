@@ -97,6 +97,7 @@ module.exports = async () => {
 		const { modules } = service.builder;
 		console.log('Building module...');
 
+		specs.noDeclaration = true;
 		const response = await modules.create(specs);
 		if (response.error) {
 			console.log(`Module not created:`.red, response.error);
