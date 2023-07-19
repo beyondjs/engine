@@ -1,5 +1,5 @@
 require('colors');
-require('../../../lib/global');
+require('../../lib/global');
 
 const { ipc } = global.utils;
 const exec = async (action, params) => ipc.exec('engine', action, params);
