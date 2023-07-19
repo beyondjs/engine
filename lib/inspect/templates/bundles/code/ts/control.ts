@@ -1,8 +1,4 @@
 export /*bundle*/
 class Control {
-
-    constructor() {
-
-    }
-
+	constructor() {}
 }

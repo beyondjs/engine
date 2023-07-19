@@ -81,8 +81,9 @@ module.exports = () => {
 		specs.npm && console.log('Installing the package dependencies...');
 		const { project } = service.builder;
 		const response = await project.create(specs);
-		!response.status && console.log(`Package "${specifier}"`, `not created. `.red, `Error: ${response.error}`);
-		response.status && console.log(`Package "${specifier}"`, `created`.green, `at:`, join(specs.cwd, specs.name));
+
+		if (!response.status) console.log(`Package "${specifier}"`, `not created. `.red, `Error: ${response.error}`);
+		else console.log(`Package "${specifier}"`, `created`.green, `at:`, join(specs.cwd, specs.name));
 	};
 	require('inquirer').prompt(fields).then(run);
 };

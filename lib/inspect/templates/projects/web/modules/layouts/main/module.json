@@ -1,21 +1,17 @@
 {
-  "name": "layout/main",
-  "widget": {
-    "is": "layout",
-    "element": {
-      "name": "main-layout"
-    },
-    "sass": {
-      "path": "sass",
-      "files": [
-        "*"
-      ]
-    },
-    "ts": {
-      "path": "ts",
-      "files": [
-        "*"
-      ]
-    }
-  }
+	"name": "layout/main",
+	"widget": {
+		"is": "layout",
+		"element": {
+			"name": "main-layout"
+		},
+		"scss": {
+			"path": "sass",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "ts",
+			"files": ["*"]
+		}
+	}
 }

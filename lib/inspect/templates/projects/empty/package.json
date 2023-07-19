@@ -1,25 +1,25 @@
 {
-  "name": "empty-app",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "license": "ISC",
-  "template": "template/template.json",
-  "languages": {
-    "default": "en",
-    "supported": [
-      "en",
-      "es"
-    ]
-  },
-  "modules": {
-    "path": "./modules"
-  },
-  "dependencies": {
-    "@beyond-js/kernel": "~0.1.8",
-    "@beyond-js/local": "~0.1.3",
-    "socket.io-client": "^4.5.4"
-  },
-  "devDependencies": {
-  }
+	"name": "empty-app",
+	"version": "0.0.1",
+	"description": "",
+	"author": "",
+	"license": "ISC",
+	"template": "template/template.json",
+	"languages": {
+		"default": "en",
+		"supported": [
+			"en",
+			"es"
+		]
+	},
+	"modules": {
+		"path": "./modules"
+	},
+	"dependencies": {
+		"@beyond-js/kernel": "~0.1.8",
+		"socket.io-client": "^4.5.4"
+	},
+	"devDependencies": {
+		"@beyond-js/local": "~0.1.3"
+	}
 }

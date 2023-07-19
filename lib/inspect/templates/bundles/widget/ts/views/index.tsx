@@ -1,10 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
 export /*bundle*/
 function Widget() {
-    return (
-        <div>
-            Im widget
-        </div>
-    );
+	return <div>Im widget</div>;
 }

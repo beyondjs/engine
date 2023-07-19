@@ -1,25 +1,19 @@
 {
-  "application": {
-    "processor": "sass",
-    "path": "application",
-    "files": [
-      "*"
-    ]
-  },
-  "global": {
-    "processor": "sass",
-    "path": "global",
-    "files": [
-      "*"
-    ]
-  },
-  "processors": {
-    "sass": {
-      "path": "sass",
-      "files": [
-        "*"
-      ]
-    }
-  },
-  "overwrites": "overwrites/overwrites.json"
+	"application": {
+		"processor": "scss",
+		"path": "application",
+		"files": ["*"]
+	},
+	"global": {
+		"processor": "scss",
+		"path": "global",
+		"files": ["*"]
+	},
+	"processors": {
+		"scss": {
+			"path": "sass",
+			"files": ["*"]
+		}
+	},
+	"overwrites": "overwrites/overwrites.json"
 }
