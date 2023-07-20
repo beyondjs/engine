@@ -1,17 +1,13 @@
 {
-  "application": {
-    "processor": "sass",
-    "path": "application",
-    "files": [
-      "*"
-    ]
-  },
-  "global": {
-    "processor": "sass",
-    "path": "global",
-    "files": [
-      "*"
-    ]
-  },
-  "overwrites": "overwrites/overwrites.json"
+	"application": {
+		"processor": "sass",
+		"path": "application",
+		"files": ["*"]
+	},
+	"global": {
+		"processor": "scss",
+		"path": "global",
+		"files": ["*"]
+	},
+	"overwrites": "overwrites/overwrites.json"
 }
