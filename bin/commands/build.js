@@ -5,23 +5,31 @@ const { ipc } = global.utils;
 const exec = async (action, params) => ipc.exec('engine', action, params);
 
 /**
- * @var SHOWTRACE
+ * @var LOGS
  * show the logs by console only executing this process
  */
-let SHOWTRACE;
+let LOGS;
 ipc.events.on('engine', 'project-process', message => {
-	if (!SHOWTRACE) return;
+	if (!LOGS) return;
 
 	const { type } = message;
 	if (!['process'].includes(type)) {
 		console.error(`Invalid application-process type "${type}"`);
 		return;
 	}
-	console.log(message.id, message.text);
+
+	message.error && console.log(message.id, `${message.text}`.red);
+	!message.error && console.log(message.id, message.text);
 });
 
+/**
+ *
+ * @param {--pkg, --distribution, --declarations, --log} argv
+ * @returns void
+ */
 const build = async argv => {
-	const { pkg, distribution, declarations } = argv;
+	const { pkg, distribution, declarations, logs } = argv;
+	LOGS = logs === undefined || logs === 'false' ? false : true;
 
 	if (!pkg) {
 		console.log(`Specify the package name`.red);
@@ -42,6 +50,14 @@ const build = async argv => {
 		process.exit(1);
 	}
 
+	/**
+	 * Build for npm
+	 */
+	if (distribution === 'npm') {
+		await exec('applications/process', { application: application.id, distribution, build: true, declarations });
+		process.exit(0);
+	}
+
 	const deployments = await exec('applications/deployments/get', [application.id]);
 	const deploy = deployments[application.id];
 	if (!deploy) {
@@ -58,7 +74,6 @@ const build = async argv => {
 		process.exit(1);
 	}
 
-	SHOWTRACE = true;
 	await exec('applications/process', {
 		application: application.id,
 		distribution: dist.id,
