@@ -7,7 +7,7 @@
 			"name": "home-page"
 		},
 		"scss": {
-			"path": "sass",
+			"path": "scss",
 			"files": ["*"]
 		},
 		"ts": {

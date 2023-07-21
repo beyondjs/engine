@@ -6,7 +6,7 @@
 			"name": "main-layout"
 		},
 		"scss": {
-			"path": "sass",
+			"path": "scss",
 			"files": ["*"]
 		},
 		"ts": {

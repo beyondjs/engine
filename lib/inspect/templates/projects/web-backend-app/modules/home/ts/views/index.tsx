@@ -1,9 +1,10 @@
 import * as React from "react";
-import {Header} from "$[scope]$[name]/header";
 
 export /*bundle*/
 function View(): JSX.Element {
-    const header = Header({message: 'My first module with BeyondJS'});
-
-    return <h1>{header}</h1>;
+    return (
+        <div className="page__container">
+            <h1>My first page using <span className="beyond">BeyondJS</span>!</h1>
+        </div>
+    );
 }

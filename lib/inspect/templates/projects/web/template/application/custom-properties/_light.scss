@@ -1,26 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+@import './mixins/button-styles';
 @mixin properties() {
-  --surface: #fff;
-  --primary: #FF8056;
-  --primary-dark: #E36152;
-  --primary-light: #FFA789;
-  --primary-accent: #FFA789;
-  --text-on-primary: #fff;
+	--text-color: #1a1a1a;
+	--altern-text-color: var(--background);
+	--secondary-text-color: var(--secondary);
+	--font-family: 'Poppins', sans-serif;
 
-  --accent-color: var(--primary);
-  //secondary colors
-  --secondary: #121F36;
-  --secondary-dark: #121F36;
-  --secondary-light: #313C50;
-  --secondary-accent: #424F6E;
-  --text-on-secondary: #FFFFFF;
+	--primary: #bbbbbb;
+	--on-primary: #444444;
+	--primary-container: #dddddd;
+	--on-primary-container: #222222;
 
-  //background
-  --text-color: #000;
-  --text-title-color: var(--secondary-dark);
-  --text-second-color: var(--gray-dark);
-  --text-hover-color: var(--primary);
+	--secondary: #999999;
+	--on-secondary: #666666;
+	--secondary-container: #bbbbbb;
+	--on-secondary-container: #444444;
 
-  --bg-element: var(--gray-light);
-  --element-border-color: var(--gray-light);
-  --separator-color: var(--gray-darker);
+	--tertiary: #777777;
+	--on-tertiary: #888888;
+	--tertiary-container: #999999;
+	--on-tertiary-container: #666666;
+
+	--error: #bbbbbb;
+	--on-error: #444444;
+	--error-container: #dddddd;
+	--on-error-container: #222222;
+
+	--background: #ffffff;
+	--on-background: #000000;
+
+	--surface: #dddddd;
+	--on-surface: #222222;
+	--outline: #777777;
+
+	--surface-variant: #bbbbbb;
+	--on-surface-variant: #444444;
+
+	--info-container: #2196f3;
+	--warning-container: #ffc107;
+	--error-container: #cf6679;
+	--background-color: #121212;
+	--success-container: #388e3c;
 }

@@ -6,7 +6,7 @@
 			"name": "base-page"
 		},
 		"scss": {
-			"path": "sass",
+			"path": "scss",
 			"files": ["*"]
 		},
 		"ts": {

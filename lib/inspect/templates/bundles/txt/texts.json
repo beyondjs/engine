@@ -1,8 +1,8 @@
 {
 	"es": {
-		"example": "Ejemplo de texto"
+		"header": "Titulo de encabezado"
 	},
 	"en": {
-		"example": "Text example"
+		"header": "Header title"
 	}
 }
