@@ -89,7 +89,7 @@ module.exports = async () => {
 
 		specs.bundles = [specs.bundles];
 		specs.processors = ['ts'];
-		specs.styles && specs.processors.push('sass');
+		specs.styles && specs.processors.push('scss');
 		if (specs.route && !specs.route.startsWith('/')) {
 			specs.route = `/${specs.route}`;
 		}
