@@ -1,0 +1,28 @@
+{
+	"name": "@beyond-js/playground",
+	"version": "1.0.0",
+	"modules": {
+		"path": "modules"
+	},
+	"deployment": {
+		"distributions": [
+			{
+				"name": "backend",
+				"platform": "backend",
+				"environment": "development",
+				"ports": {
+					"bundles": 5070,
+					"http": 5071,
+					"inspect": 5072
+				}
+			}
+		]
+	},
+	"devDependencies": {
+		"@beyond-js/local": "~0.1.3"
+	},
+	"dependencies": {
+		"@beyond-js/backend": "~0.1.6",
+		"@beyond-js/kernel": "~0.1.9"
+	}
+}
