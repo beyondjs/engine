@@ -1,6 +1,6 @@
 {
 	"name": "beyond",
-	"version": "1.1.0-beta.dts.10.local",
+	"version": "1.2.0-beta.1",
 	"author": "BeyondJS",
 	"description": "The Full Stack Universal Typescript Framework",
 	"email": "hello@beyondjs.com",
@@ -66,6 +66,9 @@
 		"./typings": "./lib/engine/typings/index.js",
 		"./inspect-service": "./lib/inspect/service/index.js",
 		"./sdk": "./lib/engine/process/bundler/index.js"
+	},
+	"params": {
+		"templates-pkg": "@beyond-js/scaffolding"
 	},
 	"dependencies": {
 		"@beyond-js/specifier-parser": "^0.0.3",
