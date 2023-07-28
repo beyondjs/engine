@@ -1,6 +1,6 @@
 {
 	"name": "beyond",
-	"version": "1.2.0-beta.1",
+	"version": "1.2.0-beta.2",
 	"author": "BeyondJS",
 	"description": "The Full Stack Universal Typescript Framework",
 	"email": "hello@beyondjs.com",
@@ -117,6 +117,6 @@
 		"vue": "^3.2.37",
 		"yargs": "^17.5.1",
 		"inquirer": "^8.2.5",
-		"global-dirs": "^3.0.1"
+		"global-modules": "^2.0.0"
 	}
 }
