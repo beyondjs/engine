@@ -24,11 +24,11 @@ ipc.events.on('engine', 'project-process', message => {
 
 /**
  *
- * @param {--pkg, --distribution, --declarations, --log} argv
+ * @param {--pkg, --distribution, --log} argv
  * @returns void
  */
 const build = async argv => {
-	const { pkg, distribution, declarations, logs } = argv;
+	const { pkg, distribution, logs } = argv;
 	LOGS = logs === undefined || logs === 'false' ? false : true;
 
 	if (!pkg) {
@@ -44,7 +44,7 @@ const build = async argv => {
 	new (require('beyond'))({});
 
 	const applications = await exec('applications/list');
-	const application = Object.values(applications).find(app => app.name === pkg);
+	const application = Object.values(applications).find(app => app.specifier === pkg);
 	if (!application) {
 		console.log(`Package "${pkg}" not found, check beyond.json file`.red);
 		process.exit(1);
@@ -78,7 +78,6 @@ const build = async argv => {
 		application: application.id,
 		distribution: dist.id,
 		build: true,
-		declarations,
 	});
 
 	process.exit(0);
