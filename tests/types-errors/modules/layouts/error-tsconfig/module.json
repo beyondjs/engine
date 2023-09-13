@@ -1,0 +1,17 @@
+{
+	"name": "layout/error",
+	"widget": {
+		"is": "layout",
+		"element": {
+			"name": "error-layout"
+		},
+		"scss": {
+			"path": "scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "ts",
+			"files": ["*"]
+		}
+	}
+}

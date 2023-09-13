@@ -1,5 +1,4 @@
 {
-  "applications": [
-    "./project.json"
-  ]
+  "packages": "packages.json",
+  "bundles": {}
 }
