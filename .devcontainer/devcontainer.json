@@ -1,0 +1,18 @@
+{
+    "build": {
+      "dockerfile": "./Dockerfile"
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [],
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "npm install",
+    "customizations": {
+      // Configure properties specific to VS Code.
+      "vscode": {
+        // Set *default* container specific settings.json values on container create.
+        "settings": {},
+        "extensions": ["esbenp.prettier-vscode", "ms-azuretools.vscode-docker"]
+      }
+    }
+  }
+  

@@ -1,39 +1,39 @@
 {
-  "name": "node-app",
-  "version": "0.0.1",
-  "title": "Node JS Basic Application",
-  "description": "Node JS Basic application",
-  "author": "",
-  "license": "ISC",
-  "languages": {
-    "default": "en",
-    "supported": [
-      "en",
-      "es"
-    ]
-  },
-  "modules": {
-    "path": "modules"
-  },
-  "deployment": {
-    "distributions": [
-      {
-        "name": "node",
-        "platform": "node",
-        "environment": "development",
-        "ports": {
-          "bundles": 6560,
-          "inspect": 6561
-        }
-      }
-    ]
-  },
-  "dependencies": {
-    "@beyond-js/kernel": "~0.1.8",
-    "@beyond-js/local": "~0.1.3",
-    "socket.io-client": "^4.5.4"
-  },
-  "devDependencies": {
-    "@types/node": "^16.11.7"
-  }
+	"name": "node-app",
+	"version": "0.0.1",
+	"title": "Node JS Basic Application",
+	"description": "Node JS Basic application",
+	"author": "",
+	"license": "ISC",
+	"languages": {
+		"default": "en",
+		"supported": [
+			"en",
+			"es"
+		]
+	},
+	"modules": {
+		"path": "modules"
+	},
+	"deployment": {
+		"distributions": [
+			{
+				"name": "node",
+				"platform": "node",
+				"environment": "development",
+				"ports": {
+					"bundles": 6560,
+					"inspect": 6561
+				}
+			}
+		]
+	},
+	"dependencies": {
+		"@beyond-js/kernel": "~0.1.8",
+		"socket.io-client": "^4.5.4"
+	},
+	"devDependencies": {
+		"@beyond-js/local": "~0.1.3",
+		"@types/node": "^16.11.7"
+	}
 }

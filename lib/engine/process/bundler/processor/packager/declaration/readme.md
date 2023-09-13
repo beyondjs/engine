@@ -1,7 +1,7 @@
 # ProcessorDeclaration
 
 ## global.ProcessorDeclaration
-
+`` const {ProcessorDeclaration} = require('beyond/sdk');``
 ```typescript
 interface ProcessorDeclaration extends IProcessorDeclaration, IDynamicProcessor {
     _build();

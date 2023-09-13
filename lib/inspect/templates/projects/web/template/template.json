@@ -1,6 +1,6 @@
 {
 	"application": {
-		"processor": "sass",
+		"processor": "scss",
 		"path": "application",
 		"files": ["*"]
 	},
