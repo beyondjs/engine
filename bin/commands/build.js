@@ -54,7 +54,7 @@ const build = async argv => {
 	 * Build for npm
 	 */
 	if (distribution === 'npm') {
-		await exec('applications/process', { application: application.id, distribution, build: true, declarations });
+		await exec('applications/process', { application: application.id, distribution, build: true });
 		process.exit(0);
 	}
 
