@@ -1,0 +1,6 @@
+{
+	"bundle": "code",
+	"sass": {
+		"files": "*"
+	}
+}

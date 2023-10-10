@@ -55,7 +55,9 @@
 		"socket.io",
 		"websockets"
 	],
-	"scripts": {},
+	"scripts": {
+		"test-overwrites": "cd tests/overwrites && node ../../index.js --inspector 4000"
+	},
 	"engines": {
 		"node": ">=14.17.4",
 		"npm": ">=6.0.0"

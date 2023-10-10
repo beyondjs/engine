@@ -1,0 +1,10 @@
+{
+	"tabWidth": 4,
+	"arrowParens": "avoid",
+	"printWidth": 120,
+	"proseWrap": "always",
+	"useTabs": true,
+	"singleQuote": true,
+	"bracketSpacing": false,
+	"configPath": "${workspaceFolder}/prettier.json"
+}
