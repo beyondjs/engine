@@ -12,7 +12,7 @@
     <img  src="https://img.shields.io/static/v1?style=for-the-badge&label=License&message=MIT&color=red">
   </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/beyond">
-    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.0.11&color=#dcdcdc">
+    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.2.0&color=#dcdcdc">
   </a>
   
   <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -38,7 +38,8 @@ npm i -g beyond
 npx @beyond-js/create-package
 ```
 
-The final command is interactive, allowing you to select the type of project you wish to create from the following options:
+The final command is interactive, allowing you to select the type of project you wish to create from the following
+options:
 
     -   web: Ready to start a web project that can be distributed on the internet or as a mobile application.
         Here you can select between use
@@ -51,7 +52,7 @@ The final command is interactive, allowing you to select the type of project you
     -   library: Ideal for creating projects intended to be distributed as NPM packages.
     -   web-backend: Generates a web project with a backend distribution.
 
-- **--container**: you can use it if you want to create your project in a new folder
+-   **--container**: you can use it if you want to create your project in a new folder
 
 For more information go to [@beyond-js/create-package](https://www.npmjs.com/package/@beyond-js/create-package)
 
@@ -67,13 +68,13 @@ contact us.
 
 BeyondJS is following [Semantic Versioning 2.0](https://semver.org/).
 
-[//]: # "# Contributors"
+[//]: # '# Contributors'
 [//]: #
-[//]: # "<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->"
-[//]: # "<!-- prettier-ignore-start -->"
-[//]: # "<!-- markdownlint-disable -->"
+[//]: # '<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->'
+[//]: # '<!-- prettier-ignore-start -->'
+[//]: # '<!-- markdownlint-disable -->'
 [//]: #
-[//]: # "<!-- markdownlint-restore -->"
-[//]: # "<!-- prettier-ignore-end -->"
+[//]: # '<!-- markdownlint-restore -->'
+[//]: # '<!-- prettier-ignore-end -->'
 [//]: #
-[//]: # "<!-- ALL-CONTRIBUTORS-LIST:END -->"
+[//]: # '<!-- ALL-CONTRIBUTORS-LIST:END -->'
