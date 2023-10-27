@@ -1,0 +1,16 @@
+{
+	"name": "widget-a",
+	"widget": {
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "widget-a-error"
+		}
+	}
+}
