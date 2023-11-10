@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const commands = require('./commands');
-const { version } = require('../package.json');
+const {version} = require('../package.json');
 
 module.exports = new (class {
 	constructor() {
@@ -9,7 +9,7 @@ module.exports = new (class {
 
 		const yargs = require('yargs').scriptName('beyond').version(version).usage(usage);
 
-		void commands.forEach(({ command, description, options, positionals, handler }) => {
+		void commands.forEach(({command, description, options, positionals, handler}) => {
 			yargs.command(
 				command,
 				description,
