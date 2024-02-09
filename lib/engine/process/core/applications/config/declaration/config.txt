@@ -6,6 +6,7 @@ interface IConfig {
     routing?: { mode: string, ssr: boolean },
     layout?: string,
     params?: any,
+    environment: string,
     ssr?: { host: string, local: string },
     backend?: { host: string, local: string }
 }
