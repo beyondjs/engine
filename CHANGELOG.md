@@ -1,6 +1,6 @@
-# BeyondJS changelog
+# Beyond
 
-## v1.2.1
+## v1.2.1 - 2024/4/10
 
 ### Features
 
@@ -12,7 +12,7 @@
 -   **Environment Property (feat)**: Added the `environment` property in the `config` module, allowing for more detailed
     and specific environment configuration of the package.
 
-## v1.2.0
+## v1.2.0 - 2023/10/18
 
 ### BREAKING CHANGES
 
