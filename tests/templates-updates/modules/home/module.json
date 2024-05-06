@@ -1,0 +1,19 @@
+{
+	"name": "home",
+	"platforms": ["web"],
+	"widget": {
+		"is": "page",
+		"route": "/",
+		"element": {
+			"name": "home-page"
+		},
+		"scss": {
+			"path": "scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "ts",
+			"files": ["*"]
+		}
+	}
+}

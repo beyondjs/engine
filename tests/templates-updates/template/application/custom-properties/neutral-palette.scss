@@ -1,0 +1,47 @@
+@mixin neutral-palette() {
+	/* neutral */
+	--neutral-4: #0f0d13;
+	--neutral-6: #141218;
+	--neutral-10: #1c1b1f;
+	--neutral-12: #2b2930;
+	--neutral-17: #2b2930;
+	--neutral-20: #1c1b1f;
+	--neutral-22: #36343b;
+	--neutral-24: #3b383e;
+	--neutral-25: #393c3a;
+	--neutral-30: #444846;
+	--neutral-35: #505351;
+	--neutral-40: #5c5f5d;
+	--neutral-50: #747875;
+	--neutral-60: #8e918f;
+	--neutral-70: #a9aca9;
+	--neutral-80: #c4c7c4;
+	--neutral-87: #ded8e1;
+	--neutral-90: #e1e3e0;
+	--neutral-94: #f3edf7;
+	--neutral-92: #ece6f0;
+	--neutral-94: #f3edf7;
+	--neutral-95: #eff1ee;
+	--neutral-96: #f7f2fa;
+	--neutral-98: #fef7ff;
+	--neutral-99: #fbfdfa;
+	--neutral-100: #ffffff;
+
+	/* --neutral-variant */
+	--neutral-variant: #000000;
+	--neutral-variant-10: #141d1a;
+	--neutral-variant-20: #29322f;
+	--neutral-variant-25: #343d3a;
+	--neutral-variant-30: #3f4945;
+	--neutral-variant-35: #4b5550;
+	--neutral-variant-40: #57605c;
+	--neutral-variant-50: #6f7975;
+	--neutral-variant-60: #89938e;
+	--neutral-variant-70: #a3ada8;
+	--neutral-variant-80: #bfc9c3;
+	--neutral-variant-90: #dbe5df;
+	--neutral-variant-95: #e9f3ed;
+	--neutral-variant-98: #f2fcf6;
+	--neutral-variant-99: #f5fff9;
+	--neutral-variant-100: #ffffff;
+}

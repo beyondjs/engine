@@ -1,0 +1,29 @@
+@use 'dark';
+@use 'light';
+@use 'alerts';
+@import 'neutral-palette';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+:root {
+	--font-family: 'Rubik', sans-serif;
+	--secondary-font-family: 'Roboto', sans-serif;
+
+	--border-radius-sm: 6px;
+	--border-radius-base: 10px;
+	--border-radius-lg: 25px;
+	@include neutral-palette();
+
+	@include alerts.properties();
+	@include light.properties();
+	@media (prefers-color-scheme: dark) {
+		@include dark.properties();
+	}
+}
+
+html[data-beyond-mode='light'] {
+	@include light.properties();
+}
+
+html[data-beyond-mode='dark'] {
+	@include dark.properties();
+}

@@ -1,0 +1,48 @@
+@mixin properties() {
+	--text-color: #fff;
+
+	--primary: var(--primary-80);
+	--primary-container: var(--primary-30);
+	--on-primary: #fff;
+	--on-primary-container: var(--primary-90);
+	--inverse-primary: var(--primary-40);
+
+	--secondary: var(--secondary-80);
+	--secondary-container: var(--secondary-30);
+	--on-secondary: #fff;
+	--on-secondary-container: var(--secondary-90);
+
+	--tertiary: var(--tertiary-80);
+	--tertiary-container: var(--tertiary-30);
+	--on-tertiary: var(--tertiary-20);
+	--on-tertiary-container: var(--tertiary-90);
+
+	--surface: var(--neutral-10);
+	--surface-dim: var(--neutral-12);
+	--surface-bright: var(--neutral-25);
+	--surface-container-lowest: var(--neutral-4);
+	--surface-container-low: var(--neutral-10);
+	--surface-container: var(--neutral-12);
+	--surface-container-high: var(--neutral-20);
+	--surface-container-highest: var(--neutral-22);
+	--surface-variant: var(--neutral-variant-30);
+	--surface-tint-color: var(--md.sys.color.primary);
+	--on-surface: var(--neutral-90);
+	--on-surface-variant: var(--neutral-variant-80);
+	--inverse-surface: var(--neutral-90);
+	--inverse-on-surface: var(--neutral-20);
+
+	--background: var(--neutral-6);
+	--on-background: var(--neutral-90);
+
+	--error: var(--error-80);
+	--error-container: var(--error-30);
+	--on-error: var(--error-20);
+	--on-error-container: var(--error-90);
+
+	--outline: var(--neutral-variant-60);
+	--outline-variant: var(--neutral-variant-30);
+
+	--shadow: var(--neutral-0);
+	--scrim: var(--neutral-0);
+}
