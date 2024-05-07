@@ -8,6 +8,5 @@
 		"processor": "scss",
 		"path": "global",
 		"files": ["*"]
-	},
-	"overwrites": "overwrites/overwrites.json"
+	}
 }

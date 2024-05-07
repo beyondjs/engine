@@ -20,6 +20,11 @@
 				"name": "web",
 				"platform": "web",
 				"environment": "development",
+				"minify": {
+					"css": true,
+					"js": true
+				},
+				"maps": "external",
 				"ports": {
 					"bundles": 8088
 				}
