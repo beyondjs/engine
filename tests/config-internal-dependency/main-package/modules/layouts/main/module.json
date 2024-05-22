@@ -1,0 +1,17 @@
+{
+	"name": "layout/main",
+	"widget": {
+		"is": "layout",
+		"element": {
+			"name": "main-layout"
+		},
+		"scss": {
+			"path": "scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "ts",
+			"files": ["*"]
+		}
+	}
+}

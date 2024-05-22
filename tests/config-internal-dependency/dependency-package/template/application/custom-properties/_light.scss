@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+@mixin properties() {
+	--text-color: #1a1a1a;
+	--altern-text-color: var(--background);
+	--secondary-text-color: var(--secondary);
+	--font-family: 'Poppins', sans-serif;
+
+	--primary: #bbbbbb;
+	--on-primary: #444444;
+	--primary-container: #dddddd;
+	--on-primary-container: #222222;
+
+	--secondary: #999999;
+	--on-secondary: #666666;
+	--secondary-container: #bbbbbb;
+	--on-secondary-container: #444444;
+
+	--tertiary: #777777;
+	--on-tertiary: #888888;
+	--tertiary-container: #999999;
+	--on-tertiary-container: #666666;
+
+	--error: #bbbbbb;
+	--on-error: #444444;
+	--error-container: #dddddd;
+	--on-error-container: #222222;
+
+	--background: #ffffff;
+	--on-background: #000000;
+
+	--surface: #dddddd;
+	--on-surface: #222222;
+	--outline: #777777;
+
+	--surface-variant: #bbbbbb;
+	--on-surface-variant: #444444;
+
+	--info-container: #2196f3;
+	--warning-container: #ffc107;
+	--error-container: #cf6679;
+	--background-color: #121212;
+	--success-container: #388e3c;
+}

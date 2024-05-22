@@ -1,0 +1,11 @@
+{
+  "name": "message",
+  "code": {
+    "ts": {
+      "path": "/code/ts",
+      "files": [
+        "*"
+      ]
+    }
+  }
+}
