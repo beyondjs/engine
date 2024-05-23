@@ -27,11 +27,10 @@
 		]
 	},
 	"dependencies": {
-		"@beyond-js/kernel": "~0.1.9"
+		"@beyond-js/kernel": "~0.1.9",
+		"@beyond-js/widgets": "1.1.1-beta.minified.1"
 	},
-	"devDependencies": {
-		"@beyond-js/local": "~0.1.3"
-	},
+	"devDependencies": {},
 	"libraries": {
 		"imports": [
 			"dependency-package"
