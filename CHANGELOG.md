@@ -1,5 +1,30 @@
 # Beyond
 
+## v1.2.2 - 2024/5/24
+
+### Fix
+
+-   **Import internal dependencies config (fix)**: solved, import of the bundle config of internal dependencies from
+    main package
+
+### Features
+
+-   **Config Declarations (feat)**: Declarations generated for `config` package modules, use case when handling packages
+    as internal dependencies (old libraries)
+
+### Enhancements
+
+-   **Minify Build (feat)**: minified css and js in the compilation process according to the distribution configuration
+
+Example:
+
+```json
+"minify": {
+  "css": true,
+  "js": true
+}
+```
+
 ## v1.2.1 - 2024/4/10
 
 ### Features
