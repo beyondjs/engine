@@ -1,0 +1,6 @@
+{
+	"name": "http/server",
+	"platforms": ["node"],
+	"bundle": "ts",
+	"files": "*"
+}

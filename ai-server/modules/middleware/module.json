@@ -1,0 +1,6 @@
+{
+	"name": "http/middleware",
+	"platforms": ["node"],
+	"bundle": "ts",
+	"files": "*"
+}
