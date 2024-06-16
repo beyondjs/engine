@@ -6,6 +6,7 @@ export /*bundle*/ const validateBearerToken = async (req: Request, res: Response
 	const accessToken = authHeader && authHeader.split(' ')[1];
 
 	if (!accessToken) {
+		console.log(accessToken);
 		return res.status(401).json({ error: 'Access token not provided' });
 	}
 
