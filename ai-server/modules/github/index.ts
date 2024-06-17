@@ -8,6 +8,23 @@ dotenv.config();
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OUTPUT_FILE = path.join(process.cwd(), 'concatenated_code.ts');
 
+// Parse GitHub URL to get API endpoint
+function getGitHubApiUrl(githubUrl: string): string {
+	const regex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/tree\/([^\/]+)\/(.+)/;
+	const match = githubUrl.match(regex);
+
+	if (!match) {
+		throw new Error('Invalid GitHub URL format. It should be like: https://github.com/owner/repo/tree/branch/path');
+	}
+
+	const owner = match[1];
+	const repo = match[2];
+	const branch = match[3];
+	const path = match[4];
+
+	return `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+}
+
 async function fetchFileList(url: string): Promise<any[]> {
 	console.log(`Fetching file list from: "${url}"`);
 
@@ -20,8 +37,12 @@ async function fetchFileList(url: string): Promise<any[]> {
 		throw new Error(`Failed to fetch file list: ${response.statusText}`);
 	}
 
-	const data = await response.json();
-	return data;
+	try {
+		const data = await response.json();
+		return data;
+	} catch (err) {
+		throw new Error(`Failed to parse file list: ${err.message}`);
+	}
 }
 
 async function fetchFileContent(url: string): Promise<string> {
@@ -58,7 +79,8 @@ export /*bundle*/ async function concatenateFiles(url: string) {
 		throw new Error('GitHub token not found in environment variables');
 	}
 
-	const fileList = await fetchFileList(url);
+	const apiUrl = getGitHubApiUrl(url);
+	const fileList = await fetchFileList(apiUrl);
 	let concatenatedContent = '';
 
 	for (const file of fileList) {
@@ -68,5 +90,5 @@ export /*bundle*/ async function concatenateFiles(url: string) {
 	writeFileSync(OUTPUT_FILE, concatenatedContent);
 	console.log(`Files concatenated into ${OUTPUT_FILE}`);
 
-	return url;
+	return concatenatedContent;
 }

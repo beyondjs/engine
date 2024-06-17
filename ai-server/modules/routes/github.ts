@@ -4,18 +4,18 @@ import { concatenateFiles } from '@beyond-js/ai-server/github';
 
 export class GitHubRoutes {
 	static setup(app: Application) {
-		app.post('/github/tools', validateBearerToken, this.post);
+		app.get('/github/tools', /* validateBearerToken, */ this.get);
 	}
 
-	static async post(req: Request, res: IResponse) {
+	static async get(req: Request, res: IResponse) {
 		try {
-			const { baseUrl } = req.body;
+			const baseUrl: string = <string>req.query.baseUrl;
 			if (!baseUrl) {
 				return res.status(400).json({ message: 'Parameter baseUrl is required' });
 			}
 
 			const concatenatedContent = await concatenateFiles(baseUrl);
-			res.json({ concatenatedContent });
+			res.status(200).send(concatenatedContent);
 		} catch (exc) {
 			res.status(500).json({ message: 'Internal server error', error: exc.message });
 		}
