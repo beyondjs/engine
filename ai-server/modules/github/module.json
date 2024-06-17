@@ -1,0 +1,6 @@
+{
+	"name": "github",
+	"platforms": ["*"],
+	"bundle": "ts",
+	"files": "*"
+}

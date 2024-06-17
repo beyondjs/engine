@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+    title: Concatenate Files API
+    version: 1.0.0
+    description: API to concatenate files from a GitHub repository and save them into a single file.
+servers:
+    - url: https://turbo-spork-pjp6xjj4gpj3rqx-8080.app.github.dev
+paths:
+    /concatenateFiles:
+        post:
+            summary: Concatenate files from a GitHub repository
+            description: |
+                This endpoint concatenates all files from a specified GitHub repository URL and saves the concatenated content into a single file. 
+                It requires a GitHub token to be set in the environment variables for authentication.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                baseUrl:
+                                    type: string
+                                    description: The base URL of the GitHub repository.
+                            required:
+                                - baseUrl
+            responses:
+                '200':
+                    description: Files successfully concatenated
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Files concatenated into concatenated_code.ts
+                '400':
+                    description: Bad request, possibly due to missing or invalid input
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: 'baseUrl is required'
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: 'Internal server error'
