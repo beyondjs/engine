@@ -1,7 +1,7 @@
 import type { Application, Request, Response as IResponse } from 'express';
 import { validateBearerToken } from '@beyond-js/ai-server/http/middleware';
 import * as fs from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
 
 export class FilesRoutes {
 	static setup(app: Application) {
@@ -16,6 +16,10 @@ export class FilesRoutes {
 			}
 
 			const fileDestination = join(process.cwd(), 'uploads', fileName);
+			const dir = dirname(fileDestination);
+
+			// Check if the directory exists, if not create it
+			!fs.existsSync(dir) && fs.mkdirSync(dir, { recursive: true });
 
 			fs.writeFile(fileDestination, content, err => {
 				err

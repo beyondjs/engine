@@ -1,50 +1,43 @@
-openapi: 3.0.0
-info:
-    title: File Upload API
-    version: 1.0.0
-servers:
-    - url: https://turbo-spork-pjp6xjj4gpj3rqx-8080.app.github.dev
-paths:
-    /files/upload:
-        post:
-            summary: Upload a file
-            operationId: uploadFile
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                fileName:
-                                    type: string
-                                content:
-                                    type: string
-            responses:
-                '200':
-                    description: File successfully uploaded
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    message:
-                                        type: string
-                '400':
-                    description: Bad request
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    message:
-                                        type: string
-                '500':
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    message:
-                                        type: string
+# /files/upload:
+post:
+    summary: Upload a file
+    operationId: uploadFile
+    requestBody:
+        required: true
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        fileName:
+                            type: string
+                        content:
+                            type: string
+    responses:
+        '200':
+            description: File successfully uploaded
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+        '400':
+            description: Bad request
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+        '500':
+            description: Internal server error
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string

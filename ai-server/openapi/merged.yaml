@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+    title: AI-Server API
+    description: BeyondJS AI-Server Open AI Specification
+    version: 1.0.0
+servers:
+    - url: https://turbo-spork-pjp6xjj4gpj3rqx-8080.app.github.dev
+paths:
+    /github/tools:
+        get:
+            summary: Concatenate files from a GitHub repository
+            description: >
+                This endpoint concatenates all files from a specified GitHub repository URL and saves the concatenated
+                content into a single file. 
+
+                It requires a GitHub token to be set in the environment variables for authentication.
+            parameters:
+                - in: query
+                  name: baseUrl
+                  required: true
+                  schema:
+                      type: string
+                  description: The base URL of the GitHub repository.
+            responses:
+                '200':
+                    description: Files successfully concatenated
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Files concatenated into concatenated_code.ts
+                '400':
+                    description: Bad request, possibly due to missing or invalid input
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: baseUrl is required
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Internal server error
+    /files/upload:
+        post:
+            summary: Upload a file
+            operationId: uploadFile
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                fileName:
+                                    type: string
+                                content:
+                                    type: string
+            responses:
+                '200':
+                    description: File successfully uploaded
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string

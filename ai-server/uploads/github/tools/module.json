@@ -1,0 +1,7 @@
+{
+	"name": "github/commit",
+	"platforms": ["*"],
+	"ts": {
+		"files": ["*"]
+	}
+}

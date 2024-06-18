@@ -9,8 +9,7 @@ const app = express();
 app.use(express.json());
 
 // Setup middleware for OpenAPI specs validation
-// const apiSpec = join(process.cwd(), 'openapi/upload.yaml');
-const apiSpec = join(process.cwd(), 'openapi/tools-github.yaml');
+const apiSpec = join(process.cwd(), 'openapi/merged.yaml');
 app.use(middleware({ apiSpec }));
 
 // Setup custom error handler

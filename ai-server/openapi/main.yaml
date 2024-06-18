@@ -1,0 +1,12 @@
+openapi: 3.0.0
+info:
+    title: AI-Server API
+    description: BeyondJS AI-Server Open AI Specification
+    version: 1.0.0
+servers:
+    - url: https://turbo-spork-pjp6xjj4gpj3rqx-8080.app.github.dev
+paths:
+    /github/tools:
+        $ref: 'github-tools.yaml'
+    /files/upload:
+        $ref: 'upload.yaml'

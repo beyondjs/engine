@@ -1,0 +1,57 @@
+openapi: 3.1.0
+info:
+  title: AI-Server-OpenAPI
+  version: 3.1.0
+  description: AI-Server Open AI Specification
+paths:
+  /github/tools:
+    $ref: ./tools-github.yaml#/paths/~1github~1tools
+  /files/upload:
+    post:
+      summary: Upload a file
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: File successfully uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    tools-github:
+      $ref: ./tools-github.yaml#/components/schemas
+    upload:
+      $ref: ./upload.yaml#/components/schemas
