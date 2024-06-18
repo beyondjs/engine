@@ -1,5 +1,5 @@
 {
-	"name": "github/commit",
+	"name": "github/upload",
 	"platforms": ["*"],
 	"ts": {
 		"files": ["*"]
