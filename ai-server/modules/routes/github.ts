@@ -5,8 +5,8 @@ import { addFiles, IAddFilesParams } from '@beyond-js/ai-server/github/add-files
 
 export class GitHubRoutes {
 	static setup(app: Application) {
-		app.get('/github/concatenate', /* validateBearerToken, */ this.concatenate);
-		app.post('/github/add-files', /* validateBearerToken, */ this.addFiles);
+		app.get('/github/concatenate', validateBearerToken, this.concatenate);
+		app.post('/github/add-files', validateBearerToken, this.addFiles);
 	}
 
 	static async concatenate(req: Request, res: IResponse) {
