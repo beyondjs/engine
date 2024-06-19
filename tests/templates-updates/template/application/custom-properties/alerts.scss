@@ -1,0 +1,32 @@
+@mixin properties() {
+	--info-container: var(--info-80);
+	--warning-container: var(--warning-80);
+	--success-container: #388e3c;
+
+	--info-container: var(--info-50);
+	--info-color: var(--text-color);
+	--info-border-color: var(--info-50)
+	--info-hover-bg: var(--info-40);
+	--info-icon-color: var(--text-color);
+
+	--warning-container: var(--warning-50);
+	--warning-color: var(--text-color);
+	--warning-border-color: var(--warning-50)
+	--warning-hover-bg: var(--warning-40);
+	--warning-icon-color: var(--text-color);
+	
+	--success-container: var(--success-50);
+	--success-color: var(--text-color);
+	--success-border-color: var(--success-50)
+	--success-hover-bg: var(--success-40);
+	--success-icon-color: var(--text-color);
+
+	--error-container: var(--error-80);
+	--error-color: var(--error-90);
+	--error-border-color: var(--error-50);
+	--error-hover-bg: var(--error-40);
+	--error-icon-color:  var(--error-90);
+
+	--app-text-highlight: var(--primary);
+	--pui-success-icon-color: red;
+}

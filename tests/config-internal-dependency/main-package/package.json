@@ -1,0 +1,50 @@
+{
+	"name": "main-package",
+	"version": "0.0.1",
+	"title": "Main package",
+	"description": "",
+	"license": "ISC",
+	"languages": {
+		"default": "en",
+		"supported": [
+			"en",
+			"es"
+		]
+	},
+	"modules": {
+		"path": "modules"
+	},
+	"deployment": {
+		"distributions": [
+			{
+				"name": "web",
+				"environment": "development",
+				"platform": "web",
+				"ports": {
+					"bundles": 6680
+				}
+			},
+			{
+				"name": "web-tsc",
+				"environment": "development",
+				"platform": "web",
+				"ports": {
+					"bundles": 6681
+				},
+				"ts": {
+					"compiler": "tsc"
+				}
+			}
+		]
+	},
+	"dependencies": {
+		"@beyond-js/kernel": "~0.1.9",
+		"@beyond-js/widgets": "1.1.1-beta.minified.1"
+	},
+	"devDependencies": {},
+	"libraries": {
+		"imports": [
+			"dependency-package"
+		]
+	}
+}

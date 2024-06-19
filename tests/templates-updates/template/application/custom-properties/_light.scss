@@ -1,0 +1,48 @@
+@mixin properties() {
+	--text-color: #1a1a1a;
+
+	--primary: var(--primary);
+	--primary-container: var(--primary-90);
+	--on-primary: var(--primary-100);
+	--on-primary-container: var(--primary-10);
+	--inverse-primary: var(--primary-80);
+
+	--secondary: var(--secondary-40);
+	--secondary-container: var(--secondary-90);
+	--on-secondary: var(--secondary-100);
+	--on-secondary-container: var(--secondary-10);
+
+	--tertiary: var(--tertiary-40);
+	--tertiary-container: var(--tertiary-90);
+	--on-tertiary: var(--tertiary-100);
+	--on-tertiary-container: var(--tertiary-10);
+
+	--surface: var(--neutral-98);
+	--surface-dim: var(--neutral-80);
+	--surface-bright: var(--neutral-98);
+	--surface-container-lowest: var(--neutral-100);
+	--surface-container-low: var(--neutral-90);
+	--surface-container: var(--neutral-94);
+	--surface-container-high: var(--neutral-92);
+	--surface-container-highest: var(--neutral-90);
+	--surface-variant: var(--neutral-variant-90);
+	--surface-tint-color: var(--primary);
+	--on-surface: var(--neutral-10);
+	--on-surface-variant: var(--neutral-variant-30);
+	--inverse-surface: var(--neutral-20);
+	--inverse-on-surface: var(--neutral-95);
+
+	--background: #f1f1f1;
+	--on-background: var(--neutral-10);
+
+	--error: var(--error-40);
+	--error-container: var(--error-90);
+	--on-error: var(--error-100);
+	--on-error-container: var(--error-10);
+
+	--outline: var(--neutral-variant-50);
+	--outline-variant: var(--neutral-variant-80);
+
+	--shadow: var(--neutral-0);
+	--scrim: var(--neutral-0);
+}

@@ -1,6 +1,10 @@
 {
 	"name": "beyond",
+<<<<<<< HEAD
 	"version": "1.2.1-dev",
+=======
+	"version": "1.2.2",
+>>>>>>> aa93fa84ef8e90128369d684dbfe71479ae722b5
 	"author": "BeyondJS",
 	"description": "The Full Stack Universal Typescript Framework",
 	"email": "hello@beyondjs.com",
