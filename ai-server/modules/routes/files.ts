@@ -12,7 +12,7 @@ export class FilesRoutes {
 		try {
 			const { fileName, content } = req.body;
 			if (!fileName || !content) {
-				return res.status(400).json({ message: 'filename and content are required' });
+				return res.status(400).json({ message: 'Parameters filename and content are required' });
 			}
 
 			const fileDestination = join(process.cwd(), 'uploads', fileName);
