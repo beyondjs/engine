@@ -1,2 +1,108 @@
-h1 {
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600&display=swap');
+:root {
+	--dark-blue: #03142b;
+	--default-gray: #b6bdc7; /* ales path*/
+	--orange: #d9684a; /* circle path */
+	--circle-fill: var(--orange);
+	--ales-fill: var(--default-gray);
+	--background: #fff;
+	--color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: var(--dark-blue);
+		--color: var(--default-gray);
+	}
+}
+
+html {
+	font-family: 'Rubik', sans-serif;
+}
+
+body {
+	padding: 3rem;
+	background: var(--background);
+	color: var(--color);
+}
+
+h1,
+h2,
+h3 {
+	border-left: 2px solid var(--orange);
+	padding-left: 0.5rem;
+}
+.logo {
+	position: fixed;
+	top: 10%;
+	right: 0;
+	width: auto;
+	height: 70svh;
+}
+
+.svg-logo {
+	left: 0;
+	width: 70vh;
+	height: 70vh;
+	aspect-ratio: 1/1;
+	opacity: 0.3;
+}
+
+.background-image {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+}
+.logo #beyond-ales path {
+	fill: var(--ales-fill);
+}
+.logo #beyond-circle path {
+	fill: var(--circle-fill);
+}
+
+main {
+	width: 100%;
+	max-width: 1200px;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 0.5rem;
+}
+
+ul li {
+	position: relative;
+	padding-left: 20px;
+	line-height: 1.6;
+}
+ul li::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0.5em;
+	width: 8px;
+	height: 8px;
+	background-color: var(--orange);
+	border-radius: 50%;
+}
+
+@media (max-width: 1024px) {
+	.svg-logo {
+		left: 0;
+		width: 60vh;
+		height: 60vh;
+		aspect-ratio: 1/1;
+		opacity: 0.3;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.svg-logo {
+		opacity: 0.1;
+	}
 }
