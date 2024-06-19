@@ -6,7 +6,9 @@ info:
 servers:
     - url: https://turbo-spork-pjp6xjj4gpj3rqx-8080.app.github.dev
 paths:
-    /github/tools:
-        $ref: 'github-tools.yaml'
+    /github/concatenate:
+        $ref: 'github/concatenate.yaml'
+    /github/add-files:
+        $ref: 'github/add-files.yaml'
     /files/upload:
-        $ref: 'upload.yaml'
+        $ref: 'files/upload.yaml'

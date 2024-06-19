@@ -38,7 +38,7 @@ export class Files {
 
 		try {
 			// Get the latest commit from the branch, or create the branch if it doesn't exist
-			let latestSha;
+			let latestSha: string;
 			try {
 				latestSha = await branch.getLatestCommit(this.repo, this.branch);
 			} catch (error) {

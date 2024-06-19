@@ -1,4 +1,4 @@
-# /github/tools:
+# /github/concatenate:
 get:
     summary: Concatenate files from a GitHub repository
     description: |

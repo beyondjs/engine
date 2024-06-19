@@ -1,0 +1,70 @@
+# /github/add-files:
+post:
+    summary: Add multiple files to a GitHub repository
+    description: |
+        This endpoint adds multiple files to a specified GitHub repository. 
+        It requires a GitHub token to be set in the environment variables for authentication.
+    requestBody:
+        required: true
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        repo:
+                            type: object
+                            properties:
+                                owner:
+                                    type: string
+                                    description: The owner of the GitHub repository.
+                                name:
+                                    type: string
+                                    description: The name of the GitHub repository.
+                            required:
+                                - owner
+                                - name
+                        branch:
+                            type: string
+                            description: The branch name where the files will be added.
+                        message:
+                            type: string
+                            description: The commit message.
+                        folder:
+                            type: string
+                            description: The relative path of the folder containing the files to be added.
+                    required:
+                        - repo
+                        - branch
+                        - message
+                        - folder
+    responses:
+        '200':
+            description: Files successfully added and commit created
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                example: Files added and commit created successfully.
+        '400':
+            description: Bad request, possibly due to missing or invalid input
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                example: 'Required fields: repo, branch, message, folder'
+        '500':
+            description: Internal server error
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                example: 'Internal server error'
