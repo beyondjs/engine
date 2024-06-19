@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
-import { Blob } from './blob';
 import { Tree } from './tree';
 import { Commit } from './commit';
+import { Branch } from './branch';
 import * as dotenv from 'dotenv';
 
 // Load environment variables from .env file
@@ -12,14 +12,13 @@ const GITHUB_TOKEN = <string>process.env.GITHUB_TOKEN;
  * Files class for adding multiple files in a GitHub repository.
  * This class interacts with Blob, Tree, and Commit classes to perform the actions.
  */
-export /*bundle*/ class Files {
-	private api: string;
+export class Files {
+	private api = 'https://api.github.com';
 	private token: string;
 	private repo: { owner: string; name: string };
 	private branch: string;
 
-	constructor(api: string, repo: { owner: string; name: string }, branch: string) {
-		this.api = api;
+	constructor(repo: { owner: string; name: string }, branch: string) {
 		this.token = GITHUB_TOKEN;
 		this.repo = repo;
 		this.branch = branch;
@@ -33,23 +32,35 @@ export /*bundle*/ class Files {
 	 * @throws Error if any step in the process fails.
 	 */
 	public async add(message: string, files: { path: string; fullPath: string }[]) {
-		const blob = new Blob(this.api, this.token);
 		const tree = new Tree(this.api, this.token);
 		const commit = new Commit(this.api, this.token);
+		const branch = new Branch(this.api, this.token);
 
 		try {
-			// Get the latest commit from the branch
-			const branchRes = await fetch(
-				`${this.api}/repos/${this.repo.owner}/${this.repo.name}/git/ref/heads/${this.branch}`,
-				{
-					headers: {
-						Authorization: `Bearer ${this.token}`,
-					},
+			// Get the latest commit from the branch, or create the branch if it doesn't exist
+			let latestSha;
+			try {
+				latestSha = await branch.getLatestCommit(this.repo, this.branch);
+			} catch (error) {
+				if (error.message === 'Failed to get branch') {
+					// Branch does not exist, create it from the default branch
+					const repoRes = await fetch(`${this.api}/repos/${this.repo.owner}/${this.repo.name}`, {
+						headers: {
+							Authorization: `Bearer ${this.token}`,
+						},
+					});
+
+					if (!repoRes.ok) throw new Error('Failed to get repository info');
+
+					const repoData = await repoRes.json();
+					const defaultBranch = repoData.default_branch;
+
+					latestSha = await branch.getLatestCommit(this.repo, defaultBranch);
+					await branch.create(this.repo, this.branch, latestSha);
+				} else {
+					throw error;
 				}
-			);
-			if (!branchRes.ok) throw new Error('Failed to get branch');
-			const branch = await branchRes.json();
-			const latestSha = branch.object.sha;
+			}
 
 			// Get the tree from the latest commit
 			const commitRes = await fetch(
@@ -79,20 +90,7 @@ export /*bundle*/ class Files {
 			const commitSha = await commit.create(treeSha, latestSha, message, this.repo);
 
 			// Update the branch to point to the new commit
-			const updateRes = await fetch(
-				`${this.api}/repos/${this.repo.owner}/${this.repo.name}/git/refs/heads/${this.branch}`,
-				{
-					method: 'PATCH',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: `Bearer ${this.token}`,
-					},
-					body: JSON.stringify({
-						sha: commitSha,
-					}),
-				}
-			);
-			if (!updateRes.ok) throw new Error('Failed to update branch');
+			await branch.update(this.repo, this.branch, commitSha);
 
 			console.log('Files added and commit created successfully.');
 		} catch (error) {

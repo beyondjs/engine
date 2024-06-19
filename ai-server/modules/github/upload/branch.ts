@@ -2,7 +2,7 @@
  * Branch class for managing branches in a GitHub repository.
  * This class interacts with the GitHub API to get the latest commit and update the branch.
  */
-export /*bundle*/ class Branch {
+export class Branch {
 	private api: string;
 	private token: string;
 
@@ -56,6 +56,32 @@ export /*bundle*/ class Branch {
 
 		if (!response.ok) {
 			throw new Error('Failed to update branch');
+		}
+	}
+
+	/**
+	 * Creates a new branch from the specified base SHA.
+	 *
+	 * @param repo - The repository information.
+	 * @param branch - The branch name.
+	 * @param baseSha - The base commit SHA.
+	 * @throws Error if the request fails.
+	 */
+	public async create(repo: { owner: string; name: string }, branch: string, baseSha: string): Promise<void> {
+		const response = await fetch(`${this.api}/repos/${repo.owner}/${repo.name}/git/refs`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${this.token}`,
+			},
+			body: JSON.stringify({
+				ref: `refs/heads/${branch}`,
+				sha: baseSha,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to create branch');
 		}
 	}
 }

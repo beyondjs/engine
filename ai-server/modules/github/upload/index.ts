@@ -6,7 +6,6 @@ import { join } from 'path';
  * Interface for the parameters required to add multiple files.
  */
 export interface AddFilesParams {
-	api: string;
 	repo: { owner: string; name: string };
 	branch: string;
 	message: string;
@@ -18,9 +17,9 @@ export interface AddFilesParams {
  *
  * @param params - The parameters required to add files.
  */
-export async function addFiles(params: AddFilesParams) {
-	const { api, repo, branch, message, folder } = params;
-	const filesInstance = new Files(api, repo, branch);
+export /*bundle*/ async function addFiles(params: AddFilesParams) {
+	const { repo, branch, message, folder } = params;
+	const filesInstance = new Files(repo, branch);
 
 	const directoryPath = join(process.cwd(), 'uploads', folder);
 

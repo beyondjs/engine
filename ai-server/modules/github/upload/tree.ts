@@ -4,7 +4,7 @@ import { Blob } from './blob';
  * Tree class for creating trees in a GitHub repository.
  * This class interacts with the GitHub API to create trees.
  */
-export /*bundle*/ class Tree {
+export class Tree {
 	private api: string;
 	private token: string;
 	private blob: Blob;

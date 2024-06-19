@@ -2,7 +2,7 @@
  * Commit class for creating commits in a GitHub repository.
  * This class interacts with the GitHub API to create commits.
  */
-export /*bundle*/ class Commit {
+export class Commit {
 	private api: string;
 	private token: string;
 
