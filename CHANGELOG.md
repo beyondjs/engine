@@ -1,5 +1,16 @@
 # Beyond
 
+## v1.2.3 - 2024/6/19
+
+### Fix
+
+-   **Generate package declarations with config imports**: solved, generate bundle declarations that have imports from
+    the bundle config
+
+### Feat
+
+-   **Styles on the information page (feat)**: Improvement in interface and page visual with bundle information
+
 ## v1.2.2 - 2024/5/24
 
 ### Fix
