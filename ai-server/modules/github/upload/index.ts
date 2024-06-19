@@ -1,14 +1,48 @@
 import { Files } from './files';
+import { promises as fs } from 'fs';
+import { join } from 'path';
 
-const GITHUB_API = 'https://api.github.com';
-const GITHUB_TOKEN = 'your-personal-access-token';
-const REPO = { owner: 'your-username', name: 'repository-name' };
-const BRANCH = 'branch-name';
-const MESSAGE = 'Add multiple files programmatically';
-const FILES = [
-  { path: 'path/to/first_file.txt', content: 'Content of the first file' },
-  { path: 'path/to/second_file.txt', content: 'Content of the second file' }
-];
+/**
+ * Interface for the parameters required to add multiple files.
+ */
+export interface AddFilesParams {
+	api: string;
+	repo: { owner: string; name: string };
+	branch: string;
+	message: string;
+	folder: string;
+}
 
-const files = new Files(GITHUB_API, GITHUB_TOKEN, REPO, BRANCH);
-files.add(MESSAGE, FILES).catch(console.error);
+/**
+ * Adds multiple files to a GitHub repository.
+ *
+ * @param params - The parameters required to add files.
+ */
+export async function addFiles(params: AddFilesParams) {
+	const { api, repo, branch, message, folder } = params;
+	const filesInstance = new Files(api, repo, branch);
+
+	const directoryPath = join(process.cwd(), 'uploads', folder);
+
+	async function getFiles(dir: string): Promise<{ path: string; fullPath: string }[]> {
+		const dirents = await fs.readdir(dir, { withFileTypes: true });
+		const files = await Promise.all(
+			dirents.map(async dirent => {
+				const res = join(dir, dirent.name);
+				if (dirent.isDirectory()) {
+					return getFiles(res);
+				} else {
+					return { path: res.replace(directoryPath + '/', ''), fullPath: res };
+				}
+			})
+		);
+		return Array.prototype.concat(...files);
+	}
+
+	try {
+		const files = await getFiles(directoryPath);
+		await filesInstance.add(message, files);
+	} catch (error) {
+		console.error(error);
+	}
+}

@@ -1,6 +1,6 @@
 import type { Application, Request, Response as IResponse } from 'express';
 import { validateBearerToken } from '@beyond-js/ai-server/http/middleware';
-import { concatenateFiles } from '@beyond-js/ai-server/github';
+import { concatenateFiles } from '@beyond-js/ai-server/github/concatenate';
 
 export class GitHubRoutes {
 	static setup(app: Application) {
