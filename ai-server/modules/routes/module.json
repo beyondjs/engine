@@ -1,6 +1,0 @@
-{
-	"name": "http/routes",
-	"platforms": ["node"],
-	"bundle": "ts",
-	"files": "*"
-}

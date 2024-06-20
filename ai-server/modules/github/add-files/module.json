@@ -1,7 +1,0 @@
-{
-	"name": "github/add-files",
-	"platforms": ["*"],
-	"ts": {
-		"files": ["*"]
-	}
-}
