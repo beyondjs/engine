@@ -1,0 +1,14 @@
+html, body {
+  min-height: 100%;
+  overflow-x: hidden;
+  padding: 0;
+  height: 100%;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-color);
+  font-family: var(--font-family);
+}
+
+html {
+  background: var(--surface);
+}

@@ -1,0 +1,5 @@
+{
+	"name": "to-export",
+	"bundle": "ts",
+	"files": ["*"]
+}
