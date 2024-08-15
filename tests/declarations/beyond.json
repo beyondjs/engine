@@ -1,0 +1,3 @@
+{
+	"packages": ["property-error/package.json", "property-error-consumer/package.json"]
+}

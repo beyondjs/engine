@@ -1,0 +1,13 @@
+{
+	"application": {
+		"processor": "scss",
+		"path": "application",
+		"files": ["*"]
+	},
+	"global": {
+		"processor": "scss",
+		"path": "global",
+		"files": ["*"]
+	},
+	"overwrites": "overwrites/overwrites.json"
+}
