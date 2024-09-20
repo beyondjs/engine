@@ -1,0 +1,7 @@
+{
+	"name": "template-styles",
+	"bundle": "scss",
+	"sass": {
+		"files": "*"
+	}
+}

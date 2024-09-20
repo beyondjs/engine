@@ -1,9 +1,7 @@
 node_modules
-!ai-server/modules/node_modules
 .idea
 .beyond
 .vscode
-package-lock.json
 lib/inspect/tests/files/apps
 lib/inspect/tests/files/modules/app
 .env

@@ -1,5 +1,5 @@
 {
-	"name": "@beyond-js/overwrites-test",
+	"name": "@beyond-js/template-modules-test",
 	"version": "0.0.1",
 	"modules": {
 		"path": "./modules"
