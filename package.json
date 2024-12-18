@@ -94,7 +94,7 @@
 		"@beyond-js/equal": "0.0.1",
 		"@beyond-js/finder": "0.0.6",
 		"@beyond-js/fs": "0.0.1",
-		"@beyond-js/ipc": "0.0.2",
+		"@beyond-js/ipc": "^0.0.7",
 		"@beyond-js/log": "0.0.1",
 		"@beyond-js/md5": "0.0.1",
 		"@beyond-js/mformat": "^0.0.3",
