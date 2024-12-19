@@ -57,7 +57,7 @@
 	],
 	"scripts": {
 		"test-overwrites": "cd tests/overwrites && node ../../index.js --inspector 4000",
-		"start": "node index.js"
+		"start": "node index.js --inspector  4000"
 	},
 	"engines": {
 		"node": ">=14.17.4",
@@ -79,7 +79,7 @@
 		"@beyond-js/code": "0.0.1",
 		"@beyond-js/config": "0.0.5",
 		"@beyond-js/crc32": "0.0.1",
-		"@beyond-js/dynamic-processor": "^0.0.4",
+		"@beyond-js/dynamic-processor": "^0.0.5",
 		"@beyond-js/equal": "0.0.1",
 		"@beyond-js/finder": "0.0.6",
 		"@beyond-js/fs": "0.0.1",
@@ -98,8 +98,6 @@
 		"ajv": "^6.12.2",
 		"ansi-to-html": "^0.6.14",
 		"archiver": "^3.1.1",
-		"async": "^2.6.4",
-		"cheerio": "^1.0.0-rc.12",
 		"clean-css": "^5.3.0",
 		"colors": "1.4.0",
 		"convert-source-map": "^1.7.0",
