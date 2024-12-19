@@ -110,7 +110,7 @@
 		"resolve-package-path": "~4.0.3",
 		"socket.io": "~4.5.1",
 		"source-map": "~0.7.4",
-		"uglify-js": "~3.16.2",
+		"uglify-js": "~3.19.3",
 		"uimport": "~1.2.9-beta.0",
 		"yargs": "~17.5.1"
 	}
