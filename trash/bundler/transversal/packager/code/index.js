@@ -1,4 +1,4 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('@beyond-js/dynamic-processor')();
 const { minify } = require('uglify-js');
 const mformat = require('@beyond-js/mformat');
 
@@ -144,7 +144,7 @@ module.exports = class extends DynamicProcessor {
 		super.setup(
 			new Map([
 				['packagers.code', { child: packagers.code }],
-				['dependencies.code', { child: tp.dependencies.code }],
+				['dependencies.code', { child: tp.dependencies.code }]
 			])
 		);
 	}

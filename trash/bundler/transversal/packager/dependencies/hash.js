@@ -1,29 +1,30 @@
-const {crc32, equal} = global.utils;
-const DynamicProcessor = global.utils.DynamicProcessor();
+const crc32 = require('@beyond-js/crc32');
+const equal = require('@beyond-js/equal');
+const DynamicProcessor = require('@beyond-js/dynamic-processor')();
 
 module.exports = class extends DynamicProcessor {
-    #dependencies;
+	#dependencies;
 
-    #value;
-    get value() {
-        return this.#value;
-    }
+	#value;
+	get value() {
+		return this.#value;
+	}
 
-    constructor(dependencies) {
-        super();
-        this.#dependencies = dependencies;
-        super.setup(new Map([['dependencies', {child: dependencies}]]));
-    }
+	constructor(dependencies) {
+		super();
+		this.#dependencies = dependencies;
+		super.setup(new Map([['dependencies', { child: dependencies }]]));
+	}
 
-    _process() {
-        const value = (() => {
-            const compute = [];
-            this.#dependencies.forEach(dependency => compute.push(dependency.specifier));
-            return crc32(equal.generate(compute));
-        })();
+	_process() {
+		const value = (() => {
+			const compute = [];
+			this.#dependencies.forEach(dependency => compute.push(dependency.specifier));
+			return crc32(equal.generate(compute));
+		})();
 
-        const changed = this.#value !== value;
-        this.#value = value;
-        return changed;
-    }
-}
+		const changed = this.#value !== value;
+		this.#value = value;
+		return changed;
+	}
+};

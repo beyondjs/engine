@@ -1,7 +1,7 @@
 module.exports = function (root, file) {
 	'use strict';
 
-	const fs = global.utils.fs;
+	const fs = require('@beyond-js/fs');
 
 	file = require('path').join(root, file);
 

@@ -1,7 +1,7 @@
 require('colors');
 require('../../lib/global');
 
-const { ipc } = global.utils;
+const ipc = require('@beyond-js/ipc/main');
 const exec = async (action, params) => ipc.exec('engine', action, params);
 
 /**
@@ -77,7 +77,7 @@ const build = async argv => {
 	await exec('applications/process', {
 		application: application.id,
 		distribution: dist.id,
-		build: true,
+		build: true
 	});
 
 	process.exit(0);
@@ -90,13 +90,13 @@ module.exports = {
 		{
 			name: 'pkg',
 			type: 'string',
-			describe: 'The name of the package to compile',
+			describe: 'The name of the package to compile'
 		},
 		{
 			name: 'distribution',
 			type: 'string',
-			describe: 'The distribution with which the package will be compiled',
-		},
+			describe: 'The distribution with which the package will be compiled'
+		}
 	],
-	handler: build,
+	handler: build
 };

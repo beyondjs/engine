@@ -68,7 +68,8 @@
 		"./mformat": "./lib/engine/mformat/index.js",
 		"./typings": "./lib/engine/typings/index.js",
 		"./inspect-service": "./lib/inspect/service/index.js",
-		"./sdk": "./lib/engine/process/bundler/index.js"
+		"./sdk": "./lib/engine/process/bundler/index.js",
+		"./environments": "./lib/engine/environments"
 	},
 	"params": {
 		"templates-pkg": "@beyond-js/scaffolding"

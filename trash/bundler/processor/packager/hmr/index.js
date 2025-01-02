@@ -1,4 +1,4 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
+const DynamicProcessor = require('@beyond-js/dynamic-processor')();
 const mformat = require('@beyond-js/mformat');
 
 /**

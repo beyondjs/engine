@@ -1,73 +1,73 @@
-const DynamicProcessor = global.utils.DynamicProcessor();
-const {equal} = global.utils;
+const DynamicProcessor = require('@beyond-js/dynamic-processor')();
+const equal = require('@beyond-js/equal');
 
 module.exports = class extends DynamicProcessor {
-    get dp() {
-        return 'module.bundle';
-    }
+	get dp() {
+		return 'module.bundle';
+	}
 
-    #name;
-    #module;
+	#name;
+	#module;
 
-    #path;
-    get path() {
-        return this.#path;
-    }
+	#path;
+	get path() {
+		return this.#path;
+	}
 
-    #configured = false;
-    #config = {};
+	#configured = false;
+	#config = {};
 
-    get value() {
-        return this.#config.processed;
-    }
+	get value() {
+		return this.#config.processed;
+	}
 
-    #errors = [];
-    get errors() {
-        return this.#errors;
-    }
+	#errors = [];
+	get errors() {
+		return this.#errors;
+	}
 
-    get valid() {
-        return !this.#errors.length;
-    }
+	get valid() {
+		return !this.#errors.length;
+	}
 
-    #destroyed = false;
-    get destroyed() {
-        return this.#destroyed;
-    }
+	#destroyed = false;
+	get destroyed() {
+		return this.#destroyed;
+	}
 
-    /**
-     * Bundle configuration constructor
-     *
-     * @param name {string} The bundle's name
-     * @param module {object} The module object
-     */
-    constructor(name, module) {
-        super();
-        this.#name = name;
-        this.#module = module;
-    }
+	/**
+	 * Bundle configuration constructor
+	 *
+	 * @param name {string} The bundle's name
+	 * @param module {object} The module object
+	 */
+	constructor(name, module) {
+		super();
+		this.#name = name;
+		this.#module = module;
+	}
 
-    _prepared() {
-        return this.#configured;
-    }
+	_prepared() {
+		return this.#configured;
+	}
 
-    _process() {
-        const module = this.#module;
-        const {input} = this.#config;
+	_process() {
+		const module = this.#module;
+		const { input } = this.#config;
 
-        const path = input.path ? require('path').join(module.path, input.path) : module.path;
-        delete input.path;
+		const path = input.path ? require('path').join(module.path, input.path) : module.path;
+		delete input.path;
 
-        if (this.#path === path && equal(input, this.#config.processed)) return;
+		if (this.#path === path && equal(input, this.#config.processed)) return;
 
-        this.#errors = typeof input === 'object' ? [] : ['Bundle configuration should be an object'];
-        this.#path = path;
-        this.#config.processed = input;
-    }
+		this.#errors = typeof input === 'object' ? [] : ['Bundle configuration should be an object'];
+		this.#path = path;
+		this.#config.processed = input;
+	}
 
-    configure(config) {
-        this.#config.input = config;
-        this.#configured = true;
-        this._invalidate();
-    }
-}
+	configure(config) {
+		this.#config.input = config;
+		this.#configured = true;
+		this._invalidate();
+	}
+};

@@ -1,4 +1,4 @@
-const DynamicProcessor = global.utils.DynamicProcessor(Map);
+const DynamicProcessor = require('@beyond-js/dynamic-processor')(Map);
 const babel = require('@babel/core');
 
 /**
@@ -8,107 +8,107 @@ const babel = require('@babel/core');
  * Only for backward compatibility required by the dashboard.
  */
 module.exports = class extends DynamicProcessor {
-    get dp() {
-        return 'bundler.bundle.dependencies.deprecated-imports';
-    }
+	get dp() {
+		return 'bundler.bundle.dependencies.deprecated-imports';
+	}
 
-    #bundle;
+	#bundle;
 
-    #sources;
-    get sources() {
-        return this.#sources;
-    }
+	#sources;
+	get sources() {
+		return this.#sources;
+	}
 
-    #hash;
-    get hash() {
-        return this.#hash;
-    }
+	#hash;
+	get hash() {
+		return this.#hash;
+	}
 
-    /**
-     * Generate the code to be included in the bundle
-     *
-     * @param dependencies {*} The code dependencies map
-     * @return {string}
-     */
-    code(dependencies) {
-        let code = '';
-        this.forEach((imports, specifier) => {
-            const variable = dependencies.get(specifier);
+	/**
+	 * Generate the code to be included in the bundle
+	 *
+	 * @param dependencies {*} The code dependencies map
+	 * @return {string}
+	 */
+	code(dependencies) {
+		let code = '';
+		this.forEach((imports, specifier) => {
+			const variable = dependencies.get(specifier);
 
-            if (!variable) throw new Error(`Dependency "${specifier}" not found`);
-            if (!imports.get('specifiers')?.length && !imports.has('default') && !imports.has('namespace')) return;
+			if (!variable) throw new Error(`Dependency "${specifier}" not found`);
+			if (!imports.get('specifiers')?.length && !imports.has('default') && !imports.has('namespace')) return;
 
-            if (imports.get('specifiers')?.length) {
-                code += 'const ';
-                code += '{';
-                imports.get('specifiers').forEach((expression, index) => {
-                    code += index !== 0 ? ', ' : '';
-                    code += expression;
-                });
-                code += `} = ${variable};\n`;
-            }
-            imports.has('default') && (code += `const ${imports.get('default')} = ${variable}.default;\n`);
-            imports.has('namespace') && (code += `const ${imports.get('namespace')} = ${variable};\n`);
-        });
+			if (imports.get('specifiers')?.length) {
+				code += 'const ';
+				code += '{';
+				imports.get('specifiers').forEach((expression, index) => {
+					code += index !== 0 ? ', ' : '';
+					code += expression;
+				});
+				code += `} = ${variable};\n`;
+			}
+			imports.has('default') && (code += `const ${imports.get('default')} = ${variable}.default;\n`);
+			imports.has('namespace') && (code += `const ${imports.get('namespace')} = ${variable};\n`);
+		});
 
-        return code;
-    }
+		return code;
+	}
 
-    async _begin() {
-        await this.#bundle.ready;
-    }
+	async _begin() {
+		await this.#bundle.ready;
+	}
 
-    constructor(bundle) {
-        super();
-        this.#bundle = bundle;
+	constructor(bundle) {
+		super();
+		this.#bundle = bundle;
 
-        const sources = this.#sources = new (require('./sources'))(bundle.watcher);
-        super.setup(new Map([['sources', {child: sources}]]));
+		const sources = (this.#sources = new (require('./sources'))(bundle.watcher));
+		super.setup(new Map([['sources', { child: sources }]]));
 
-        this.#hash = new (require('./hash'))(this);
-    }
+		this.#hash = new (require('./hash'))(this);
+	}
 
-    configure(path, config) {
-        this.#sources.configure(path, config);
-    }
+	configure(path, config) {
+		this.#sources.configure(path, config);
+	}
 
-    _prepared(require) {
-        this.#sources.forEach(source => require(source));
-    }
+	_prepared(require) {
+		this.#sources.forEach(source => require(source));
+	}
 
-    _process() {
-        this.clear();
+	_process() {
+		this.clear();
 
-        const add = (specifier, imports) => {
-            const values = this.has(specifier) ? this.get(specifier) : new Map();
-            this.set(specifier, values);
+		const add = (specifier, imports) => {
+			const values = this.has(specifier) ? this.get(specifier) : new Map();
+			this.set(specifier, values);
 
-            imports?.forEach(({type, imported, local}) => {
-                if (type === 'ImportSpecifier') {
-                    const specifiers = values.has('specifiers') ? values.get('specifiers') : [];
-                    values.set('specifiers', specifiers);
-                    specifiers.push(imported?.name === local.name ? local.name : `${imported.name} as ${local.name}`);
-                }
-                else if (type === 'ImportDefaultSpecifier') {
-                    values.set('default', local.name);
-                }
-                else if (type === 'ImportNamespaceSpecifier') {
-                    values.set('namespace', local.name);
-                }
-            });
-        }
+			imports?.forEach(({ type, imported, local }) => {
+				if (type === 'ImportSpecifier') {
+					const specifiers = values.has('specifiers') ? values.get('specifiers') : [];
+					values.set('specifiers', specifiers);
+					specifiers.push(imported?.name === local.name ? local.name : `${imported.name} as ${local.name}`);
+				} else if (type === 'ImportDefaultSpecifier') {
+					values.set('default', local.name);
+				} else if (type === 'ImportNamespaceSpecifier') {
+					values.set('namespace', local.name);
+				}
+			});
+		};
 
-        this.#sources.forEach(source => {
-            babel.transform(source.content, {
-                plugins: [{
-                    visitor: {
-                        ImportDeclaration: path => {
-                            const specifier = path.node.source.value;
-                            add(specifier, path.node.specifiers);
-                        }
-                    }
-                }]
-            });
-        });
-    }
-}
+		this.#sources.forEach(source => {
+			babel.transform(source.content, {
+				plugins: [
+					{
+						visitor: {
+							ImportDeclaration: path => {
+								const specifier = path.node.source.value;
+								add(specifier, path.node.specifiers);
+							}
+						}
+					}
+				]
+			});
+		});
+	}
+};
