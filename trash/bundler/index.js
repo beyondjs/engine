@@ -1,3 +1,4 @@
+
 /**
  * Processor, Source and Bundle are objects that are exposed globally
  * in lib/engine/process/core/global/index.js
