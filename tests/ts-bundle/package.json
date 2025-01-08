@@ -7,6 +7,9 @@
 	"modules": {
 		"path": "modules"
 	},
+	"bundles": [
+		"@beyond-js/ts-processor"
+	],
 	"deployment": {
 		"distributions": [
 			{
@@ -20,7 +23,8 @@
 		]
 	},
 	"dependencies": {
-		"@beyond-js/kernel": "~0.1.9"
+		"@beyond-js/kernel": "~0.1.9",
+		"@beyond-js/ts-processor": "~0.0.1"
 	},
 	"devDependencies": {
 		"@beyond-js/local": "~0.1.3",
