@@ -91,6 +91,7 @@
 		"@beyond-js/pending-promise": "~0.0.1",
 		"@beyond-js/ports": "~0.0.1",
 		"@beyond-js/specifier-parser": "~0.0.3",
+		"@beyond-js/uimport": "^1.2.11",
 		"@beyond-js/watchers": "~0.0.8",
 		"@beyond-js/widgets-bundle": "~1.0.0",
 		"@mdx-js/mdx": "~2.1.5",
@@ -112,7 +113,6 @@
 		"socket.io": "~4.5.1",
 		"source-map": "~0.7.4",
 		"uglify-js": "~3.19.3",
-		"@beyond-js/uimport": "~1.2.9",
 		"yargs": "~17.5.1"
 	},
 	"devDependencies": {
