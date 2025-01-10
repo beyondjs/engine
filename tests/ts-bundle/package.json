@@ -7,9 +7,9 @@
 	"modules": {
 		"path": "modules"
 	},
-	"bundles": [
-		"@beyond-js/ts-processor"
-	],
+	"bundlers": {
+		"@beyond-js/ts-processor": {}
+	},
 	"deployment": {
 		"distributions": [
 			{
