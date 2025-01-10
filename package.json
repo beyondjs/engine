@@ -69,7 +69,7 @@
 		"./typings": "./lib/engine/typings/index.js",
 		"./inspect-service": "./lib/inspect/service/index.js",
 		"./sdk": "./lib/engine/process/bundler/index.js",
-		"./environments": "./lib/engine/environments"
+		"./environments": "./lib/engine/environments/index.js"
 	},
 	"params": {
 		"templates-pkg": "@beyond-js/scaffolding"
