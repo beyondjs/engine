@@ -114,8 +114,5 @@
 		"source-map": "~0.7.4",
 		"uglify-js": "~3.19.3",
 		"yargs": "~17.5.1"
-	},
-	"devDependencies": {
-		"@beyond-js/ts-processor": "~0.0.1"
 	}
 }

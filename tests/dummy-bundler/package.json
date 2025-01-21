@@ -1,0 +1,31 @@
+{
+	"name": "dummy-bundler-test",
+	"version": "0.0.1",
+	"title": "",
+	"description": "",
+	"license": "ISC",
+	"modules": {
+		"path": "modules"
+	},
+	"bundlers": {
+		"dummy-bundler": {}
+	},
+	"deployment": {
+		"distributions": [
+			{
+				"name": "web",
+				"environment": "development",
+				"platform": "web",
+				"ports": {
+					"bundles": 8080
+				}
+			}
+		]
+	},
+	"dependencies": {
+		"@beyond-js/kernel": "~0.1.9"
+	},
+	"devDependencies": {
+		"dummy-bundler": "file://./bundler"
+	}
+}
