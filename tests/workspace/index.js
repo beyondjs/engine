@@ -6,5 +6,10 @@ const workspace = new Workspace(path);
 
 (async () => {
 	await workspace.packages.ready;
-	console.log(workspace.packages);
+	console.log('Packages found:');
+
+	for (const [id, pkg] of workspace.packages) {
+		await pkg.ready;
+		console.log(id, pkg.name);
+	}
 })().catch(exc => console.error(exc));

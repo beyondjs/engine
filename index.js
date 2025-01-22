@@ -1,5 +1,6 @@
 require('./lib/global');
 Error.stackTraceLimit = Infinity;
+
 const args = (() => {
 	const argv = process.argv.slice(2);
 	const args = new Map();
