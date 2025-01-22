@@ -10,6 +10,12 @@ const workspace = new Workspace(path);
 
 	for (const [id, pkg] of workspace.packages) {
 		await pkg.ready;
-		console.log(id, pkg.name);
+		console.log('•', id, pkg.name);
+
+		await pkg.modules.ready;
+		console.log('  Modules found:', pkg.modules.size);
+		pkg.modules.forEach(module => console.log('  • Module:', module.ready));
 	}
+
+	console.log('End!');
 })().catch(exc => console.error(exc));
