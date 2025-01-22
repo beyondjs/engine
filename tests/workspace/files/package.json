@@ -1,0 +1,13 @@
+{
+	"name": "beuyond-js-workspace-test",
+	"version": "0.0.1",
+	"title": "",
+	"description": "",
+	"license": "ISC",
+	"modules": {
+		"path": "modules"
+	},
+	"dependencies": {
+		"@beyond-js/kernel": "~0.1.9"
+	}
+}
