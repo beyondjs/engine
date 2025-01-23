@@ -13,8 +13,8 @@ const workspace = new Workspace(path);
 		console.log('•', id, pkg.name);
 
 		await pkg.modules.ready;
-		console.log('  Modules found:', pkg.modules.size);
-		pkg.modules.forEach(module => console.log('  • Module:', module.ready));
+		console.log('  Entries found:', pkg.modules.size);
+		pkg.modules.forEach(module => console.log('  • Entry:', module.subpath, module.bundlers));
 	}
 
 	console.log('End!');
