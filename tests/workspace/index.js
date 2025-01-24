@@ -14,7 +14,7 @@ const workspace = new Workspace(path);
 
 		await pkg.modules.ready;
 		console.log('  Entries found:', pkg.modules.size);
-		pkg.modules.forEach(module => console.log('  • Entry:', module.subpath, module.bundlers));
+		pkg.modules.forEach(module => console.log('  • Entry:', module.id, module.platforms));
 	}
 
 	console.log('End!');
