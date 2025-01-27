@@ -7,7 +7,15 @@
 	"modules": {
 		"path": "modules"
 	},
+	"bundlers": {
+		"bundler-dummy": {
+			"specifier": "bundler-dummy"
+		}
+	},
 	"dependencies": {
 		"@beyond-js/kernel": "~0.1.9"
+	},
+	"devDependencies": {
+		"bundler-dummy": "file://./bundler-dummy"
 	}
 }

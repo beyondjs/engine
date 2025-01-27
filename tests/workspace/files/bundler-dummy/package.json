@@ -1,0 +1,6 @@
+{
+	"name": "bundler-dummy",
+	"exports": {
+		".": "./index.js"
+	}
+}
