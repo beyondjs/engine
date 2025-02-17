@@ -12,7 +12,7 @@
     <img  src="https://img.shields.io/static/v1?style=for-the-badge&label=License&message=MIT&color=red">
   </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/beyond">
-    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.2.4&color=#dcdcdc">
+    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.2.5&color=#dcdcdc">
   </a>
   
   <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->

@@ -1,5 +1,19 @@
 # Beyond
 
+## v1.2.5 - 2025/2/17
+
+### Fix
+
+-   **Path error in static file generation for internal library modules**: solved, static files are generated with the
+    library's vspecifier
+
+## v1.2.4 - 2024/8/15
+
+### Fix
+
+-   **Internal libraries that do not have the build distribution are not being processed**: solved, error message during
+    compilation process
+
 ## v1.2.3 - 2024/6/19
 
 ### Fix
