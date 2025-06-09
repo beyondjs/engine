@@ -1,5 +1,42 @@
 # Beyond
 
+## v1.3.2 - 2025/3/01
+
+### Features
+
+-   **Template Overwrites Support**: Introduced support for defining `scss` and `txt` bundle overwrites at the template
+    level.
+
+    This feature allows templates to customize specific bundles and processors of modules from dependent packages. To
+    enable it, use the `overwrites` entry point in the `template.json` file. The value can be either an inline object or
+    a string referencing a separate configuration file (e.g., `"overwrites": "overwrites.json"` will resolve to a file
+    located alongside `template.json`).
+
+    The `overwrites` object must follow this structure:
+
+    ```json
+    {
+    	"@scope/package-name/module-name": {
+    		"txt": {
+    			"txt": {
+    				"files": "./overwrites/example.json"
+    			}
+    		},
+    		"widget": {
+    			"scss": {
+    				"files": "./overwrites/example.scss"
+    			}
+    		}
+    	}
+    }
+    ```
+
+    -   Each key is the bare module specifier (as used in imports or dependencies).
+    -   Bundles (`txt`, `widget`, etc.) group related processors, which may include `scss`, `txt`, or others.
+    -   For each processor, the `files` property specifies the source of the overwrite.
+    -   The processor configuration mirrors the format used in `module.json`, ensuring consistency across customization
+        points.
+
 ## v1.2.5 - 2025/2/17
 
 ### Fix
