@@ -1,6 +1,6 @@
 module.exports = {
 	command: 'add [option]',
-	description: 'Add package or module in beyondJS',
+	description: 'Add a package or a module in beyondJS',
 	handler: ({ option }) => {
 		if (['module', 'package'].includes(option)) {
 			require(`./${option}`)();
@@ -9,5 +9,5 @@ module.exports = {
 
 		console.log('Command: beyond add [option] - Add a package or module in BeyondJS');
 		console.log('option: package | module');
-	},
+	}
 };
