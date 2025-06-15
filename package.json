@@ -132,8 +132,10 @@
     "yargs": "^17.5.1",
     "esbuild": "^0.14.48",
     "semver": "^7.3.7",
-    "zlib": "^1.0.5",
     "tar-stream": "^2.2.0",
     "@beyond-js/bee": "^0.0.1"
+  },
+  "devDependencies": {
+    "prettier": "~3.5.3"
   }
 }
