@@ -4,3 +4,4 @@ node_modules
 .vscode
 lib/inspect/tests/files/apps
 lib/inspect/tests/files/modules/app
+.DS_Store
