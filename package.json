@@ -64,10 +64,10 @@
 		"npm": ">=6.0.0"
 	},
 	"exports": {
-		".": "./lib/index.js",
-		"./workspace": "./lib/workspace/index.js",
-		"./packages/installer": "./lib/packages/installer/index.js",
-		"./packages/installed": "./lib/packages/installed/index.js"
+		".": "./src/index.js",
+		"./workspace": "./src/workspace/index.js",
+		"./packages/installer": "./src/packages/installer/index.js",
+		"./packages/installed": "./src/packages/installed/index.js"
 	},
 	"params": {
 		"templates-pkg": "@beyond-js/scaffolding"
