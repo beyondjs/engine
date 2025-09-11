@@ -1,5 +1,16 @@
 # Beyond
 
+## v1.3.3 - 2025/1/15
+
+### Fixes
+
+-   **Updated "uimport" dependency**: Updated dependency "uimport" to version "^1.2.9", which supports exports as string
+-   **Updated "@beyond-js/bee" dependency**: Updated dependency "@beyond-js/bee" to version "^0.0.7"
+-   **Multibundle compilation improvements**: Improvements in the compilation process for multibundle support in npm
+    compilation
+-   **Distribution process improvements**: Improvements in folder and file distribution during the npm compilation
+    process
+
 ## v1.3.2 - 2025/3/01
 
 ### Features
