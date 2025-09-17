@@ -1,6 +1,21 @@
 # Beyond
 
-## v1.3.3 - 2025/1/15
+## v1.4.1 - 2025/9/17
+
+### Fixes
+
+-   **Updated "uimport" dependency**: Updated dependency "uimport" to version "1.2.9"
+-   **Updated "@beyond-js/bee" dependency**: Updated dependency "@beyond-js/bee" to version "^0.0.8", improvements in
+    error handling
+-   **Compilation improvements**: Fixed bug in generating config.js file for internal dependencies
+
+## v1.4.0 - 2025/9/16
+
+### Fixes
+
+-   **Updated "uimport" dependency**: unstable version
+
+## v1.3.3 - 2025/9/12
 
 ### Fixes
 
