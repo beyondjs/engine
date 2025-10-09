@@ -5,6 +5,7 @@
 	"proseWrap": "always",
 	"useTabs": true,
 	"singleQuote": true,
+	"trailingComma": "none",
 	"bracketSpacing": true,
 	"configPath": "${workspaceFolder}/prettier.json"
 }
