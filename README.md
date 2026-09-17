@@ -26,6 +26,8 @@
 
 # Getting started
 
+For maintainers, the [inspector and development-service guide](docs/inspector.md) documents startup, HMR events, HTTP/RPC boundaries, Workspace action families, lifecycle limitations and the required service-side integration in Packages.
+
 ## Global instalation
 
 ```shell

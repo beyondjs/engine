@@ -10,4 +10,6 @@ Older Beyond engine and bootstrap reference. Preserve its current authoring/runt
 - Read the relevant maintained references before architectural changes; label source findings, runtime evidence and proposals accurately. Use targeted validation for behavior changes; documentation/comment edits do not require unrelated builds or services.
 - Keep instructions concise here and link maintained documentation. Before editing nested areas, read any applicable nested AGENTS.md. Do not apply sibling repository instructions globally.
 
-Suite references: [engine-current.md](../docs/engine-current.md), [engine-comparison.md](../docs/engine-comparison.md). Read [README.md](README.md) when present. These links use the beyond-suite checkout layout; if opened independently, inspect local source and do not invent missing suite documentation.
+Read [README.md](README.md) and the [inspector and development-service guide](docs/inspector.md) for this repository's service boundaries. Engine compiles and serves Beyond-authored modules. When it bootstraps a newer Packages implementation, Packages remains responsible for compiling and serving its target application. No sibling checkout or suite document is required by these instructions.
+
+Documentation follows [the local documentation standards](docs/AGENTS.md).
