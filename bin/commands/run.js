@@ -3,6 +3,7 @@ require('../../lib/global');
 const {ports} = global.utils;
 
 const start = argv => {
+    if (argv.host) process.env.BEYOND_HOST = argv.host;
     const done = ({error, params}) => {
         if (error) {
             console.log('Cannot run BeyondJS:'.red, error);
@@ -31,6 +32,11 @@ module.exports = {
     command: 'run [inspector]',
     description: 'Run the BeyondJS packages engine and server',
     options: [{
+        name: 'host',
+        type: 'string',
+        optional: true,
+        describe: 'The address the servers listen on (127.0.0.1 by default; 0.0.0.0 opens them to every interface)'
+    }, {
         name: 'inspector',
         type: 'number',
         default: 4000,

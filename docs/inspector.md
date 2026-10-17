@@ -10,7 +10,7 @@ Local consumes inspector events and delegates runtime updates to Kernel; Backend
 
 The [main Engine object](../lib/index.js) initializes globals, starts the watcher process, constructs the engine, conditionally constructs the inspector when `inspect` is truthy, and constructs launchers. The [CLI run command](../bin/commands/run.js) declares the inspector port option and checks availability before construction. Exact CLI runtime defaults depend on its argument parsing; a declared default is not a demonstrated running listener.
 
-[Inspector](../lib/inspect/index.js) checks the port again, creates an HTTP server, calls `listen(port)`, constructs Service and Actions, attaches Socket.IO, then forwards events through Service.setup. It prints a link to the remote Workspace frontend. It does not serve that frontend itself. Its constructor starts asynchronous work and logs rejection; it exposes no ready Promise, bind-error contract or stop method. The port check and subsequent bind are separate operations, and the code does not await the server's listening event before reporting the link.
+[Inspector](../lib/inspect/index.js) checks the port again, creates an HTTP server, calls `listen(port, host)` on the address of [Listening address](#listening-address), constructs Service and Actions, attaches Socket.IO, then forwards events through Service.setup. It prints a link to the remote Workspace frontend. It does not serve that frontend itself. Its constructor starts asynchronous work and logs rejection; it exposes no ready Promise, bind-error contract or stop method. The port check and subsequent bind are separate operations, and the code does not await the server's listening event before reporting the link.
 
 Three responsibilities must not be conflated:
 
@@ -21,6 +21,12 @@ Three responsibilities must not be conflated:
 | Application artifacts | Distribution [HTTP listener](../lib/engine/process/http/server/listener/index.js) | HTML, project/config/import information, widget resources, styles, bundles, externals, sources and static files. |
 
 The inspector does not compile a JavaScript patch in its socket handler and does not send its bytes over the HMR event. The client receives identity information, then obtains the artifact through the appropriate delivery path.
+
+## Listening address
+
+Every server Engine opens, the inspector and each distribution's HTTP server, listens on `127.0.0.1` by default ([`lib/utils/ports`](../lib/utils/ports/host.js)). Another address is an explicit choice: `BEYOND_HOST=<address>` in the environment, or `--host <address>` on `node index.js` and on `beyond run`; `0.0.0.0` opens them to every interface, as inside a container whose port is published. Engine then says once, at start, that every machine reaching that address can read the compiled sources. The port check refuses a port held on loopback or on every interface by another process.
+
+The forked processes (the compiler and the watchers monitor) end when the main process ends, however it ended, because they leave on the IPC channel's disconnect; a killed Engine no longer leaves a compiler holding its port.
 
 ## Transport and exposed HTTP surface
 
