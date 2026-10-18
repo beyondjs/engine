@@ -12,7 +12,7 @@
     <img  src="https://img.shields.io/static/v1?style=for-the-badge&label=License&message=MIT&color=red">
   </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/beyond">
-    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.3.3&color=#dcdcdc">
+    <img alt="" src="https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.4.1&color=#dcdcdc">
   </a>
   
   <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -28,7 +28,7 @@
 
 For maintainers, the [inspector and development-service guide](docs/inspector.md) documents startup, HMR events, HTTP/RPC boundaries, Workspace action families, lifecycle limitations and the required service-side integration in Packages. [Testing](docs/testing.md) names the contract tests in `test/` (`npm test`) and classifies the legacy manual scenarios in `tests/` and `lib/inspect/tests/files/`.
 
-Engine's servers listen on `127.0.0.1` only. To open them to another address, set `BEYOND_HOST` (or pass `--host <address>`); see [Listening address](docs/inspector.md#listening-address).
+Engine's servers listen on `127.0.0.1` only. To open them to another address, set `BEYOND_HOST` (or pass `--host <address>`); see [Listening address](docs/inspector.md#listening-address). The compiler and watcher processes Engine forks end with the main process. Both are in this repository's `feature/next` and not in a release yet: the published `beyond` 1.4.1 listens on every interface ([changelog](CHANGELOG.md)).
 
 ## Global instalation
 

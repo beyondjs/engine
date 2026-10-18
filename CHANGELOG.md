@@ -1,5 +1,15 @@
 # Beyond
 
+## Unreleased
+
+### Fixes
+
+-   **Servers on loopback by default**: every server Engine opens (each distribution's HTTP server and the inspector)
+    listens on `127.0.0.1`; `BEYOND_HOST=<address>` or `--host <address>` opens them to another address and is said
+    once at start. The port check refuses a port held on loopback or on every interface.
+-   **Forked processes end with the main one**: the compiler and the watchers monitor leave when their IPC channel
+    disconnects, so a killed Engine no longer leaves a compiler holding its port.
+
 ## v1.4.1 - 2025/9/17
 
 ### Fixes
