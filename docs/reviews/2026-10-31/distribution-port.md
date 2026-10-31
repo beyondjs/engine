@@ -29,6 +29,9 @@ Executed locally on 2026-10-31 in macOS, Node 22, from this repository with its 
   Engine on a temporary copy of `test/fixtures/port/`: `--port <port>` and `BEYOND_PORT=node-esm=<port>` each serve
   the fixture's `project.json` on the given port and nothing on the package file's, and `--port node-esm` exits 1
   with the reason before any server answers.
+- Beyond Snapshots' browser focus journey ran seven times, in three runs, against this Engine, started by
+  Snapshots' own test helper with `BEYOND_PORT=24160` beside its `SNAPSHOTS_ENGINE_PORT`, while its package file names
+  1160: the service loaded every module from the given port, and the package file stayed unchanged.
 
 Not established here: the suite's Live mode and worktree conventions still use their own mapping until they adopt
 this setting, and no release of `beyond` carries it.
