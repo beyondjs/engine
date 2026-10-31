@@ -28,6 +28,15 @@ Every server Engine opens, the inspector and each distribution's HTTP server, li
 
 The forked processes (the compiler and the watchers monitor) end when the main process ends, however it ended, because they leave on the IPC channel's disconnect; a killed Engine no longer leaves a compiler holding its port.
 
+## A distribution's port
+
+Each distribution's HTTP server listens on the port its package file names (`deployment.distributions[].ports.bundles`, or `port`). A person who needs another one, a second working copy beside the first or a preview environment that assigns ports, gives it without changing the package file ([`lib/utils/ports/assignment.js`](../lib/utils/ports/assignment.js)):
+
+- `--port <port>` on `node index.js` and on `beyond run`, or `BEYOND_PORT=<port>` in the environment, gives that port to every distribution whose package file names one. Use it for an Engine whose packages name one port; with several, they would all ask for the same one, and every one but the first is refused as unavailable.
+- `--port <distribution>=<port>,…` (or the same value in `BEYOND_PORT`) gives each named distribution its port, whether its package file names one or not, and leaves the others as declared.
+
+The launchers of `node`, `ssr` and `backend` distributions reach the server on the same given port. The inspector (`--inspector`) and a distribution's `ports.http` and `ports.inspect` are unchanged. A value that is neither form (`0`, a name without a port, a distribution named twice) stops Engine before any server or process starts, with the reason and exit code 1; the forked processes inherit the variable. `test/port.test.js` checks both forms against a running Engine.
+
 ## Transport and exposed HTTP surface
 
 The inspector's [HTTP handler](../lib/inspect/server/index.js) explicitly serves `/uploader`; other requests return a Resource 404. It normalizes a `.hmr.js` suffix but contains no bundle-serving branch, so that normalization does not make the inspector port an artifact endpoint. Socket.IO attaches its transport handling to the same server separately.

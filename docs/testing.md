@@ -1,18 +1,20 @@
 # Testing
 
-`test/` holds the contract tests of the listening address and the port check (`npm test`, Node's own test runner). Besides them, `tests/` holds legacy manual scenario packages that a person serves with this Engine and inspects in the browser, the console or the inspector, and `lib/inspect/tests/files/` holds ad hoc builder scripts and sample projects of the former inspector; both are legacy reference material kept unmodified, not validation. Engine's current role as the bootstrap compiler of Packages is exercised from other repositories: the Packages repository's bootstrap package, the command line's acceptance in the `cli` repository and the Beyond Suite's utilities validation, which serves each utility through the bootstrap's Engine (optional external references). Those runs establish that bootstrap path only, not the scenarios described here.
+`test/` holds the contract tests of the listening address, the port check and a distribution's given port (`npm test`, Node's own test runner). Besides them, `tests/` holds legacy manual scenario packages that a person serves with this Engine and inspects in the browser, the console or the inspector, and `lib/inspect/tests/files/` holds ad hoc builder scripts and sample projects of the former inspector; both are legacy reference material kept unmodified, not validation. Engine's current role as the bootstrap compiler of Packages is exercised from other repositories: the Packages repository's bootstrap package, the command line's acceptance in the `cli` repository and the Beyond Suite's utilities validation, which serves each utility through the bootstrap's Engine (optional external references). Those runs establish that bootstrap path only, not the scenarios described here.
 
 ## Levels and commands
 
 | Level | Location | Command | Prerequisites | What a run shows |
 | --- | --- | --- | --- | --- |
-| Contract | `test/*.test.js` | `npm test` | Node 22 | The servers' default loopback address, the `BEYOND_HOST` opt-in and its single warning, that a server on the default address cannot be reached from another interface (skipped without an external IPv4 interface), and that the port check refuses a port held on loopback or on every interface and offers it again once released |
+| Contract | `test/*.test.js`, fixture in `test/fixtures/port/` | `npm test` | Node 22; the dependencies of this repository installed, and ports the test allocates | The servers' default loopback address, the `BEYOND_HOST` opt-in and its single warning, that a server on the default address cannot be reached from another interface (skipped without an external IPv4 interface), that the port check refuses a port held on loopback or on every interface and offers it again once released, how `BEYOND_PORT` gives a distribution its port (one port, a list by distribution, refusals as `INVALID_PORT`), and that a running Engine serves the fixture's `project.json` on the port `--port` or `BEYOND_PORT` gives and not on its package file's, and stops with exit code 1 on a value it cannot use |
 | Integration and acceptance | None in this repository | None | None | Nothing is asserted here |
 | Manual scenario: template overwrites | `tests/overwrites/` | `npm run test-overwrites`, which runs `node ../../index.js --inspector 4000` inside `tests/overwrites/` | The dependencies of this repository installed | The `welcome` module served with its styles, for a person to inspect how overwrites apply |
 | Manual scenarios: the others | `tests/<scenario>/` | Serve the scenario's `beyond.json` with this Engine from its directory, as `test-overwrites` does | The dependencies each scenario's `package.json` declares, and its ports free | What the scenario's purpose names, observed by a person |
 | Builder scripts of the former inspector | `lib/inspect/tests/files/*.js`, `lib/inspect/tests/files/*/*.js` | None that works as checked in | Several scripts require modules at paths that no longer exist (`lib/dashboard/...`, `lib/templates`) | Nothing: they are reference material only |
 
 ## Fixtures
+
+`test/fixtures/port/` is the contract tests' package: one `node-esm` distribution naming a bundles port, which `test/port.test.js` copies to a temporary directory, gives a port it allocates and serves on another one it gives ([its README](../test/fixtures/port/README.md)).
 
 The scenario packages are the fixtures of the manual runs. Each is served in place.
 
@@ -28,7 +30,7 @@ The scenario packages are the fixtures of the manual runs. Each is served in pla
 ## Exceptions and limits
 
 - Everything above is legacy manual material kept unmodified as reference. None of it has a runner or assertions, and a manual run is an observation, not evidence of a contract.
-- The layout predates the suite convention: `tests/` holds served scenario packages rather than `*.test.*` files, and there is no `fixtures/` or `support/` directory. It is kept because it is legacy reference material.
+- The layout predates the suite convention: `tests/` holds served scenario packages rather than `*.test.*` files, outside the contract tests' `test/fixtures/`, and there is no `support/` directory. It is kept because it is legacy reference material.
 - `tests/beyond.json` points to `tests/packages.json`, which lists `/property-error-declarations/package.json`; no such directory exists (the declaration scenarios are under `tests/declarations/`, with their own `beyond.json`). The root `packages.json` lists `/types-errors/package.json`, which does not exist at the root either. Both references are stale and were left unchanged.
 - `lib/inspect/tests/files/` sits inside `lib/`, which `package.json` lists in `files`, so a published package includes it.
 - `tests/bundle-loader/` is byte-identical to `test/bundle-loader/` of the `bee` repository (an optional external reference), verified by a recursive comparison on 2026-09-22. Each independent repository keeps its copy; neither is removed.

@@ -28,7 +28,7 @@
 
 For maintainers, the [inspector and development-service guide](docs/inspector.md) documents startup, HMR events, HTTP/RPC boundaries, Workspace action families, lifecycle limitations and the required service-side integration in Packages. [Testing](docs/testing.md) names the contract tests in `test/` (`npm test`) and classifies the legacy manual scenarios in `tests/` and `lib/inspect/tests/files/`.
 
-Engine's servers listen on `127.0.0.1` only. To open them to another address, set `BEYOND_HOST` (or pass `--host <address>`); see [Listening address](docs/inspector.md#listening-address). The compiler and watcher processes Engine forks end with the main process. Both are in this repository's `feature/next` and not in a release yet: the published `beyond` 1.4.1 listens on every interface ([changelog](CHANGELOG.md)).
+Engine's servers listen on `127.0.0.1` only. To open them to another address, set `BEYOND_HOST` (or pass `--host <address>`); see [Listening address](docs/inspector.md#listening-address). A distribution's server listens on its package file's port unless `BEYOND_PORT` (or `--port <port>`, or `--port <distribution>=<port>`) gives another; see [A distribution's port](docs/inspector.md#a-distributions-port). The compiler and watcher processes Engine forks end with the main process. Both are in this repository's `feature/next` and not in a release yet: the published `beyond` 1.4.1 listens on every interface ([changelog](CHANGELOG.md)).
 
 ## Global instalation
 

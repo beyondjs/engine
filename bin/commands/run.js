@@ -4,6 +4,7 @@ const {ports} = global.utils;
 
 const start = argv => {
     if (argv.host) process.env.BEYOND_HOST = argv.host;
+    if (argv.port) process.env.BEYOND_PORT = String(argv.port);
     const done = ({error, params}) => {
         if (error) {
             console.log('Cannot run BeyondJS:'.red, error);
@@ -12,6 +13,14 @@ const start = argv => {
 
         params = params ? params : {};
         new (require('beyond'))(params);
+    }
+
+    try {
+        ports.assignment;
+    }
+    catch (exc) {
+        if (exc.code !== 'INVALID_PORT') throw exc;
+        return done({error: exc.message});
     }
 
     const {inspector} = argv;
@@ -36,6 +45,11 @@ module.exports = {
         type: 'string',
         optional: true,
         describe: 'The address the servers listen on (127.0.0.1 by default; 0.0.0.0 opens them to every interface)'
+    }, {
+        name: 'port',
+        type: 'string',
+        optional: true,
+        describe: "The port of the distributions' servers instead of their package file's: one port, or <distribution>=<port> separated by commas"
     }, {
         name: 'inspector',
         type: 'number',

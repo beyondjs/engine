@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Features
+
+-   **A distribution's port without editing its package file**: `--port <port>` or `BEYOND_PORT=<port>` gives every
+    distribution that names a port the given one, and `--port <distribution>=<port>,…` gives each named
+    distribution its own. A value that is not one of those forms stops Engine at start with exit code 1.
+
 ### Fixes
 
 -   **Servers on loopback by default**: every server Engine opens (each distribution's HTTP server and the inspector)

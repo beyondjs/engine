@@ -1,0 +1,23 @@
+{
+	"private": true,
+	"name": "@beyond-js/engine-port-fixture",
+	"version": "0.1.0",
+	"description": "A package whose one distribution names a port, served by Engine on another one the person gives",
+	"deployment": {
+		"distributions": [
+			{
+				"name": "node-esm",
+				"platform": "node",
+				"bundles": {
+					"mode": "esm"
+				},
+				"development": {
+					"tools": false
+				},
+				"ports": {
+					"bundles": 1199
+				}
+			}
+		]
+	}
+}
